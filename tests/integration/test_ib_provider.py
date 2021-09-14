@@ -27,6 +27,17 @@ class TestIBMarketProvider(TestCase):
         self.assertTrue(len(candles) > 10)
         self.assertTrue(candles[0].timestamp < candles[-1].timestamp)
 
+    def test_current_day_history(self):
+        ib_provider = IBMarketProvider(self.ib_connector)
+
+        yesterday = (datetime.now() - timedelta(days=1)).date()
+        yesterday = datetime(yesterday.year, yesterday.month, yesterday.day)
+        async_result: AsyncQueryResult = ib_provider.request_symbol_history('AAPL', TimeSpan.Day, yesterday,
+                                                                            datetime.now())
+        candles = async_result.result()
+        self.assertEqual(1, len(candles))
+        self.assertEqual(yesterday.date(), candles[0].timestamp.date())
+
     def test_yearly_history(self):
         ib_provider = IBMarketProvider(self.ib_connector)
         from_time = datetime.now() - timedelta(days=500)

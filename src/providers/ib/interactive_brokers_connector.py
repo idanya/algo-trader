@@ -58,7 +58,7 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
 
     def _calculate_query_duration(self, candle_timespan: TimeSpan, from_time: datetime, to_time: datetime) -> str:
         if candle_timespan == TimeSpan.Day:
-            days = (to_time - from_time).days
+            days = (to_time - from_time).days + 1
             if days > 365:
                 return f'{math.ceil(days / 365)} Y'
             else:
