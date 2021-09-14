@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 
 from calc.technicals import TechnicalCalculator
 from entities.candle import Candle
@@ -14,7 +14,7 @@ class TechnicalsContextWriter:
     def __init__(self, context: SharedContext[TechnicalsData]) -> None:
         self.context = context
 
-    def save_indicator_values(self, indicator_name: str, symbol: str, values: List[float]):
+    def save_indicator_values(self, indicator_name: str, symbol: str, values: Union[List[List[float]], List[float]]):
         data = self.context.get_kv_data(CONTEXT_IDENT)
         if not data:
             data = {}
@@ -30,7 +30,7 @@ class TechnicalsContextReader:
     def __init__(self, context: SharedContext[TechnicalsData]) -> None:
         self.context = context
 
-    def get_indicator_values(self, symbol: str, indicator_name: str) -> Optional[List[float]]:
+    def get_indicator_values(self, symbol: str, indicator_name: str) -> Optional[Union[List[List[float]], List[float]]]:
         data = self.context.get_kv_data(CONTEXT_IDENT)
         if data:
             return data.get(symbol, {}).get(indicator_name, None)
@@ -46,10 +46,9 @@ class TechnicalsProcessor(Processor):
         context_writer = TechnicalsContextWriter(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol)
         calculator = TechnicalCalculator(symbol_candles)
-        sma_values = calculator.sma(5)
-        cci_values = calculator.cci(7)
-        context_writer.save_indicator_values('sma5', candle.symbol, sma_values)
-        context_writer.save_indicator_values('cci7', candle.symbol, cci_values)
+        context_writer.save_indicator_values('sma5', candle.symbol, calculator.sma(5))
+        context_writer.save_indicator_values('cci7', candle.symbol, calculator.cci(7))
+        context_writer.save_indicator_values('macd', candle.symbol, calculator.macd(2, 5, 9))
         self.next_processor.process(context, candle)
 
     @staticmethod
