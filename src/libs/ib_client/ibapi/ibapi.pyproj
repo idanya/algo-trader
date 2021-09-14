@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{aa7df1c2-6d30-4556-b6d5-a188f972bbdd}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>account_summary_tags.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="account_summary_tags.py" />
+    <Compile Include="client.py" />
+    <Compile Include="comm.py" />
+    <Compile Include="commission_report.py" />
+    <Compile Include="common.py" />
+    <Compile Include="connection.py" />
+    <Compile Include="contract.py" />
+    <Compile Include="decoder.py" />
+    <Compile Include="enum_implem.py" />
+    <Compile Include="errors.py" />
+    <Compile Include="execution.py" />
+    <Compile Include="message.py" />
+    <Compile Include="news.py" />
+    <Compile Include="object_implem.py" />
+    <Compile Include="order.py" />
+    <Compile Include="order_condition.py" />
+    <Compile Include="order_state.py" />
+    <Compile Include="reader.py" />
+    <Compile Include="scanner.py" />
+    <Compile Include="server_versions.py" />
+    <Compile Include="softdollartier.py" />
+    <Compile Include="tag_value.py" />
+    <Compile Include="ticktype.py" />
+    <Compile Include="utils.py" />
+    <Compile Include="wrapper.py" />
+    <Compile Include="__init__.py" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

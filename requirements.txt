@@ -1,0 +1,8 @@
+-e ./src/libs/ib_client
+mysql-connector-python==8.0.19
+numpy==1.19.4
+pandas==1.1.5
+requests==2.23.0
+SQLAlchemy==1.3.16
+newtulipy==0.4.6
+python-telegram-bot==13.1
