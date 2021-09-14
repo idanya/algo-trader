@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List, Dict
 from unittest import TestCase
 
 from entities.candle import Candle
@@ -22,9 +21,11 @@ class TestCandleCacheProcessor(TestCase):
     def test(self):
         def _check(context: SharedContext, candle: Candle):
             self.assertIsNotNone(context)
-            cache_store: Dict[str, List[Candle]] = context.get_kv_data('cache')
-            self.assertEqual(self.test_candle.symbol, cache_store[candle.symbol][0].symbol)
+
+            cache_reader = CandleCache.context_reader(context)
+            cached_candles = cache_reader.get_symbol_candles(candle.symbol)
+            self.assertEqual(self.test_candle.symbol, cached_candles[0].symbol)
 
         validator = ValidationProcessor(_check)
-        processor = CandleCache('cache', validator)
+        processor = CandleCache(validator)
         PipelineRunner(self.source, processor).run()

@@ -10,68 +10,68 @@ from entities.candle import Candle
 
 class TechnicalCalculator:
     def __init__(self, candles: List[Candle]):
-        self.candles = candles
-        self.closes = np.array([c.close for c in candles])
-        self.highs = np.array([c.high for c in candles])
-        self.lows = np.array([c.low for c in candles])
-        self.volumes = np.array([c.volume for c in candles])
+        self._candles = candles
+        self._closes = np.array([float(c.close) for c in candles])
+        self._highs = np.array([float(c.high) for c in candles])
+        self._lows = np.array([float(c.low) for c in candles])
+        self._volumes = np.array([float(c.volume) for c in candles])
 
     def sma(self, period: int) -> List[float]:
-        if len(self.candles) < period:
+        if len(self._candles) < period:
             return []
 
-        return ti.sma(self.closes, period=period)
+        return ti.sma(self._closes, period=period).tolist()
 
     def adxr(self, period: int) -> List[float]:
-        if len(self.closes) < period * 2 + 3:
+        if len(self._closes) < period * 2 + 3:
             return []
 
-        return ti.adxr(self.highs, self.lows, self.closes, period=period)
+        return ti.adxr(self._highs, self._lows, self._closes, period=period)
 
     def cci(self, period: int) -> List[float]:
-        if len(self.closes) - 1 < period + 1:
+        if len(self._closes) - 1 < (period - 1) * 2:
             return []
 
-        return ti.cci(self.highs, self.lows, self.closes, period=period)
+        return ti.cci(self._highs, self._lows, self._closes, period=period)
 
     def obv(self) -> List[float]:
-        return ti.obv(self.closes, self.volumes)
+        return ti.obv(self._closes, self._volumes)
 
     def natr(self, period: int) -> List[float]:
-        if len(self.closes) < period:
+        if len(self._closes) < period:
             return []
 
-        return ti.natr(self.highs, self.lows, self.closes, period=period)
+        return ti.natr(self._highs, self._lows, self._closes, period=period)
 
     def stoch(self, k_period: int, k_slow_period: int, d_period: int) -> List[List[float]]:
-        if len(self.closes) - 1 < k_period + k_slow_period + 1:
+        if len(self._closes) - 1 < k_period + k_slow_period + 1:
             return [] * 2
 
-        return ti.stoch(self.highs, self.lows, self.closes, k_period, k_slow_period, d_period)
+        return ti.stoch(self._highs, self._lows, self._closes, k_period, k_slow_period, d_period)
 
     def fisher(self, period: int) -> List[float]:
-        if len(self.highs) < period:
+        if len(self._highs) < period:
             return [] * 2
 
-        return ti.fisher(self.highs, self.lows, period)
+        return ti.fisher(self._highs, self._lows, period)
 
     def aroonosc(self, period: int) -> List[float]:
-        if len(self.highs) < period:
+        if len(self._highs) < period:
             return []
 
-        return ti.aroonosc(self.highs, self.lows, period)
+        return ti.aroonosc(self._highs, self._lows, period)
 
     def ema(self, period: int) -> List[float]:
-        if len(self.closes) < period:
+        if len(self._closes) < period:
             return []
 
-        return ti.ema(self.closes, period=period)
+        return ti.ema(self._closes, period=period)
 
     def var(self, period: int) -> List[float]:
-        if len(self.closes) < period:
+        if len(self._closes) < period:
             return []
 
-        return ti.var(self.closes, period=period)
+        return ti.var(self._closes, period=period)
 
     def stddev(self, values: List[float], period: int) -> List[float]:
         if len(values) < period:
@@ -88,32 +88,32 @@ class TechnicalCalculator:
     def macd(self, short_period: int, long_period: int, signal_period: int) -> List[float]:
 
         needed_history_count = max(short_period, long_period, signal_period)
-        if len(self.closes) < needed_history_count:
+        if len(self._closes) < needed_history_count:
             return [] * 3
 
-        return ti.macd(self.closes, short_period=short_period, long_period=long_period,
+        return ti.macd(self._closes, short_period=short_period, long_period=long_period,
                        signal_period=signal_period)
 
     def bbands(self, period: int) -> List[float]:
-        if len(self.closes) < period:
+        if len(self._closes) < period:
             return [] * 3
 
-        return ti.bbands(self.closes, period=period, stddev=2)
+        return ti.bbands(self._closes, period=period, stddev=2)
 
     def rsi(self, period: int) -> List[float]:
-        if len(self.closes) < period + 1:
+        if len(self._closes) < period + 1:
             return []
 
-        return ti.rsi(np.array(self.closes), period=period)
+        return ti.rsi(np.array(self._closes), period=period)
 
     def mom(self, period: int) -> List[float]:
-        if len(self.closes) < period + 1:
+        if len(self._closes) < period + 1:
             return []
 
-        return ti.mom(np.array(self.closes), period=period)
+        return ti.mom(np.array(self._closes), period=period)
 
     def vosc(self, short_period: int, long_period: int) -> List[float]:
-        if len(self.volumes) < long_period + 1:
+        if len(self._volumes) < long_period + 1:
             return []
 
-        return ti.vosc(self.volumes, short_period, long_period)
+        return ti.vosc(self._volumes, short_period, long_period)
