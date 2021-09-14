@@ -46,10 +46,14 @@ class TechnicalsProcessor(Processor):
         context_writer = TechnicalsContextWriter(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol)
         calculator = TechnicalCalculator(symbol_candles)
-        context_writer.save_indicator_values('sma5', candle.symbol, calculator.sma(5))
-        context_writer.save_indicator_values('cci7', candle.symbol, calculator.cci(7))
-        context_writer.save_indicator_values('macd', candle.symbol, calculator.macd(2, 5, 9))
+
+        self._calculate(context_writer, candle.symbol, calculator)
         self.next_processor.process(context, candle)
+
+    def _calculate(self, context_writer: TechnicalsContextWriter, symbol: str, calculator: TechnicalCalculator):
+        context_writer.save_indicator_values('sma5', symbol, calculator.sma(5))
+        context_writer.save_indicator_values('cci7', symbol, calculator.cci(7))
+        context_writer.save_indicator_values('macd', symbol, calculator.macd(2, 5, 9))
 
     @staticmethod
     def context_reader(context: SharedContext[TechnicalsData]) -> TechnicalsContextReader:
