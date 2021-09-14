@@ -5,7 +5,7 @@ from unittest import TestCase
 from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.source import FakeSource
-from fakes.validator import ValidationProcessor
+from fakes.pipeline_validators import ValidationProcessor
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.runner import PipelineRunner

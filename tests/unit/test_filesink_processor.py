@@ -1,0 +1,39 @@
+import json
+import random
+import tempfile
+from datetime import datetime
+from unittest import TestCase
+
+from entities.candle import Candle
+from entities.timespan import TimeSpan
+from fakes.pipeline_validators import TerminatorValidator
+from fakes.source import FakeSource
+from pipeline.processors.file_sink import FileSinkProcessor
+from pipeline.runner import PipelineRunner
+from pipeline.shared_context import SharedContext
+from unit import generate_candle_with_price
+
+
+class TestFileSinkProcessor(TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.source = FakeSource(
+            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(0, c)) for c in range(1, 50)])
+
+    def test(self):
+        temp_file = tempfile.NamedTemporaryFile()
+
+        def _check(context: SharedContext):
+            self.assertIsNotNone(context)
+            with open(temp_file.name) as output_file:
+                lines = output_file.readlines()
+                self.assertEqual(49, len(lines))
+                for line in lines:
+                    candle = Candle.deserialize(json.loads(line))
+                    self.assertEqual(TimeSpan.Day, candle.time_span)
+                    self.assertEqual(datetime.now().day, candle.timestamp.day)
+
+        validator = TerminatorValidator(_check)
+
+        processor = FileSinkProcessor(temp_file.name)
+        PipelineRunner(self.source, processor, validator).run()
