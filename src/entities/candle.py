@@ -33,7 +33,7 @@ class Candle(Serializable, Deserializable):
         obj = super().serialize()
         obj.update({
             'symbol': self.symbol,
-            'timestamp': self.timestamp.replace(microsecond=0),
+            'timestamp': timestamp_to_str(self.timestamp),
             'timespan': self.time_span.name,
             'open': self.open,
             'close': self.close,
@@ -46,6 +46,6 @@ class Candle(Serializable, Deserializable):
 
     @classmethod
     def deserialize(cls, data: Dict) -> Candle:
-        return cls(data['symbol'], TimeSpan[data['timespan']], data['timestamp'], data['open'],
+        return cls(data['symbol'], TimeSpan[data['timespan']], str_to_timestamp(data['timestamp']), data['open'],
                    data['close'], data['high'], data['low'], data['volume'],
                    DeserializationService.deserialize(data.get('attachments')))

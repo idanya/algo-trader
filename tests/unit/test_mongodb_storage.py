@@ -15,6 +15,7 @@ class TestMongoDBStorage(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.mogodb_storage = MongoDBStorage()
+        self.mogodb_storage.__drop_collections__()
 
     def test_save_single_candle(self):
         minute_candle = generate_candle(TimeSpan.Minute, datetime.now().replace(microsecond=0))
@@ -60,4 +61,3 @@ class TestMongoDBStorage(TestCase):
         self.assertEqual(2, len(candles))
         self.assertEqual(candles[0].timestamp, minute_candle.timestamp)
         self.assertEqual(candles[1].timestamp, next_minute_candle.timestamp)
-

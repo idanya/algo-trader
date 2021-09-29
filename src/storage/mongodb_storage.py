@@ -1,11 +1,10 @@
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 
 import pymongo
 
-from entities.candle import Candle
+from entities.candle import Candle, str_to_timestamp, timestamp_to_str
 from entities.timespan import TimeSpan
-from serialization.store import DeserializationService
 from storage.storage_provider import StorageProvider
 
 DB_NAME = 'algo-trader'
@@ -21,7 +20,16 @@ class MongoDBStorage(StorageProvider):
 
     def save(self, candle: Candle):
         collection = self.db[CANDLES_COLLECTION]
-        collection.insert_one(candle.serialize())
+        collection.insert_one(self._serialize_candle(candle))
+
+    def _serialize_candle(self, candle: Candle) -> Dict:
+        data = candle.serialize()
+        data['timestamp'] = str_to_timestamp(data['timestamp'])
+        return data
+
+    def _deserialize_candle(self, data: Dict) -> Candle:
+        data['timestamp'] = timestamp_to_str(data['timestamp'])
+        return Candle.deserialize(data)
 
     def get_candles(self, symbol: str, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[
@@ -34,4 +42,7 @@ class MongoDBStorage(StorageProvider):
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 
-        return [Candle.deserialize(candle) for candle in collection.find(query).sort("timestamp")]
+        return [self._deserialize_candle(candle) for candle in collection.find(query).sort("timestamp")]
+
+    def __drop_collections__(self):
+        self.db.drop_collection(CANDLES_COLLECTION)
