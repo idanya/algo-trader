@@ -1,7 +1,10 @@
-from typing import Optional, List, Dict, Union
+from __future__ import annotations
+
+from typing import Optional, List, Dict, Union, Tuple
 
 from calc.technicals import TechnicalCalculator
 from entities.candle import Candle
+from entities.serializable import Deserializable, Serializable
 from pipeline.processor import Processor
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.shared_context import SharedContext
@@ -10,30 +13,19 @@ CONTEXT_IDENT = 'Technicals'
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
 
-class TechnicalsContextWriter:
-    def __init__(self, context: SharedContext[TechnicalsData]) -> None:
-        self.context = context
+class Indicators(Serializable, Deserializable):
+    def __init__(self) -> None:
+        super().__init__()
+        self.indicators: Dict[str, Union[List[float], float]] = {}
 
-    def save_indicator_values(self, indicator_name: str, symbol: str, values: Union[List[List[float]], List[float]]):
-        data = self.context.get_kv_data(CONTEXT_IDENT)
-        if not data:
-            data = {}
-            self.context.put_kv_data(CONTEXT_IDENT, data)
+    @classmethod
+    def deserialize(cls, data: Dict) -> Indicators:
+        obj = Indicators()
+        obj.indicators = data
+        return obj
 
-        if symbol not in data:
-            data[symbol] = {}
-
-        data[symbol][indicator_name] = values
-
-
-class TechnicalsContextReader:
-    def __init__(self, context: SharedContext[TechnicalsData]) -> None:
-        self.context = context
-
-    def get_indicator_values(self, symbol: str, indicator_name: str) -> Optional[Union[List[List[float]], List[float]]]:
-        data = self.context.get_kv_data(CONTEXT_IDENT)
-        if data:
-            return data.get(symbol, {}).get(indicator_name, None)
+    def serialize(self) -> Dict:
+        return self.indicators
 
 
 class TechnicalsProcessor(Processor):
@@ -43,19 +35,24 @@ class TechnicalsProcessor(Processor):
 
     def process(self, context: SharedContext, candle: Candle):
         cache_reader = CandleCache.context_reader(context)
-        context_writer = TechnicalsContextWriter(context)
-        symbol_candles = cache_reader.get_symbol_candles(candle.symbol)
-        calculator = TechnicalCalculator(symbol_candles)
+        symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
+        calculator = TechnicalCalculator(symbol_candles + [candle])
 
-        self._calculate(context_writer, candle.symbol, calculator)
+        candle_indicators = Indicators()
+        self._calculate(calculator, candle_indicators)
+        candle.attachments.add_attachement('indicators', candle_indicators)
+
         self.next_processor.process(context, candle)
 
     @staticmethod
-    def _calculate(context_writer: TechnicalsContextWriter, symbol: str, calculator: TechnicalCalculator):
-        context_writer.save_indicator_values('sma5', symbol, calculator.sma(5))
-        context_writer.save_indicator_values('cci7', symbol, calculator.cci(7))
-        context_writer.save_indicator_values('macd', symbol, calculator.macd(2, 5, 9))
+    def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):
+        candle_indicators.indicators['sma5'] = TechnicalsProcessor._get_last_value(calculator.sma(5))
+        candle_indicators.indicators['cci7'] = TechnicalsProcessor._get_last_value(calculator.cci(7))
+        candle_indicators.indicators['macd'] = TechnicalsProcessor._get_last_value(calculator.macd(2, 5, 9))
 
     @staticmethod
-    def context_reader(context: SharedContext[TechnicalsData]) -> TechnicalsContextReader:
-        return TechnicalsContextReader(context)
+    def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[Union[List[float], float]]:
+        if isinstance(values, tuple):
+            return [v[-1] for v in values]
+        elif isinstance(values, list) and values:
+            return values[-1]

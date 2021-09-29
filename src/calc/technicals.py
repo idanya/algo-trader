@@ -32,7 +32,7 @@ class TechnicalCalculator:
         if len(self._closes) - 1 < (period - 1) * 2:
             return []
 
-        return ti.cci(self._highs, self._lows, self._closes, period=period)
+        return ti.cci(self._highs, self._lows, self._closes, period=period).tolist()
 
     def obv(self) -> List[float]:
         return ti.obv(self._closes, self._volumes)
