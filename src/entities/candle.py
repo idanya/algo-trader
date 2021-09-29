@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional
 
+from entities.candle_attachments import CandleAttachments
+from entities.serializable import Serializable, Deserializable
 from entities.timespan import TimeSpan
+from serialization.store import DeserializationService
 
 timestamp_to_str: Callable[[datetime], str] = lambda d: d.strftime("%Y%m%d %H:%M:%S.%f")
 str_to_timestamp: Callable[[str], datetime] = lambda d: datetime.strptime(d, "%Y%m%d %H:%M:%S.%f")
 
 
-class Candle:
+class Candle(Serializable, Deserializable):
     def __init__(self, symbol: str, time_span: TimeSpan, timestamp: datetime, open: float, close: float, high: float,
-                 low: float, volume: float):
+                 low: float, volume: float, attachments: Optional[CandleAttachments] = None):
         self.symbol = symbol
         self.timestamp = timestamp
         self.time_span = time_span
@@ -21,9 +24,14 @@ class Candle:
         self.high = high
         self.low = low
         self.volume = volume
+        self.attachments = attachments or CandleAttachments()
+
+    def add_attachement(self, key: str, data: Serializable):
+        self.attachments.add_attachement(key, data)
 
     def serialize(self) -> Dict:
-        return {
+        obj = super().serialize()
+        obj.update({
             'symbol': self.symbol,
             'timestamp': timestamp_to_str(self.timestamp),
             'timespan': self.time_span.name,
@@ -32,9 +40,12 @@ class Candle:
             'high': self.high,
             'low': self.low,
             'volume': self.volume,
-        }
+            'attachments': self.attachments.serialize()
+        })
+        return obj
 
-    @staticmethod
-    def deserialize(data: Dict) -> Candle:
-        return Candle(data['symbol'], TimeSpan[data['timespan']], str_to_timestamp(data['timestamp']), data['open'],
-                      data['close'], data['high'], data['low'], data['volume'])
+    @classmethod
+    def deserialize(cls, data: Dict) -> Candle:
+        return cls(data['symbol'], TimeSpan[data['timespan']], str_to_timestamp(data['timestamp']), data['open'],
+                   data['close'], data['high'], data['low'], data['volume'],
+                   DeserializationService.deserialize(data.get('attachments')))
