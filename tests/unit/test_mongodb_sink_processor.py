@@ -1,0 +1,36 @@
+import random
+from datetime import datetime, timedelta
+from unittest import TestCase
+
+import mongomock
+
+from entities.timespan import TimeSpan
+from fakes.pipeline_validators import TerminatorValidator
+from fakes.source import FakeSource
+from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
+from pipeline.runner import PipelineRunner
+from pipeline.shared_context import SharedContext
+from storage.mongodb_storage import MongoDBStorage
+from unit import generate_candle_with_price, TEST_SYMBOL
+
+
+class TestMongoDBSinkProcessor(TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.source = FakeSource(
+            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(0, c)) for c in range(1, 50)])
+
+    @mongomock.patch(servers=(('localhost', 27017),))
+    def test(self):
+        mogodb_storage = MongoDBStorage()
+        mogodb_storage.__drop_collections__()
+
+        def _check(context: SharedContext):
+            self.assertIsNotNone(context)
+            candles = mogodb_storage.get_candles(TEST_SYMBOL, TimeSpan.Day, datetime.now() - timedelta(minutes=1),
+                                                 datetime.now())
+            self.assertEqual(49, len(candles))
+
+        validator = TerminatorValidator(_check)
+        processor = MongoDBSinkProcessor(mogodb_storage)
+        PipelineRunner(self.source, processor, validator).run()
