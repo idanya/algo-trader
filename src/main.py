@@ -1,5 +1,5 @@
-
+from pipeline.builders.loader import LoadersPipelines
 
 if __name__ == '__main__':
-    print('PyCharm')
+    LoadersPipelines.build_daily_loader().run()
 

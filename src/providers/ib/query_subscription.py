@@ -1,5 +1,4 @@
 import threading
-from datetime import datetime
 from typing import List
 
 from entities.candle import Candle
@@ -14,7 +13,6 @@ class QuerySubscription:
         self.done_event = threading.Event()
         self.candles: List[Candle] = []
         self.is_error = False
-
 
     def push_candles(self, candles: List[Candle]):
         self.candles += candles
