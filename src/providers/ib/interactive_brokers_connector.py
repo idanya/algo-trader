@@ -1,3 +1,4 @@
+import logging
 import math
 import threading
 from datetime import datetime
@@ -42,6 +43,7 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
 
     def request_symbol_history(self, symbol: str, candle_timespan: TimeSpan, from_time: datetime,
                                to_time: datetime) -> AsyncQueryResult:
+        logging.info(f'request_symbol_history :: {symbol} ...')
         async_query_result = AsyncQueryResult(from_time, to_time)
         self.tick_last_query_id += 1
         subscription = self._add_subscription(self.tick_last_query_id, symbol, candle_timespan)
