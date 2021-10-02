@@ -18,7 +18,7 @@ class StrategyProcessor(Processor):
     def process(self, context: SharedContext, candle: Candle):
         signals: List[StrategySignal] = []
         for strategy in self.strategies:
-            signals += strategy.process(candle) or []
+            signals += strategy.process(context, candle) or []
 
         if signals:
             self.signals_executor.execute(signals)

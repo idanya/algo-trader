@@ -45,7 +45,9 @@ class CandleCache(Processor):
     def process(self, context: SharedContext, candle: Candle):
         context_writer = CandleCacheContextWriter(context)
         context_writer.put_candle(candle)
-        self.next_processor.process(context, candle)
+
+        if self.next_processor:
+            self.next_processor.process(context, candle)
 
     @staticmethod
     def context_reader(context: SharedContext) -> CandleCacheContextReader:

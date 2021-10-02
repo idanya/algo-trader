@@ -10,6 +10,7 @@ from pipeline.processors.candle_cache import CandleCache
 from pipeline.shared_context import SharedContext
 
 CONTEXT_IDENT = 'Technicals'
+INDICATORS_ATTACHMENT_KEY = 'indicators'
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
 
@@ -17,6 +18,9 @@ class Indicators(Serializable, Deserializable):
     def __init__(self) -> None:
         super().__init__()
         self.indicators: Dict[str, Union[List[float], float]] = {}
+
+    def __getitem__(self, key):
+        return self.indicators[key]
 
     @classmethod
     def deserialize(cls, data: Dict) -> Indicators:
@@ -40,7 +44,7 @@ class TechnicalsProcessor(Processor):
 
         candle_indicators = Indicators()
         self._calculate(calculator, candle_indicators)
-        candle.attachments.add_attachement('indicators', candle_indicators)
+        candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, candle_indicators)
 
         self.next_processor.process(context, candle)
 

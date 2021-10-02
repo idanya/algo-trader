@@ -13,12 +13,12 @@ from unit import TEST_SYMBOL, generate_candle
 
 
 class DummyStrategy(Strategy):
-    def process(self, candle: Candle) -> List[StrategySignal]:
+    def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         return [StrategySignal(candle.symbol, SignalDirection.Long)]
 
 
 class NoSignalStrategy(Strategy):
-    def process(self, candle: Candle) -> List[StrategySignal]:
+    def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         return []
 
 
