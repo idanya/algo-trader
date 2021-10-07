@@ -26,7 +26,6 @@ class MongoDBStorage(StorageProvider):
     def save(self, candle: Candle):
         self.candles_collection.replace_one(self._serialize_candle_key(candle), self._serialize_candle(candle),
                                             upsert=True)
-        # self.candles_collection.insert_one(self._serialize_candle(candle))
 
     def _serialize_candle_key(self, candle: Candle) -> Dict:
         data = self._serialize_candle(candle)
@@ -45,11 +44,20 @@ class MongoDBStorage(StorageProvider):
         data['timestamp'] = timestamp_to_str(data['timestamp'])
         return Candle.deserialize(data)
 
-    def get_candles(self, symbol: str, time_span: TimeSpan,
-                    from_timestamp: datetime, to_timestamp: datetime) -> List[
+    def get_symbol_candles(self, symbol: str, time_span: TimeSpan,
+                           from_timestamp: datetime, to_timestamp: datetime) -> List[
         Candle]:
         query = {
             'symbol': symbol,
+            'timespan': time_span.name,
+            'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
+        }
+
+        return [self._deserialize_candle(candle) for candle in self.candles_collection.find(query).sort("timestamp")]
+
+    def get_candles(self, time_span: TimeSpan,
+                    from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
+        query = {
             'timespan': time_span.name,
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }

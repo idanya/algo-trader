@@ -12,6 +12,10 @@ class StorageProvider:
         pass
 
     @abstractmethod
-    def get_candles(self, symbol: str, time_span: TimeSpan, from_timestamp: datetime,
-                    to_timestamp: datetime) -> List[Candle]:
+    def get_symbol_candles(self, symbol: str, time_span: TimeSpan, from_timestamp: datetime,
+                           to_timestamp: datetime) -> List[Candle]:
+        pass
+
+    @abstractmethod
+    def get_candles(self, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
         pass

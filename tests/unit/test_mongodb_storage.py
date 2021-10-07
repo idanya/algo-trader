@@ -22,9 +22,9 @@ class TestMongoDBStorage(TestCase):
 
         self.mogodb_storage.save(minute_candle)
 
-        candles: List[Candle] = self.mogodb_storage.get_candles(symbol=TEST_SYMBOL, time_span=TimeSpan.Minute,
-                                                                from_timestamp=minute_candle.timestamp,
-                                                                to_timestamp=minute_candle.timestamp)
+        candles: List[Candle] = self.mogodb_storage.get_symbol_candles(symbol=TEST_SYMBOL, time_span=TimeSpan.Minute,
+                                                                       from_timestamp=minute_candle.timestamp,
+                                                                       to_timestamp=minute_candle.timestamp)
 
         self.assertEqual(1, len(candles))
         self.assertEqual(TEST_SYMBOL, candles[0].symbol)
@@ -38,9 +38,9 @@ class TestMongoDBStorage(TestCase):
         day_candle = generate_candle(TimeSpan.Day, minute_candle.timestamp.replace(microsecond=0))
         self.mogodb_storage.save(day_candle)
 
-        candles: List[Candle] = self.mogodb_storage.get_candles(symbol=TEST_SYMBOL, time_span=TimeSpan.Minute,
-                                                                from_timestamp=minute_candle.timestamp,
-                                                                to_timestamp=minute_candle.timestamp)
+        candles: List[Candle] = self.mogodb_storage.get_symbol_candles(symbol=TEST_SYMBOL, time_span=TimeSpan.Minute,
+                                                                       from_timestamp=minute_candle.timestamp,
+                                                                       to_timestamp=minute_candle.timestamp)
 
         self.assertEqual(1, len(candles))
         self.assertEqual(TimeSpan.Minute, candles[0].time_span)
@@ -54,9 +54,9 @@ class TestMongoDBStorage(TestCase):
         self.mogodb_storage.save(next_minute_candle)
         self.mogodb_storage.save(minute_candle)
 
-        candles: List[Candle] = self.mogodb_storage.get_candles(symbol=TEST_SYMBOL, time_span=TimeSpan.Minute,
-                                                                from_timestamp=minute_candle.timestamp,
-                                                                to_timestamp=next_minute_candle.timestamp)
+        candles: List[Candle] = self.mogodb_storage.get_symbol_candles(symbol=TEST_SYMBOL, time_span=TimeSpan.Minute,
+                                                                       from_timestamp=minute_candle.timestamp,
+                                                                       to_timestamp=next_minute_candle.timestamp)
 
         self.assertEqual(2, len(candles))
         self.assertEqual(candles[0].timestamp, minute_candle.timestamp)
