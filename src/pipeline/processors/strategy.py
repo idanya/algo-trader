@@ -21,7 +21,7 @@ class StrategyProcessor(Processor):
             signals += strategy.process(context, candle) or []
 
         if signals:
-            self.signals_executor.execute(signals)
+            self.signals_executor.execute(candle, signals)
 
         if self.next_processor:
             self.next_processor.process(context, candle)

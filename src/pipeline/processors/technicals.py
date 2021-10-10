@@ -31,6 +31,9 @@ class Indicators(Serializable, Deserializable):
     def serialize(self) -> Dict:
         return self.indicators
 
+    def has(self, key: str):
+        return key in self.indicators and self.indicators[key] is not None
+
 
 class TechnicalsProcessor(Processor):
 
@@ -51,6 +54,7 @@ class TechnicalsProcessor(Processor):
     @staticmethod
     def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):
         candle_indicators.indicators['sma5'] = TechnicalsProcessor._get_last_value(calculator.sma(5))
+        candle_indicators.indicators['sma20'] = TechnicalsProcessor._get_last_value(calculator.sma(20))
         candle_indicators.indicators['cci7'] = TechnicalsProcessor._get_last_value(calculator.cci(7))
         candle_indicators.indicators['macd'] = TechnicalsProcessor._get_last_value(calculator.macd(2, 5, 9))
 

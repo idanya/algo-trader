@@ -13,12 +13,12 @@ from storage.mongodb_storage import MongoDBStorage
 class LoadersPipelines:
     @staticmethod
     def build_daily_loader() -> PipelineRunner:
-        mogodb_storage = MongoDBStorage()
+        mongodb_storage = MongoDBStorage()
 
         from_time = datetime.now() - timedelta(days=500)
         source = IBHistorySource(InteractiveBrokersConnector(), ['AAPL'], TimeSpan.Day, from_time)
 
-        sink = MongoDBSinkProcessor(mogodb_storage)
+        sink = MongoDBSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
         processor = TechnicalsProcessor(cache_processor)
 

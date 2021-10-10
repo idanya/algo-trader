@@ -5,7 +5,7 @@ from unittest import TestCase
 from entities.candle import Candle
 from entities.strategy_signal import StrategySignal, SignalDirection
 from entities.timespan import TimeSpan
-from fakes.strategy_executor import FakeStrategyExecutor
+from fakes.strategy_executor import FakeSignalsExecutor
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.strategy import StrategyProcessor
 from pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
@@ -27,7 +27,7 @@ class TestSimpleSMAStrategy(TestCase):
         cache_processor = CandleCache(None)
         cache_processor.process(context, prev_candle)
 
-        processor = StrategyProcessor([SimpleSMA()], FakeStrategyExecutor(_check), None)
+        processor = StrategyProcessor([SimpleSMA()], FakeSignalsExecutor(_check), None)
         processor.process(context, current_candle)
 
     def test_short(self):
@@ -42,7 +42,7 @@ class TestSimpleSMAStrategy(TestCase):
         cache_processor = CandleCache(None)
         cache_processor.process(context, prev_candle)
 
-        processor = StrategyProcessor([SimpleSMA()], FakeStrategyExecutor(_check), None)
+        processor = StrategyProcessor([SimpleSMA()], FakeSignalsExecutor(_check), None)
         processor.process(context, current_candle)
 
     def _get_candles(self) -> Tuple[Candle, Candle]:

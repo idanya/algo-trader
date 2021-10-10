@@ -6,7 +6,7 @@ from entities.candle import Candle
 from entities.strategy import Strategy
 from entities.strategy_signal import StrategySignal, SignalDirection
 from entities.timespan import TimeSpan
-from fakes.strategy_executor import FakeStrategyExecutor
+from fakes.strategy_executor import FakeSignalsExecutor
 from pipeline.processors.strategy import StrategyProcessor
 from pipeline.shared_context import SharedContext
 from unit import TEST_SYMBOL, generate_candle
@@ -30,7 +30,7 @@ class TestStrategyProcessor(TestCase):
             self.assertEqual(TEST_SYMBOL, signals[0].symbol)
 
         candle = generate_candle(TimeSpan.Day, datetime.now())
-        processor = StrategyProcessor([DummyStrategy()], FakeStrategyExecutor(_check), None)
+        processor = StrategyProcessor([DummyStrategy()], FakeSignalsExecutor(_check), None)
         processor.process(SharedContext(), candle)
 
     def test_multiple_strategies(self):
@@ -41,7 +41,7 @@ class TestStrategyProcessor(TestCase):
                 self.assertEqual(TEST_SYMBOL, signals[i].symbol)
 
         candle = generate_candle(TimeSpan.Day, datetime.now())
-        processor = StrategyProcessor([DummyStrategy()] * 3, FakeStrategyExecutor(_check), None)
+        processor = StrategyProcessor([DummyStrategy()] * 3, FakeSignalsExecutor(_check), None)
         processor.process(SharedContext(), candle)
 
     def test_no_signal(self):
@@ -49,5 +49,5 @@ class TestStrategyProcessor(TestCase):
             self.assertEqual(0, len(signals))
 
         candle = generate_candle(TimeSpan.Day, datetime.now())
-        processor = StrategyProcessor([NoSignalStrategy()], FakeStrategyExecutor(_check), None)
+        processor = StrategyProcessor([NoSignalStrategy()], FakeSignalsExecutor(_check), None)
         processor.process(SharedContext(), candle)
