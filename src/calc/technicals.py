@@ -104,7 +104,7 @@ class TechnicalCalculator:
         if len(self._closes) < period + 1:
             return []
 
-        return ti.rsi(np.array(self._closes), period=period)
+        return ti.rsi(np.array(self._closes), period=period).tolist()
 
     def mom(self, period: int) -> List[float]:
         if len(self._closes) < period + 1:

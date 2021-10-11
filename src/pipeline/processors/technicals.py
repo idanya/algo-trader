@@ -55,8 +55,10 @@ class TechnicalsProcessor(Processor):
     def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):
         candle_indicators.indicators['sma5'] = TechnicalsProcessor._get_last_value(calculator.sma(5))
         candle_indicators.indicators['sma20'] = TechnicalsProcessor._get_last_value(calculator.sma(20))
+        candle_indicators.indicators['sma50'] = TechnicalsProcessor._get_last_value(calculator.sma(50))
         candle_indicators.indicators['cci7'] = TechnicalsProcessor._get_last_value(calculator.cci(7))
         candle_indicators.indicators['macd'] = TechnicalsProcessor._get_last_value(calculator.macd(2, 5, 9))
+        candle_indicators.indicators['rsi2'] = TechnicalsProcessor._get_last_value(calculator.rsi(2))
 
     @staticmethod
     def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[Union[List[float], float]]:

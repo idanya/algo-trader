@@ -10,7 +10,7 @@ from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.strategy import StrategyProcessor
 from pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
 from pipeline.shared_context import SharedContext
-from pipeline.strategies.simaple_sma import SimpleSMA
+from pipeline.strategies.simple_sma import SimpleSMA
 from unit import generate_candle, TEST_SYMBOL
 
 

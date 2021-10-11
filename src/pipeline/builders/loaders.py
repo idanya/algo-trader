@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from assets.assets_provider import AssetsProvider
 from entities.timespan import TimeSpan
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
@@ -15,8 +16,10 @@ class LoadersPipelines:
     def build_daily_loader() -> PipelineRunner:
         mongodb_storage = MongoDBStorage()
 
-        from_time = datetime.now() - timedelta(days=500)
-        source = IBHistorySource(InteractiveBrokersConnector(), ['AAPL'], TimeSpan.Day, from_time)
+        from_time = datetime.now() - timedelta(days=365 * 3)
+        symbols = AssetsProvider.get_sp500_symbols()
+
+        source = IBHistorySource(InteractiveBrokersConnector(), symbols, TimeSpan.Day, from_time)
 
         sink = MongoDBSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
