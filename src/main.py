@@ -5,5 +5,6 @@ from pipeline.builders.loaders import LoadersPipelines
 if __name__ == '__main__':
     setup_logger()
     # LoadersPipelines.build_daily_loader().run()
-    BacktestPipelines.build_mongodb_backtester().run()
+    # BacktestPipelines.build_mongodb_backtester().run()
+    LoadersPipelines.build_returns_calculator().run()
 

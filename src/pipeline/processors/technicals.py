@@ -29,7 +29,9 @@ class Indicators(Serializable, Deserializable):
         return obj
 
     def serialize(self) -> Dict:
-        return self.indicators
+        obj = super().serialize()
+        obj.update(self.indicators)
+        return obj
 
     def has(self, key: str):
         return key in self.indicators and self.indicators[key] is not None
@@ -49,7 +51,8 @@ class TechnicalsProcessor(Processor):
         self._calculate(calculator, candle_indicators)
         candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, candle_indicators)
 
-        self.next_processor.process(context, candle)
+        if self.next_processor:
+            self.next_processor.process(context, candle)
 
     @staticmethod
     def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):
