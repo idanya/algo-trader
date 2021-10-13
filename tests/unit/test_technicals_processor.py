@@ -8,6 +8,8 @@ from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY, Indicators
+from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor, \
+    NORMALIZED_INDICATORS_ATTACHMENT_KEY, NormalizedIndicators
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
 from unit import generate_candle_with_price
@@ -17,7 +19,7 @@ class TestTechnicalsProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(1, c)) for c in range(1, 50)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now(), c) for c in range(1, 50)])
 
     def test(self):
         def _check(context: SharedContext, candle: Candle):
@@ -44,3 +46,21 @@ class TestTechnicalsProcessor(TestCase):
         cache_processor = CandleCache(validator)
         processor = TechnicalsProcessor(cache_processor)
         PipelineRunner(self.source, processor).run()
+
+    def test_normalization(self):
+        def _check(context: SharedContext, candle: Candle):
+            self.assertIsNotNone(context)
+            context.put_kv_data('check_count', context.get_kv_data('check_count', 0) + 1)
+
+            check_count = context.get_kv_data('check_count', 0)
+            if check_count > 20:
+                indicators: NormalizedIndicators = candle.attachments.get_attachment(
+                    NORMALIZED_INDICATORS_ATTACHMENT_KEY)
+                sma5_value = indicators.get('sma5')
+                self.assertTrue(0 < sma5_value < 1)
+
+        validator = ValidationProcessor(_check)
+        cache_processor = CandleCache(validator)
+        technicals_normalizer = TechnicalsNormalizerProcessor(cache_processor)
+        technicals = TechnicalsProcessor(technicals_normalizer)
+        PipelineRunner(self.source, technicals).run()

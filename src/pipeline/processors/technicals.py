@@ -13,8 +13,10 @@ CONTEXT_IDENT = 'Technicals'
 INDICATORS_ATTACHMENT_KEY = 'indicators'
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
+IndicatorValue = Union[List[float], float]
 
-class Indicators(GenericCandleAttachment[Union[List[float], float]]):
+
+class Indicators(GenericCandleAttachment[IndicatorValue]):
     pass
 
 
@@ -48,7 +50,7 @@ class TechnicalsProcessor(Processor):
         candle_indicators.set('rsi2', TechnicalsProcessor._get_last_value(calculator.rsi(2)))
 
     @staticmethod
-    def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[Union[List[float], float]]:
+    def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[IndicatorValue]:
         if isinstance(values, tuple):
             return [v[-1] for v in values]
         elif isinstance(values, list) and values:
