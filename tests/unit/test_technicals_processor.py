@@ -1,4 +1,3 @@
-import random
 from datetime import datetime
 from unittest import TestCase
 
@@ -54,10 +53,15 @@ class TestTechnicalsProcessor(TestCase):
 
             check_count = context.get_kv_data('check_count', 0)
             if check_count > 20:
-                indicators: NormalizedIndicators = candle.attachments.get_attachment(
+                indicators: Indicators = candle.attachments.get_attachment(
+                    INDICATORS_ATTACHMENT_KEY)
+
+                normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
                     NORMALIZED_INDICATORS_ATTACHMENT_KEY)
                 sma5_value = indicators.get('sma5')
-                self.assertTrue(0 < sma5_value < 1)
+                normalized_sma5_value = normalized_indicators.get('sma5')
+                vwap = (candle.close + candle.high + candle.low) / candle.volume
+                self.assertTrue(sma5_value / vwap, normalized_sma5_value)
 
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)

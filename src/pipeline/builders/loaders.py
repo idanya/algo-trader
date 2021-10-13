@@ -6,6 +6,7 @@ from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
 from pipeline.processors.returns import ReturnsCalculatorProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
+from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
 from pipeline.reverse_source import ReverseSource
 from pipeline.runner import PipelineRunner
 from pipeline.sources.ib_history import IBHistorySource
@@ -55,6 +56,7 @@ class LoadersPipelines:
 
         sink = MongoDBSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = TechnicalsProcessor(cache_processor)
+        technical_normalizer = TechnicalsNormalizerProcessor(cache_processor)
+        technicals = TechnicalsProcessor(technical_normalizer)
 
-        return PipelineRunner(source, processor)
+        return PipelineRunner(source, technicals)
