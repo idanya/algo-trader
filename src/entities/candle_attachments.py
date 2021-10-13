@@ -31,6 +31,7 @@ class CandleAttachments(Serializable, Deserializable):
         obj = super().serialize()
 
         for k, v in self.data.items():
-            obj[k] = v.serialize()
+            if v:
+                obj[k] = v.serialize()
 
         return obj

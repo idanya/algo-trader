@@ -44,3 +44,17 @@ class LoadersPipelines:
         processor = ReturnsCalculatorProcessor(cache_processor)
 
         return PipelineRunner(source, processor)
+
+    @staticmethod
+    def build_technicals_calculator() -> PipelineRunner:
+        mongodb_storage = MongoDBStorage()
+        symbols = AssetsProvider.get_sp500_symbols()
+
+        from_time = datetime.now() - timedelta(days=365 * 2)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+
+        sink = MongoDBSinkProcessor(mongodb_storage)
+        cache_processor = CandleCache(sink)
+        processor = TechnicalsProcessor(cache_processor)
+
+        return PipelineRunner(source, processor)

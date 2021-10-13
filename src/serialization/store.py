@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import Dict, Optional
 
+from typing import Dict, Optional
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from entities.serializable import Deserializable
@@ -14,7 +15,9 @@ deserializers: Dict[str, Deserializable] = {
 class DeserializationService:
     @staticmethod
     def register(obj: Deserializable):
-        deserializers[obj.__class__.__name__] = obj
+        name = obj.__class__.__name__
+        if name not in deserializers:
+            deserializers[name] = obj
 
     @staticmethod
     def deserialize(data: Dict) -> Optional[Deserializable]:

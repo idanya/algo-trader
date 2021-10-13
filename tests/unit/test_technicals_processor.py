@@ -7,7 +7,7 @@ from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
 from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import TechnicalsProcessor, Indicators, INDICATORS_ATTACHMENT_KEY
+from pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY, Indicators
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
 from unit import generate_candle_with_price
@@ -26,17 +26,18 @@ class TestTechnicalsProcessor(TestCase):
 
             check_count = context.get_kv_data('check_count', 0)
             if check_count > 20:
-                candle_indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
-                macd_values = candle_indicators.indicators['macd']
+                candle_indicators: Indicators = candle.attachments.get_attachment(
+                    INDICATORS_ATTACHMENT_KEY)
+                macd_values = candle_indicators.get('macd')
                 self.assertEqual(len(macd_values), 3)
                 self.assertIsNotNone(macd_values[0])
                 self.assertIsNotNone(macd_values[1])
                 self.assertIsNotNone(macd_values[2])
 
-                sma5_value = candle_indicators.indicators['sma5']
+                sma5_value = candle_indicators.get('sma5')
                 self.assertTrue(sma5_value > 0)
 
-                cci7_value = candle_indicators.indicators['cci7']
+                cci7_value = candle_indicators.get('cci7')
                 self.assertIsNotNone(cci7_value)
 
         validator = ValidationProcessor(_check)

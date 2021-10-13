@@ -27,7 +27,7 @@ class TestReturnsCalculatorProcessor(TestCase):
 
             if check_count > 6:
                 candle_returns: Returns = candle.attachments.get_attachment(RETURNS_ATTACHMENT_KEY)
-                self.assertTrue('ctc1' in candle_returns.returns)
+                self.assertTrue(candle_returns.has('ctc1'))
 
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)

@@ -1,4 +1,3 @@
-import logging
 from typing import List, Optional, Dict
 
 from entities.candle import Candle
@@ -14,7 +13,6 @@ class ConnorsRSI2(Strategy):
     def __init__(self) -> None:
         self.current_position: Dict[str, Optional[SignalDirection]] = {}
 
-
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol)
@@ -25,8 +23,10 @@ class ConnorsRSI2(Strategy):
         if candle.symbol not in self.current_position:
             self.current_position[candle.symbol] = None
 
-        past_candle_indicators: Indicators = symbol_candles[-1].attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
-        current_candle_indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
+        past_candle_indicators: Indicators = symbol_candles[-1].attachments.get_attachment(
+            INDICATORS_ATTACHMENT_KEY)
+        current_candle_indicators: Indicators = candle.attachments.get_attachment(
+            INDICATORS_ATTACHMENT_KEY)
 
         if not current_candle_indicators.has('rsi2') \
                 or not current_candle_indicators.has('sma50') \
