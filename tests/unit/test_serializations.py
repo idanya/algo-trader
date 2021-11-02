@@ -2,9 +2,12 @@ from datetime import datetime
 from typing import Dict
 from unittest import TestCase
 
+from entities.bucketscontainer import BucketsContainer
 from entities.candle import Candle
 from entities.serializable import Serializable, Deserializable
 from entities.timespan import TimeSpan
+from entities.bucket import Bucket
+from serialization.store import DeserializationService
 from unit import generate_candle_with_price
 
 
@@ -52,3 +55,24 @@ class TestSerializations(TestCase):
         original_attachment = candle.attachments.get_attachment('key1')
         new_attachment = new_candle.attachments.get_attachment('key1')
         self.assertEqual(original_attachment.__class__, new_attachment.__class__)
+
+    def test_bins(self):
+        bins = BucketsContainer()
+        bins.add('x', [Bucket(ident=1, start=1, end=2)])
+        bins.add('list', [[Bucket(ident=0, start=1, end=2)], [Bucket(ident=1, start=3, end=4)]])
+
+        serialized_data = bins.serialize()
+        new_bins: BucketsContainer = DeserializationService.deserialize(serialized_data)
+
+        x = new_bins.get('x')
+        self.assertIsNotNone(x)
+        self.assertEqual(1, x[0].start)
+        self.assertEqual(2, x[0].end)
+
+        lst = new_bins.get('list')
+        self.assertIsNotNone(lst)
+        self.assertTrue(isinstance(lst[0], list))
+        self.assertEqual(1, lst[0][0].start)
+        self.assertEqual(2, lst[0][0].end)
+        self.assertEqual(3, lst[1][0].start)
+        self.assertEqual(4, lst[1][0].end)

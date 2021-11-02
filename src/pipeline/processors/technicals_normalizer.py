@@ -17,7 +17,6 @@ class NormalizedIndicators(GenericCandleAttachment[IndicatorValue]):
 
 NormalizedIndicators()
 
-# CLOSE_NORMALIZE_PREFIXES = ['sma', 'ema']
 VWAP_NORMALIZE_PREFIXES = ['sma', 'ema']
 
 NormalizeFunc = Callable[[Candle, IndicatorValue], IndicatorValue]
