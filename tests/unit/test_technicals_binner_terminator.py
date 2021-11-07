@@ -30,7 +30,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
 
     def test(self):
         cache_processor = CandleCache()
-        technicals_normalizer = TechnicalsNormalizerProcessor(cache_processor)
+        technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
         technicals = TechnicalsProcessor(technicals_normalizer)
 
         with patch("builtins.open", mock_open()) as mock_file:
@@ -62,7 +62,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
             tmpfilepath = os.path.join(tempdir, 'temp_bin_file.dat')
 
             cache_processor = CandleCache()
-            technicals_normalizer = TechnicalsNormalizerProcessor(cache_processor)
+            technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
             technicals = TechnicalsProcessor(technicals_normalizer)
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], tmpfilepath)
 
@@ -71,6 +71,6 @@ class TestTechnicalsBinnerTerminator(TestCase):
             validator = ValidationProcessor(_check)
             cache_processor = CandleCache(validator)
             matcher = TechnicalsBucketsMatcher(cache_processor, tmpfilepath)
-            technicals_normalizer = TechnicalsNormalizerProcessor(matcher)
+            technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=matcher)
             technicals = TechnicalsProcessor(technicals_normalizer)
             PipelineRunner(self.source, technicals).run()

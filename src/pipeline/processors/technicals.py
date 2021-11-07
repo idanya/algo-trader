@@ -42,6 +42,7 @@ class TechnicalsProcessor(Processor):
 
     @staticmethod
     def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):
+        candle_indicators.set('typical', TechnicalsProcessor._get_last_value(calculator.typical()))
         candle_indicators.set('sma5', TechnicalsProcessor._get_last_value(calculator.sma(5)))
         candle_indicators.set('sma20', TechnicalsProcessor._get_last_value(calculator.sma(20)))
         candle_indicators.set('sma50', TechnicalsProcessor._get_last_value(calculator.sma(50)))

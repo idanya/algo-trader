@@ -22,6 +22,9 @@ class TechnicalCalculator:
 
         return ti.sma(self._closes, period=period).tolist()
 
+    def typical(self) -> List[float]:
+        return ti.typprice(self._highs, self._lows, self._closes).tolist()
+
     def adxr(self, period: int) -> List[float]:
         if len(self._closes) < period * 2 + 3:
             return []

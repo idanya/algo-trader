@@ -65,6 +65,6 @@ class TestTechnicalsProcessor(TestCase):
 
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
-        technicals_normalizer = TechnicalsNormalizerProcessor(cache_processor)
+        technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
         technicals = TechnicalsProcessor(technicals_normalizer)
         PipelineRunner(self.source, technicals).run()
