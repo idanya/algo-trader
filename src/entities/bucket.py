@@ -30,4 +30,4 @@ class Bucket(Serializable, Deserializable):
 BucketList = List[Bucket]
 CompoundBucketList = Union[List[BucketList], BucketList]
 
-
+Bucket(0)

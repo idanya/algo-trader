@@ -32,7 +32,10 @@ class GenericCandleAttachment(Generic[T], Serializable, Deserializable):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(self._data)
+        for k, v in self._data.items():
+            if v:
+                obj[k] = v.serialize() if isinstance(v, Serializable) else v
+
         return obj
 
     def has(self, key: str):

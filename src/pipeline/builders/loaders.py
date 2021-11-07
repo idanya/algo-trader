@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 from assets.assets_provider import AssetsProvider
 from entities.timespan import TimeSpan
@@ -7,6 +8,7 @@ from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
 from pipeline.processors.returns import ReturnsCalculatorProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
+from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
 from pipeline.reverse_source import ReverseSource
 from pipeline.runner import PipelineRunner
@@ -59,11 +61,17 @@ class LoadersPipelines:
         return source
 
     @staticmethod
-    def _build_technicals_base_processor_chain() -> Processor:
+    def _build_technicals_base_processor_chain(bins_file_path: Optional[str] = None) -> Processor:
         mongodb_storage = MongoDBStorage()
         sink = MongoDBSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        technical_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
+
+        bucket_matcher: Optional[TechnicalsBucketsMatcher] = None
+        if bins_file_path:
+            bucket_matcher = TechnicalsBucketsMatcher(bins_file_path, next_processor=cache_processor)
+
+        technical_normalizer = TechnicalsNormalizerProcessor(
+            next_processor=bucket_matcher if bins_file_path else cache_processor)
         technicals = TechnicalsProcessor(technical_normalizer)
         return technicals
 
@@ -82,3 +90,11 @@ class LoadersPipelines:
         technicals_binner = TechnicalsBinner(symbols, bins_file_path)
 
         return PipelineRunner(source, technicals, technicals_binner)
+
+    @staticmethod
+    def build_technicals_with_buckets_matcher(bins_file_path: str) -> PipelineRunner:
+        source = LoadersPipelines._build_mongo_source(365)
+
+        technicals = LoadersPipelines._build_technicals_base_processor_chain(bins_file_path)
+
+        return PipelineRunner(source, technicals)

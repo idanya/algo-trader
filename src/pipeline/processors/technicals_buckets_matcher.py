@@ -21,7 +21,7 @@ IndicatorsMatchedBuckets()
 
 
 class TechnicalsBucketsMatcher(Processor):
-    def __init__(self, next_processor: Optional[Processor], bins_file_path: str) -> None:
+    def __init__(self, bins_file_path: str, next_processor: Optional[Processor]) -> None:
         super().__init__(next_processor)
 
         with open(bins_file_path) as bins_file_content:

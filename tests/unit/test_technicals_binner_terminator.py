@@ -70,7 +70,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
 
             validator = ValidationProcessor(_check)
             cache_processor = CandleCache(validator)
-            matcher = TechnicalsBucketsMatcher(cache_processor, tmpfilepath)
+            matcher = TechnicalsBucketsMatcher(tmpfilepath, cache_processor)
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=matcher)
             technicals = TechnicalsProcessor(technicals_normalizer)
             PipelineRunner(self.source, technicals).run()

@@ -7,6 +7,7 @@ from entities.serializable import Serializable, Deserializable
 from serialization.store import DeserializationService
 
 
+
 class BucketsContainer(Serializable, Deserializable):
     def __init__(self) -> None:
         super().__init__()
@@ -50,3 +51,6 @@ class BucketsContainer(Serializable, Deserializable):
                 bins.add(key, [DeserializationService.deserialize(x) for x in value])
 
         return bins
+
+
+BucketsContainer()
