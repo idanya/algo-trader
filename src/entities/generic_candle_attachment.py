@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, TypeVar, Generic, Optional, ItemsView
+from typing import Dict, TypeVar, Generic, Optional, ItemsView, Union
 
 from entities.serializable import Serializable, Deserializable
 
@@ -34,9 +34,16 @@ class GenericCandleAttachment(Generic[T], Serializable, Deserializable):
         obj = super().serialize()
         for k, v in self._data.items():
             if v:
-                obj[k] = v.serialize() if isinstance(v, Serializable) else v
+                if isinstance(v, list):
+                    obj[k] = [self._serialized_value(x) for x in v]
+                else:
+                    obj[k] = self._serialized_value(v)
 
         return obj
+
+    @staticmethod
+    def _serialized_value(value: Union[any, Serializable]):
+        return value.serialize() if isinstance(value, Serializable) else value
 
     def has(self, key: str):
         return key in self._data and self._data[key] is not None

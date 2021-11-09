@@ -45,18 +45,19 @@ class TechnicalsNormalizerProcessor(Processor):
         for indicator_name, indicator_value in indicators.items():
             if indicator_value:
                 normalized_value = self._normalize(latest_candles, indicator_name, indicator_value)
-                if normalized_value:
-                    normalized_indicators.set(indicator_name, normalized_value)
+                normalized_indicators.set(indicator_name, normalized_value)
 
         candle.attachments.add_attachement(NORMALIZED_INDICATORS_ATTACHMENT_KEY, normalized_indicators)
 
         if self.next_processor:
             self.next_processor.process(context, candle)
 
-    def _normalize(self, latest_candles: List[Candle], field_name: str, value: IndicatorValue) -> Optional[IndicatorValue]:
+    def _normalize(self, latest_candles: List[Candle], field_name: str, value: IndicatorValue) -> IndicatorValue:
         for prefix, normalizer in self.normalizers.items():
             if field_name.startswith(prefix):
                 return normalizer(latest_candles, value)
+
+        return value
 
     @staticmethod
     def _normalize_close(candle: Candle, value: IndicatorValue) -> IndicatorValue:

@@ -19,13 +19,14 @@ from pipeline.terminators.technicals_binner import TechnicalsBinner
 from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 from storage.mongodb_storage import MongoDBStorage
 
+DEFAULT_DAYS_BACK = 365 * 3
 
 class LoadersPipelines:
     @staticmethod
-    def build_daily_loader() -> PipelineRunner:
+    def build_daily_loader(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         mongodb_storage = MongoDBStorage()
 
-        from_time = datetime.now() - timedelta(days=365 * 3)
+        from_time = datetime.now() - timedelta(days=days_back)
         symbols = AssetsProvider.get_sp500_symbols()
 
         source = IBHistorySource(InteractiveBrokersConnector(), symbols, TimeSpan.Day, from_time)
@@ -37,11 +38,11 @@ class LoadersPipelines:
         return PipelineRunner(source, processor)
 
     @staticmethod
-    def build_returns_calculator() -> PipelineRunner:
+    def build_returns_calculator(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=365 * 2)
+        from_time = datetime.now() - timedelta(days=days_back)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
         source = ReverseSource(source)
 
@@ -76,14 +77,14 @@ class LoadersPipelines:
         return technicals
 
     @staticmethod
-    def build_technicals_calculator() -> PipelineRunner:
-        source = LoadersPipelines._build_mongo_source(365)
+    def build_technicals_calculator(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+        source = LoadersPipelines._build_mongo_source(days_back)
         technicals = LoadersPipelines._build_technicals_base_processor_chain()
         return PipelineRunner(source, technicals)
 
     @staticmethod
-    def build_technicals_with_buckets_calculator(bins_file_path: str) -> PipelineRunner:
-        source = LoadersPipelines._build_mongo_source(365)
+    def build_technicals_with_buckets_calculator(bins_file_path: str, days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+        source = LoadersPipelines._build_mongo_source(days_back)
         technicals = LoadersPipelines._build_technicals_base_processor_chain()
 
         symbols = AssetsProvider.get_sp500_symbols()
@@ -92,8 +93,8 @@ class LoadersPipelines:
         return PipelineRunner(source, technicals, technicals_binner)
 
     @staticmethod
-    def build_technicals_with_buckets_matcher(bins_file_path: str) -> PipelineRunner:
-        source = LoadersPipelines._build_mongo_source(365)
+    def build_technicals_with_buckets_matcher(bins_file_path: str, days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+        source = LoadersPipelines._build_mongo_source(days_back)
 
         technicals = LoadersPipelines._build_technicals_base_processor_chain(bins_file_path)
 

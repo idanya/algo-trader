@@ -50,7 +50,7 @@ class TechnicalsBucketsMatcher(Processor):
             self.next_processor.process(context, candle)
 
     def _indicator_list_match(self, values: List[float], bins: List[BucketList]) -> List[Optional[Bucket]]:
-        return [self._indicator_match(v, b) for v in values for b in bins]
+        return [self._indicator_match(values[i], bins[i]) for i in range(len(values))]
 
     def _indicator_match(self, value: float, bins: BucketList) -> Optional[Bucket]:
         for bin in bins:
