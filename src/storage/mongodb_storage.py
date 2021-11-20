@@ -23,6 +23,71 @@ class MongoDBStorage(StorageProvider):
                                               ("timestamp", pymongo.ASCENDING)],
                                              unique=True, background=True)
 
+    def get_aggregated_history(self, groupby_fields: List[str], return_field: str, min_count: int, min_avg: float) -> \
+            List[Dict[str, int]]:
+        pipeline = [
+            self._generate_existing_fields_match_stage(groupby_fields + [return_field]),
+            self._generate_group_stage(groupby_fields, return_field),
+            self._generate_min_fields_match_stage(min_count, min_avg)
+        ]
+
+        results = self.candles_collection.aggregate(pipeline)
+        matches: List[Dict[str, int]] = []
+
+        for res in results:
+            matches.append({field: value for field, value in res['_id'].items()})
+
+        return matches
+
+    def _generate_existing_fields_match_stage(self, fields: List[str]) -> object:
+        existing_fields_query = {field: {'$exists': True} for field in fields}
+        return {'$match': existing_fields_query}
+
+    def _generate_group_stage(self, groupby_fields: List[str], return_field: str) -> object:
+        return {
+            "$group": {
+                "_id": {field: f'${field}' for field in groupby_fields},
+                "avg": {'$avg': f'${return_field}'},
+                "count": {"$sum": 1},
+            }
+        }
+
+    def _generate_min_fields_match_stage(self, min_count: int, min_avg: float) -> object:
+        return {
+            '$match': {
+                "count": {'$gte': min_count},
+                "avg": {'$gte': min_avg},
+            }
+        }
+
+    # def aggregate(self, pipeline: object):
+    #     pipeline = [
+    #         {
+    #             '$match': {
+    #                 "attachments.indicators_matched_buckets.sma5.ident": {'$exists': True},
+    #                 "attachments.indicators_matched_buckets.sma20.ident": {'$exists': True},
+    #                 "attachments.returns.ctc1": {'$exists': True},
+    #             }
+    #         },
+    #         {
+    #             "$group": {
+    #                 "_id": {
+    #                     "sma5": "$attachments.indicators_matched_buckets.sma5.ident",
+    #                     "sma20": "$attachments.indicators_matched_buckets.sma20.ident"
+    #                 },
+    #                 "avg": {"$avg": "$attachments.returns.ctc1"},
+    #                 "count": {"$sum": 1},
+    #             }
+    #         },
+    #         {
+    #             '$match': {
+    #                 "count": {'$gte': 1800},
+    #                 "avg": {'$gte': 0},
+    #             }
+    #         }
+    #     ]
+    #     self.candles_collection.aggregate(pipeline)
+
     def save(self, candle: Candle):
         self.candles_collection.replace_one(self._serialize_candle_key(candle), self._serialize_candle(candle),
                                             upsert=True)

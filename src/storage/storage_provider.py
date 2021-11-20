@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 
 from entities.candle import Candle
 from entities.timespan import TimeSpan
@@ -18,4 +18,9 @@ class StorageProvider:
 
     @abstractmethod
     def get_candles(self, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
+        pass
+
+    @abstractmethod
+    def get_aggregated_history(self, groupby_fields: List[str], return_field: str, min_count: int, min_avg: float) -> \
+            List[Dict[str, int]]:
         pass
