@@ -41,6 +41,62 @@ class TestHistoryCompareStrategy(TestCase):
         mongodb_storage.save(self._get_history_candle(0.5))
 
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
+                                                                datetime.now() - timedelta(days=60),
+                                                                datetime.now(),
+                                                                indicators_to_compare=['sma5', 'sma20'],
+                                                                return_field='ctc1', min_event_count=1,
+                                                                min_avg_return=0.2)
+
+        # TODO: FakeSignalsExecutor is not called when there is not signal. make sure to fail if it's not called.
+        processor = StrategyProcessor([history_compare_strategy], FakeSignalsExecutor(_check), None)
+        processor.process(context, candle)
+
+    @mongomock.patch(servers=(('localhost', 27017),))
+    def test_no_signals(self):
+        def _check(signals: List[StrategySignal]):
+            self.fail()
+
+        candle = self._get_candle()
+
+        context = SharedContext()
+        cache_processor = CandleCache(None)
+        cache_processor.process(context, candle)
+
+        mongodb_storage = MongoDBStorage()
+        mongodb_storage.__drop_collections__()
+
+        mongodb_storage.save(self._get_history_candle(0.15))
+
+        history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
+                                                                datetime.now() - timedelta(days=60),
+                                                                datetime.now(),
+                                                                indicators_to_compare=['sma5', 'sma20'],
+                                                                return_field='ctc1', min_event_count=1,
+                                                                min_avg_return=0.2)
+
+        # TODO: FakeSignalsExecutor is not called when there is not signal. make sure to fail if it's not called.
+        processor = StrategyProcessor([history_compare_strategy], FakeSignalsExecutor(_check), None)
+        processor.process(context, candle)
+
+    @mongomock.patch(servers=(('localhost', 27017),))
+    def test_no_signal_because_timeframe(self):
+        def _check(signals: List[StrategySignal]):
+            self.fail()
+
+        candle = self._get_candle()
+
+        context = SharedContext()
+        cache_processor = CandleCache(None)
+        cache_processor.process(context, candle)
+
+        mongodb_storage = MongoDBStorage()
+        mongodb_storage.__drop_collections__()
+
+        mongodb_storage.save(self._get_history_candle(0.5))
+
+        history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
+                                                                datetime.now(),
+                                                                datetime.now(),
                                                                 indicators_to_compare=['sma5', 'sma20'],
                                                                 return_field='ctc1', min_event_count=1,
                                                                 min_avg_return=0.2)

@@ -21,6 +21,6 @@ class StorageProvider:
         pass
 
     @abstractmethod
-    def get_aggregated_history(self, groupby_fields: List[str], return_field: str, min_count: int, min_avg: float) -> \
-            List[Dict[str, int]]:
+    def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
+                               return_field: str, min_count: int, min_avg: float) -> List[Dict[str, int]]:
         pass

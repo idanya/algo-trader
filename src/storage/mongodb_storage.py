@@ -23,10 +23,11 @@ class MongoDBStorage(StorageProvider):
                                               ("timestamp", pymongo.ASCENDING)],
                                              unique=True, background=True)
 
-    def get_aggregated_history(self, groupby_fields: List[str], return_field: str, min_count: int, min_avg: float) -> \
+    def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
+                               return_field: str, min_count: int, min_avg: float) -> \
             List[Dict[str, int]]:
         pipeline = [
-            self._generate_existing_fields_match_stage(groupby_fields + [return_field]),
+            self._generate_history_match_clause(from_timestamp, to_timestamp, groupby_fields + [return_field]),
             self._generate_group_stage(groupby_fields, return_field),
             self._generate_min_fields_match_stage(min_count, min_avg)
         ]
@@ -39,11 +40,15 @@ class MongoDBStorage(StorageProvider):
 
         return matches
 
-    def _generate_existing_fields_match_stage(self, fields: List[str]) -> object:
+    @staticmethod
+    def _generate_history_match_clause(from_timestamp: datetime, to_timestamp: datetime,
+                                       fields: List[str]) -> object:
         existing_fields_query = {field: {'$exists': True} for field in fields}
+        existing_fields_query.update({'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}})
         return {'$match': existing_fields_query}
 
-    def _generate_group_stage(self, groupby_fields: List[str], return_field: str) -> object:
+    @staticmethod
+    def _generate_group_stage(groupby_fields: List[str], return_field: str) -> object:
         return {
             "$group": {
                 "_id": {field: f'${field}' for field in groupby_fields},
@@ -52,41 +57,14 @@ class MongoDBStorage(StorageProvider):
             }
         }
 
-    def _generate_min_fields_match_stage(self, min_count: int, min_avg: float) -> object:
+    @staticmethod
+    def _generate_min_fields_match_stage(min_count: int, min_avg: float) -> object:
         return {
             '$match': {
                 "count": {'$gte': min_count},
                 "avg": {'$gte': min_avg},
             }
         }
-
-    # def aggregate(self, pipeline: object):
-    #     pipeline = [
-    #         {
-    #             '$match': {
-    #                 "attachments.indicators_matched_buckets.sma5.ident": {'$exists': True},
-    #                 "attachments.indicators_matched_buckets.sma20.ident": {'$exists': True},
-    #                 "attachments.returns.ctc1": {'$exists': True},
-    #             }
-    #         },
-    #         {
-    #             "$group": {
-    #                 "_id": {
-    #                     "sma5": "$attachments.indicators_matched_buckets.sma5.ident",
-    #                     "sma20": "$attachments.indicators_matched_buckets.sma20.ident"
-    #                 },
-    #                 "avg": {"$avg": "$attachments.returns.ctc1"},
-    #                 "count": {"$sum": 1},
-    #             }
-    #         },
-    #         {
-    #             '$match': {
-    #                 "count": {'$gte': 1800},
-    #                 "avg": {'$gte': 0},
-    #             }
-    #         }
-    #     ]
-    #     self.candles_collection.aggregate(pipeline)
 
     def save(self, candle: Candle):
         self.candles_collection.replace_one(self._serialize_candle_key(candle), self._serialize_candle(candle),
