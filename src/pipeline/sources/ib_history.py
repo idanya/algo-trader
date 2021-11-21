@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Iterator, List, Optional
 
@@ -19,6 +20,9 @@ class IBHistorySource(Source):
 
     def read(self) -> Iterator[Candle]:
         for symbol in self.symbols:
-            result = self.marketProvider.request_symbol_history(symbol, self.timespan, self.from_time, self.to_time)
-            for candle in result.result():
-                yield candle
+            try:
+                result = self.marketProvider.request_symbol_history(symbol, self.timespan, self.from_time, self.to_time)
+                for candle in result.result():
+                    yield candle
+            except Exception as ex:
+                logging.warning(f'Failed to fetch symbol {symbol} history. Error: {ex}')

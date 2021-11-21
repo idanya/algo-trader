@@ -36,7 +36,7 @@ class MongoDBStorage(StorageProvider):
         matches: List[Dict[str, int]] = []
 
         for res in results:
-            matches.append({field: value for field, value in res['_id'].items()})
+            matches.append({MongoDBStorage._deserialize_group_field_name(field): value for field, value in res['_id'].items()})
 
         return matches
 
@@ -51,11 +51,19 @@ class MongoDBStorage(StorageProvider):
     def _generate_group_stage(groupby_fields: List[str], return_field: str) -> object:
         return {
             "$group": {
-                "_id": {field: f'${field}' for field in groupby_fields},
+                "_id": {MongoDBStorage._serialize_group_field_name(field): f'${field}' for field in groupby_fields},
                 "avg": {'$avg': f'${return_field}'},
                 "count": {"$sum": 1},
             }
         }
+
+    @staticmethod
+    def _serialize_group_field_name(field: str) -> str:
+        return field.replace('.', '*')
+
+    @staticmethod
+    def _deserialize_group_field_name(field: str) -> str:
+        return field.replace('*', '.')
 
     @staticmethod
     def _generate_min_fields_match_stage(min_count: int, min_avg: float) -> object:
@@ -96,7 +104,8 @@ class MongoDBStorage(StorageProvider):
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 
-        return [self._deserialize_candle(candle) for candle in self.candles_collection.find(query).sort("timestamp")]
+        return [self._deserialize_candle(candle) for candle in
+                self.candles_collection.find(query).sort("timestamp").allow_disk_use(True)]
 
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
@@ -105,7 +114,8 @@ class MongoDBStorage(StorageProvider):
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 
-        return [self._deserialize_candle(candle) for candle in self.candles_collection.find(query).sort("timestamp")]
+        return [self._deserialize_candle(candle) for candle in
+                self.candles_collection.find(query).sort("timestamp").allow_disk_use(True)]
 
     def __drop_collections__(self):
         self.db.drop_collection(CANDLES_COLLECTION)

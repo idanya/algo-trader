@@ -8,6 +8,8 @@ if __name__ == '__main__':
     # BacktestPipelines.build_mongodb_backtester().run()
     # LoadersPipelines.build_technicals_calculator().run()
     # LoadersPipelines.build_returns_calculator().run()
+
     # LoadersPipelines.build_technicals_with_buckets_calculator('bins.json').run()
-    LoadersPipelines.build_technicals_with_buckets_matcher('bins.json').run()
+    # LoadersPipelines.build_technicals_with_buckets_matcher('bins.json').run()
+    BacktestPipelines.build_mongodb_history_buckets_backtester('bins.json').run()
 

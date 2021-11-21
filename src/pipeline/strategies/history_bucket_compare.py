@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 
 from entities.candle import Candle
 from entities.strategy import Strategy
@@ -27,9 +27,13 @@ class HistoryBucketCompareStrategy(Strategy):
         indicators_buckets: IndicatorsMatchedBuckets = \
             candle.attachments.get_attachment(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY)
 
-        candle_buckets_map = {
-            f'attachments.indicators_matched_buckets.{indicator}.ident': indicators_buckets.get(indicator).ident
-            for indicator in self.indicators_to_compare}
+        candle_buckets_map: Dict[str, int] = {}
+        for indicator in self.indicators_to_compare:
+            if not indicators_buckets.has(indicator):
+                return []
+
+            candle_buckets_map[f'attachments.indicators_matched_buckets.{indicator}.ident'] = indicators_buckets.get(
+                indicator).ident
 
         for matcher in self.matchers:
             for candle_ind, candle_val in candle_buckets_map.items():
