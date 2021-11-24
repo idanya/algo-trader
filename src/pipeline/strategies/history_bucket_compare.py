@@ -36,8 +36,12 @@ class HistoryBucketCompareStrategy(Strategy):
                 indicator).ident
 
         for matcher in self.matchers:
+            match = True
             for candle_ind, candle_val in candle_buckets_map.items():
                 if matcher[candle_ind] != candle_val:
-                    continue
+                    match = False
 
-            return [StrategySignal(candle.symbol, SignalDirection.Long)]
+            if match:
+                return [StrategySignal(candle.symbol, SignalDirection.Long)]
+
+        return []

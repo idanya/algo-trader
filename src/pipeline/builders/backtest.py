@@ -42,9 +42,14 @@ class BacktestPipelines:
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
                                                                 from_time,
                                                                 datetime.now(),
-                                                                indicators_to_compare=['sma5', 'sma20'],
+                                                                indicators_to_compare=['sma5', 'sma20', 'sma50',
+                                                                                       'cci7', 'cci14',
+                                                                                       'rsi2', 'rsi7', 'rsi14', 'adxr5',
+                                                                                       'stddev5',
+                                                                                       'ema5', 'ema20', 'ema50', 'mom5',
+                                                                                       'natr5'],
                                                                 return_field='ctc1', min_event_count=100,
-                                                                min_avg_return=0.2)
+                                                                min_avg_return=0.5)
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)

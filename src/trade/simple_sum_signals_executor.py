@@ -5,6 +5,8 @@ from entities.candle import Candle
 from entities.strategy_signal import StrategySignal, SignalDirection
 from trade.signals_executor import SignalsExecutor
 
+DEFAULT_ORDER_VALUE = 10000
+
 
 class SimpleSumSignalsExecutor(SignalsExecutor):
 
@@ -12,19 +14,38 @@ class SimpleSumSignalsExecutor(SignalsExecutor):
         self.position: Dict[str, float] = {}
         self.cash = 0
 
+    def _get_order_size(self, price: float) -> int:
+        return int(DEFAULT_ORDER_VALUE / price)
+
     def execute(self, candle: Candle, signals: List[StrategySignal]):
+        # close when there is no signal
+        if len(signals) == 0 and candle.symbol in self.position and self.position[candle.symbol] != 0:
+
+            if self.position[candle.symbol] > 0:
+                self.cash += candle.close * self.position[candle.symbol]
+            else:
+                self.cash -= candle.close * self.position[candle.symbol]
+
+            self.position[candle.symbol] = 0
+
         for signal in signals:
             logging.info(f"Got {signal.direction} signal for {signal.symbol}. Signaling candle: {candle.serialize()}")
 
             if signal.symbol not in self.position:
                 self.position[signal.symbol] = 0
 
-            if signal.direction == SignalDirection.Long:
-                self.position[signal.symbol] += 1
-                self.cash -= candle.close
-            else:
-                self.position[signal.symbol] -= 1
-                self.cash += candle.close
+            # don't act if we already have a position
+            if self.position[signal.symbol] != 0:
+                continue
 
-        logging.info(f"Position:\n {self.position}")
-        logging.info(f"Cash: {self.cash}")
+            order_size = self._get_order_size(candle.close)
+
+            if signal.direction == SignalDirection.Long:
+                self.position[signal.symbol] += order_size
+                self.cash -= candle.close * order_size
+            else:
+                self.position[signal.symbol] -= order_size
+                self.cash += candle.close * order_size
+
+        non_zero_postitions = {k: v for k, v in self.position.items() if v > 0}
+        logging.info(f"Position: {non_zero_postitions} | Cash: {self.cash}")

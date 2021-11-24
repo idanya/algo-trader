@@ -29,7 +29,7 @@ class TechnicalCalculator:
         if len(self._closes) < period * 2 + 3:
             return []
 
-        return ti.adxr(self._highs, self._lows, self._closes, period=period)
+        return ti.adxr(self._highs, self._lows, self._closes, period=period).tolist()
 
     def cci(self, period: int) -> List[float]:
         if len(self._closes) - 1 < (period - 1) * 2:
@@ -44,7 +44,7 @@ class TechnicalCalculator:
         if len(self._closes) < period:
             return []
 
-        return ti.natr(self._highs, self._lows, self._closes, period=period)
+        return ti.natr(self._highs, self._lows, self._closes, period=period).tolist()
 
     def stoch(self, k_period: int, k_slow_period: int, d_period: int) -> List[List[float]]:
         if len(self._closes) - 1 < k_period + k_slow_period + 1:
@@ -68,7 +68,7 @@ class TechnicalCalculator:
         if len(self._closes) < period:
             return []
 
-        return ti.ema(self._closes, period=period)
+        return ti.ema(self._closes, period=period).tolist()
 
     def var(self, period: int) -> List[float]:
         if len(self._closes) < period:
@@ -76,11 +76,11 @@ class TechnicalCalculator:
 
         return ti.var(self._closes, period=period)
 
-    def stddev(self, values: List[float], period: int) -> List[float]:
-        if len(values) < period:
+    def stddev(self, period: int) -> List[float]:
+        if len(self._closes) < period:
             return []
 
-        return ti.stddev(np.array(values), period=period)
+        return ti.stddev(np.array(self._closes), period=period).tolist()
 
     def meandev(self, values: List[float], period: int) -> List[float]:
         if len(values) < period:
@@ -113,7 +113,7 @@ class TechnicalCalculator:
         if len(self._closes) < period + 1:
             return []
 
-        return ti.mom(np.array(self._closes), period=period)
+        return ti.mom(np.array(self._closes), period=period).tolist()
 
     def vosc(self, short_period: int, long_period: int) -> List[float]:
         if len(self._volumes) < long_period + 1:

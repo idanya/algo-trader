@@ -47,8 +47,18 @@ class TechnicalsProcessor(Processor):
         candle_indicators.set('sma20', TechnicalsProcessor._get_last_value(calculator.sma(20)))
         candle_indicators.set('sma50', TechnicalsProcessor._get_last_value(calculator.sma(50)))
         candle_indicators.set('cci7', TechnicalsProcessor._get_last_value(calculator.cci(7)))
+        candle_indicators.set('cci14', TechnicalsProcessor._get_last_value(calculator.cci(14)))
         candle_indicators.set('macd', TechnicalsProcessor._get_last_value(calculator.macd(2, 5, 9)))
         candle_indicators.set('rsi2', TechnicalsProcessor._get_last_value(calculator.rsi(2)))
+        candle_indicators.set('rsi7', TechnicalsProcessor._get_last_value(calculator.rsi(7)))
+        candle_indicators.set('rsi14', TechnicalsProcessor._get_last_value(calculator.rsi(14)))
+        candle_indicators.set('adxr5', TechnicalsProcessor._get_last_value(calculator.adxr(5)))
+        candle_indicators.set('stddev5', TechnicalsProcessor._get_last_value(calculator.stddev(5)))
+        candle_indicators.set('ema5', TechnicalsProcessor._get_last_value(calculator.ema(5)))
+        candle_indicators.set('ema20', TechnicalsProcessor._get_last_value(calculator.ema(20)))
+        candle_indicators.set('ema50', TechnicalsProcessor._get_last_value(calculator.ema(50)))
+        candle_indicators.set('mom5', TechnicalsProcessor._get_last_value(calculator.mom(5)))
+        candle_indicators.set('natr5', TechnicalsProcessor._get_last_value(calculator.natr(5)))
 
     @staticmethod
     def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[IndicatorValue]:
