@@ -74,7 +74,7 @@ class TechnicalCalculator:
         if len(self._closes) < period:
             return []
 
-        return ti.var(self._closes, period=period)
+        return ti.var(self._closes, period=period).tolist()
 
     def stddev(self, period: int) -> List[float]:
         if len(self._closes) < period:
@@ -82,11 +82,11 @@ class TechnicalCalculator:
 
         return ti.stddev(np.array(self._closes), period=period).tolist()
 
-    def meandev(self, values: List[float], period: int) -> List[float]:
-        if len(values) < period:
+    def meandev(self, period: int) -> List[float]:
+        if len(self._closes) < period:
             return []
 
-        return ti.md(np.array(values), period=period)
+        return ti.md(np.array(self._closes), period=period).tolist()
 
     def macd(self, short_period: int, long_period: int, signal_period: int) -> List[float]:
 
@@ -119,4 +119,4 @@ class TechnicalCalculator:
         if len(self._volumes) < long_period + 1:
             return []
 
-        return ti.vosc(self._volumes, short_period, long_period)
+        return ti.vosc(self._volumes, short_period, long_period).tolist()

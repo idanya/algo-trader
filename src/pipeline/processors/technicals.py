@@ -59,6 +59,10 @@ class TechnicalsProcessor(Processor):
         candle_indicators.set('ema50', TechnicalsProcessor._get_last_value(calculator.ema(50)))
         candle_indicators.set('mom5', TechnicalsProcessor._get_last_value(calculator.mom(5)))
         candle_indicators.set('natr5', TechnicalsProcessor._get_last_value(calculator.natr(5)))
+        candle_indicators.set('meandev5', TechnicalsProcessor._get_last_value(calculator.meandev(5)))
+        candle_indicators.set('obv', TechnicalsProcessor._get_last_value(calculator.obv()))
+        candle_indicators.set('var5', TechnicalsProcessor._get_last_value(calculator.var(5)))
+        candle_indicators.set('vosc', TechnicalsProcessor._get_last_value(calculator.vosc(2, 5)))
 
     @staticmethod
     def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[IndicatorValue]:

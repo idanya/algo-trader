@@ -47,9 +47,10 @@ class BacktestPipelines:
                                                                                        'rsi2', 'rsi7', 'rsi14', 'adxr5',
                                                                                        'stddev5',
                                                                                        'ema5', 'ema20', 'ema50', 'mom5',
-                                                                                       'natr5'],
-                                                                return_field='ctc1', min_event_count=100,
-                                                                min_avg_return=0.5)
+                                                                                       'natr5', 'meandev5', 'obv',
+                                                                                       'var5', 'vosc'],
+                                                                return_field='ctc1', min_event_count=30,
+                                                                min_avg_return=0.2)
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)

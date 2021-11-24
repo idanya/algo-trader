@@ -61,6 +61,10 @@ class TechnicalsBinner(Terminator):
     @staticmethod
     def _get_single_float_bins(values: List[float]) -> List[Bucket]:
         values.sort()
+
+        margins = int(len(values) * 0.05)
+        values = values[margins:len(values) - margins]
+
         step_size = int(math.floor(len(values) / BUCKET_COUNT))
 
         bins: List[Bucket] = [Bucket(ident=0, end=values[0])]
