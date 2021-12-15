@@ -49,8 +49,7 @@ class TechnicalsNormalizerProcessor(Processor):
 
         candle.attachments.add_attachement(NORMALIZED_INDICATORS_ATTACHMENT_KEY, normalized_indicators)
 
-        if self.next_processor:
-            self.next_processor.process(context, candle)
+        super().process(context, candle)
 
     def _normalize(self, latest_candles: List[Candle], field_name: str, value: IndicatorValue) -> IndicatorValue:
         for prefix, normalizer in self.normalizers.items():

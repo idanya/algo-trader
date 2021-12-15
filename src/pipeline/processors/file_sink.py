@@ -16,8 +16,7 @@ class FileSinkProcessor(Processor):
             line = self._generate_candle_output(context, candle)
             output_file.write(f'{line}\n')
 
-        if self.next_processor:
-            self.next_processor.process(context, candle)
+        super().process(context, candle)
 
     def _generate_candle_output(self, context: SharedContext, candle: Candle) -> str:
         return json.dumps(candle.serialize())

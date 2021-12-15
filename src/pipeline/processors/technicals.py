@@ -37,8 +37,7 @@ class TechnicalsProcessor(Processor):
         self._calculate(calculator, candle_indicators)
         candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, candle_indicators)
 
-        if self.next_processor:
-            self.next_processor.process(context, candle)
+        super().process(context, candle)
 
     @staticmethod
     def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):

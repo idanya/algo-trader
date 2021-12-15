@@ -14,7 +14,7 @@ from pipeline.processors.technicals_normalizer import NormalizedIndicators, NORM
 from pipeline.shared_context import SharedContext
 from pipeline.terminator import Terminator
 
-BUCKET_COUNT = 4
+BUCKET_COUNT = 7
 
 
 class TechnicalsBinner(Terminator):

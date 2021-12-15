@@ -46,8 +46,7 @@ class TechnicalsBucketsMatcher(Processor):
 
         candle.attachments.add_attachement(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, matched_buckets)
 
-        if self.next_processor:
-            self.next_processor.process(context, candle)
+        super().process(context, candle)
 
     def _indicator_list_match(self, values: List[float], bins: List[BucketList]) -> List[Optional[Bucket]]:
         return [self._indicator_match(values[i], bins[i]) for i in range(len(values))]

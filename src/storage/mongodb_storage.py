@@ -32,11 +32,12 @@ class MongoDBStorage(StorageProvider):
             self._generate_min_fields_match_stage(min_count, min_avg)
         ]
 
-        results = self.candles_collection.aggregate(pipeline)
+        results = self.candles_collection.aggregate(pipeline, allowDiskUse=True)
         matches: List[Dict[str, int]] = []
 
         for res in results:
-            matches.append({MongoDBStorage._deserialize_group_field_name(field): value for field, value in res['_id'].items()})
+            matches.append(
+                {MongoDBStorage._deserialize_group_field_name(field): value for field, value in res['_id'].items()})
 
         return matches
 
@@ -105,7 +106,7 @@ class MongoDBStorage(StorageProvider):
         }
 
         return [self._deserialize_candle(candle) for candle in
-                self.candles_collection.find(query).sort("timestamp").allow_disk_use(True)]
+                self.candles_collection.find(query, allow_disk_use=True).sort("timestamp")]
 
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
@@ -115,7 +116,7 @@ class MongoDBStorage(StorageProvider):
         }
 
         return [self._deserialize_candle(candle) for candle in
-                self.candles_collection.find(query).sort("timestamp").allow_disk_use(True)]
+                self.candles_collection.find(query, allow_disk_use=True).sort("timestamp")]
 
     def __drop_collections__(self):
         self.db.drop_collection(CANDLES_COLLECTION)

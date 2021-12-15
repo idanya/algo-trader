@@ -14,5 +14,4 @@ class MongoDBSinkProcessor(Processor):
 
     def process(self, context: SharedContext, candle: Candle):
         self.mongo_storage.save(candle)
-        if self.next_processor:
-            self.next_processor.process(context, candle)
+        super().process(context, candle)

@@ -4,6 +4,7 @@ from abc import abstractmethod
 from typing import Optional
 
 from entities.candle import Candle
+from entities.event import Event
 from pipeline.shared_context import SharedContext
 
 
@@ -13,4 +14,11 @@ class Processor:
 
     @abstractmethod
     def process(self, context: SharedContext, candle: Candle):
-        pass
+        if self.next_processor:
+            self.next_processor.process(context, candle)
+
+    @abstractmethod
+    def event(self, context: SharedContext, event: Event):
+        if self.next_processor:
+            self.next_processor.event(context, event)
+

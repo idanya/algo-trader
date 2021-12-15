@@ -36,21 +36,21 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=365 * 1)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+        backtest_from_time = datetime.now() - timedelta(days=30 * 4)
+        data_from_time = datetime.now() - timedelta(days=365 * 3)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time)
 
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
-                                                                from_time,
+                                                                data_from_time,
                                                                 datetime.now(),
-                                                                indicators_to_compare=['sma5', 'sma20', 'sma50',
+                                                                indicators_to_compare=['sma5', 'sma20',
                                                                                        'cci7', 'cci14',
-                                                                                       'rsi2', 'rsi7', 'rsi14', 'adxr5',
+                                                                                       'rsi2', 'rsi7', 'rsi14',
                                                                                        'stddev5',
-                                                                                       'ema5', 'ema20', 'ema50', 'mom5',
-                                                                                       'natr5', 'meandev5', 'obv',
-                                                                                       'var5', 'vosc'],
-                                                                return_field='ctc1', min_event_count=30,
-                                                                min_avg_return=0.2)
+                                                                                       'var5', 'ema5',
+                                                                                       'ema20', 'mom5'],
+                                                                return_field='ctc1', min_event_count=70,
+                                                                min_avg_return=0.3)
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)

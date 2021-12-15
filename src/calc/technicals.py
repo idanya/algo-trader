@@ -38,7 +38,7 @@ class TechnicalCalculator:
         return ti.cci(self._highs, self._lows, self._closes, period=period).tolist()
 
     def obv(self) -> List[float]:
-        return ti.obv(self._closes, self._volumes)
+        return ti.obv(self._closes, self._volumes).tolist()
 
     def natr(self, period: int) -> List[float]:
         if len(self._closes) < period:
