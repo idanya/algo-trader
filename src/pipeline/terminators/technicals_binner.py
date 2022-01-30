@@ -1,29 +1,27 @@
 from __future__ import annotations
 
 import json
+import math
 from typing import List, Dict, Tuple
 
-import math
-
+from entities.bucket import Bucket
 from entities.bucketscontainer import BucketsContainer
 from entities.candle import Candle
-from entities.bucket import Bucket
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import IndicatorValue
 from pipeline.processors.technicals_normalizer import NormalizedIndicators, NORMALIZED_INDICATORS_ATTACHMENT_KEY
 from pipeline.shared_context import SharedContext
 from pipeline.terminator import Terminator
 
-BUCKET_COUNT = 7
-
 
 class TechnicalsBinner(Terminator):
-    def __init__(self, symbols: List[str], output_file_path: str) -> None:
+    def __init__(self, symbols: List[str], bins_count: int, output_file_path: str) -> None:
         super().__init__()
         self.symbols = symbols
         self.output_file_path = output_file_path
         self.values: Dict[str, List[IndicatorValue]] = {}
         self.bins = BucketsContainer()
+        self.bins_count = bins_count
 
     def terminate(self, context: SharedContext):
         cache_reader = CandleCache.context_reader(context)
@@ -58,14 +56,13 @@ class TechnicalsBinner(Terminator):
 
                 self.bins.add(indicator, bins)
 
-    @staticmethod
-    def _get_single_float_bins(values: List[float]) -> List[Bucket]:
+    def _get_single_float_bins(self, values: List[float]) -> List[Bucket]:
         values.sort()
 
         margins = int(len(values) * 0.05)
         values = values[margins:len(values) - margins]
 
-        step_size = int(math.floor(len(values) / BUCKET_COUNT))
+        step_size = int(math.floor(len(values) / self.bins_count))
 
         bins: List[Bucket] = [Bucket(ident=0, end=values[0])]
 

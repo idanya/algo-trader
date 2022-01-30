@@ -1,3 +1,4 @@
+from abc import ABC
 from datetime import datetime
 from typing import Optional
 
@@ -9,7 +10,6 @@ from pipeline.shared_context import SharedContext
 
 
 class TimeSpanChangeProcessor(Processor):
-
     def __init__(self, timespan: TimeSpan, next_processor: Optional[Processor]) -> None:
         super().__init__(next_processor)
         self.timespan = timespan

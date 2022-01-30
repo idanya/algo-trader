@@ -37,21 +37,21 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        backtest_from_time = datetime.now() - timedelta(days=30 * 4)
+        backtest_from_time = datetime.now() - timedelta(days=30 * 6)
         data_from_time = datetime.now() - timedelta(days=365 * 3)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time)
 
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
                                                                 data_from_time,
-                                                                datetime.now(),
+                                                                backtest_from_time,
                                                                 indicators_to_compare=['sma5', 'sma20',
                                                                                        'cci7', 'cci14',
                                                                                        'rsi2', 'rsi7', 'rsi14',
                                                                                        'stddev5',
                                                                                        'var5', 'ema5',
                                                                                        'ema20', 'mom5'],
-                                                                return_field='ctc1', min_event_count=70,
-                                                                min_avg_return=0.3)
+                                                                return_field='ctc1', min_event_count=100,
+                                                                min_avg_return=0.2)
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)
@@ -77,7 +77,7 @@ class BacktestPipelines:
                                                                                           'cci7', 'cci14',
                                                                                           'rsi2', 'rsi7',
                                                                                           'stddev5', 'ema5', 'ema20'],
-                                                                   return_field='ctc1', min_event_count=80,
+                                                                   return_field='ctc1', min_event_count=50,
                                                                    min_avg_return=0.3)
 
         cache_processor = CandleCache()

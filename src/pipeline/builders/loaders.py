@@ -21,6 +21,7 @@ from storage.mongodb_storage import MongoDBStorage
 
 DEFAULT_DAYS_BACK = 365 * 3
 
+
 class LoadersPipelines:
     @staticmethod
     def build_daily_loader(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
@@ -83,17 +84,19 @@ class LoadersPipelines:
         return PipelineRunner(source, technicals)
 
     @staticmethod
-    def build_technicals_with_buckets_calculator(bins_file_path: str, days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+    def build_technicals_with_buckets_calculator(bins_file_path: str, bins_count: int,
+                                                 days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         source = LoadersPipelines._build_mongo_source(days_back)
         technicals = LoadersPipelines._build_technicals_base_processor_chain()
 
         symbols = AssetsProvider.get_sp500_symbols()
-        technicals_binner = TechnicalsBinner(symbols, bins_file_path)
+        technicals_binner = TechnicalsBinner(symbols, bins_count, bins_file_path)
 
         return PipelineRunner(source, technicals, technicals_binner)
 
     @staticmethod
-    def build_technicals_with_buckets_matcher(bins_file_path: str, days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+    def build_technicals_with_buckets_matcher(bins_file_path: str,
+                                              days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         source = LoadersPipelines._build_mongo_source(days_back)
 
         technicals = LoadersPipelines._build_technicals_base_processor_chain(bins_file_path)
