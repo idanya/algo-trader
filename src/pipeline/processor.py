@@ -17,7 +17,10 @@ class Processor:
         if self.next_processor:
             self.next_processor.process(context, candle)
 
+    def reprocess(self, context: SharedContext, candle: Candle):
+        if self.next_processor:
+            self.next_processor.reprocess(context, candle)
+
     def event(self, context: SharedContext, event: Event):
         if self.next_processor:
             self.next_processor.event(context, event)
-

@@ -4,9 +4,12 @@ import json
 import math
 from typing import List, Dict, Tuple
 
+import numpy
+
 from entities.bucket import Bucket
 from entities.bucketscontainer import BucketsContainer
 from entities.candle import Candle
+from pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import IndicatorValue
 from pipeline.processors.technicals_normalizer import NormalizedIndicators, NORMALIZED_INDICATORS_ATTACHMENT_KEY
@@ -43,6 +46,15 @@ class TechnicalsBinner(Terminator):
                 self.values[indicator] = []
 
             self.values[indicator].append(value)
+
+        asset_correlation: AssetCorrelation = candle.attachments.get_attachment(
+            CORRELATIONS_ATTACHMENT_KEY)
+        if asset_correlation:
+            values = []
+            for s, v in asset_correlation.items():
+                values.append(v)
+
+            self.values['avg_correlation'] = numpy.average(values)
 
     def _calculate_bins(self):
         for indicator, values in self.values.items():

@@ -36,11 +36,27 @@ class CandleCacheContextReader:
         if data and symbol in data:
             return data[symbol]
 
+    def get_symbols_list(self) -> Optional[List[str]]:
+        data = self.context.get_kv_data(CONTEXT_IDENT)
+        if data:
+            return list(data.keys())
+
 
 class CandleCache(Processor):
     def __init__(self, next_processor: Optional[Processor] = None) -> None:
         super().__init__(next_processor)
         self.data: CacheData = {}
+
+    def reprocess(self, context: SharedContext, candle: Candle):
+        context_reader = CandleCacheContextReader(context)
+        candles = context_reader.get_symbol_candles(candle.symbol)
+
+        for i in range(len(candles)):
+            if candles[i].timestamp == candle.timestamp:
+                candles[i] = candle
+                break
+
+        super().reprocess(context, candle)
 
     def process(self, context: SharedContext, candle: Candle):
         context_writer = CandleCacheContextWriter(context)

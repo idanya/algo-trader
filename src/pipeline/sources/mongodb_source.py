@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Iterator, List, Optional
 
@@ -8,6 +9,7 @@ from storage.mongodb_storage import MongoDBStorage
 
 
 class MongoDBSource(Source):
+    logger = logging.getLogger('MongoDBSource')
 
     def __init__(self, mongo_storage: MongoDBStorage, symbols: List[str], timespan: TimeSpan,
                  from_time: datetime, to_time: Optional[datetime] = datetime.now()) -> None:
@@ -18,7 +20,9 @@ class MongoDBSource(Source):
         self.symbols = symbols
 
     def read(self) -> Iterator[Candle]:
+        self.logger.info('Fetching candles from mongo source...')
         all_candles = self.mongo_storage.get_candles(self.timespan, self.from_time, self.to_time)
+        self.logger.info('Got candles, starting iteration')
         for c in all_candles:
             if c.symbol in self.symbols:
                 yield c

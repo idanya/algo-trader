@@ -4,12 +4,14 @@ from typing import Optional
 from assets.assets_provider import AssetsProvider
 from entities.timespan import TimeSpan
 from pipeline.processor import Processor
+from pipeline.processors.assets_correlation import AssetCorrelationProcessor
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
 from pipeline.processors.returns import ReturnsCalculatorProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
+from pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from pipeline.reverse_source import ReverseSource
 from pipeline.runner import PipelineRunner
 from pipeline.source import Source
@@ -19,7 +21,7 @@ from pipeline.terminators.technicals_binner import TechnicalsBinner
 from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 from storage.mongodb_storage import MongoDBStorage
 
-DEFAULT_DAYS_BACK = 365 * 3
+DEFAULT_DAYS_BACK = 365 * 1
 
 
 class LoadersPipelines:
@@ -63,19 +65,26 @@ class LoadersPipelines:
         return source
 
     @staticmethod
-    def _build_technicals_base_processor_chain(bins_file_path: Optional[str] = None) -> Processor:
+    def _build_technicals_base_processor_chain(bins_file_path: Optional[str] = None,
+                                               correlations_file_path: Optional[str] = None) -> Processor:
         mongodb_storage = MongoDBStorage()
         sink = MongoDBSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
 
-        bucket_matcher: Optional[TechnicalsBucketsMatcher] = None
-        if bins_file_path:
-            bucket_matcher = TechnicalsBucketsMatcher(bins_file_path, next_processor=cache_processor)
+        latest_processor = cache_processor
 
-        technical_normalizer = TechnicalsNormalizerProcessor(
-            next_processor=bucket_matcher if bins_file_path else cache_processor)
+        if bins_file_path:
+            bucket_matcher = TechnicalsBucketsMatcher(bins_file_path, next_processor=latest_processor)
+            latest_processor = bucket_matcher
+
+        if correlations_file_path:
+            asset_correlation = AssetCorrelationProcessor(correlations_file_path, next_processor=latest_processor)
+            latest_processor = asset_correlation
+
+        technical_normalizer = TechnicalsNormalizerProcessor(next_processor=latest_processor)
         technicals = TechnicalsProcessor(technical_normalizer)
-        return technicals
+        timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, technicals)
+        return timespan_change_processor
 
     @staticmethod
     def build_technicals_calculator(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
@@ -85,9 +94,11 @@ class LoadersPipelines:
 
     @staticmethod
     def build_technicals_with_buckets_calculator(bins_file_path: str, bins_count: int,
+                                                 correlations_file_path: str,
                                                  days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         source = LoadersPipelines._build_mongo_source(days_back)
-        technicals = LoadersPipelines._build_technicals_base_processor_chain()
+        technicals = LoadersPipelines._build_technicals_base_processor_chain(
+            correlations_file_path=correlations_file_path)
 
         symbols = AssetsProvider.get_sp500_symbols()
         technicals_binner = TechnicalsBinner(symbols, bins_count, bins_file_path)
@@ -96,6 +107,7 @@ class LoadersPipelines:
 
     @staticmethod
     def build_technicals_with_buckets_matcher(bins_file_path: str,
+                                              correlations_file_path: str,
                                               days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         source = LoadersPipelines._build_mongo_source(days_back)
 

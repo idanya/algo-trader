@@ -9,7 +9,7 @@ from pipeline.processor import Processor
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.shared_context import SharedContext
 
-CONTEXT_IDENT = 'Technicals'
+
 INDICATORS_ATTACHMENT_KEY = 'indicators'
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
