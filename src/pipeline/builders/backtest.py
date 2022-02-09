@@ -46,11 +46,10 @@ class BacktestPipelines:
                                                                 backtest_from_time,
                                                                 indicators_to_compare=['sma5', 'sma20',
                                                                                        'cci7', 'cci14',
-                                                                                       'rsi2', 'rsi7', 'rsi14',
-                                                                                       'stddev5',
-                                                                                       'var5', 'ema5',
-                                                                                       'ema20', 'mom5'],
-                                                                return_field='ctc1', min_event_count=100,
+                                                                                       'rsi7', 'rsi14',
+                                                                                       'stddev5', 'ema5',
+                                                                                       'ema20', 'correlation'],
+                                                                return_field='ctc1', min_event_count=50,
                                                                 min_avg_return=0.2)
 
         cache_processor = CandleCache()

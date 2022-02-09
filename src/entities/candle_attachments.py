@@ -25,7 +25,7 @@ class CandleAttachments(Serializable, Deserializable):
         self.data[key] = data
 
     def get_attachment(self, key: str) -> Optional[Serializable]:
-        return self.data[key] or None
+        return self.data.get(key, None)
 
     def serialize(self) -> Dict:
         obj = super().serialize()

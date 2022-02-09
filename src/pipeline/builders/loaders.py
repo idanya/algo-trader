@@ -111,6 +111,6 @@ class LoadersPipelines:
                                               days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
         source = LoadersPipelines._build_mongo_source(days_back)
 
-        technicals = LoadersPipelines._build_technicals_base_processor_chain(bins_file_path)
+        technicals = LoadersPipelines._build_technicals_base_processor_chain(bins_file_path, correlations_file_path)
 
         return PipelineRunner(source, technicals)

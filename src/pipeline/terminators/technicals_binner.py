@@ -47,15 +47,6 @@ class TechnicalsBinner(Terminator):
 
             self.values[indicator].append(value)
 
-        asset_correlation: AssetCorrelation = candle.attachments.get_attachment(
-            CORRELATIONS_ATTACHMENT_KEY)
-        if asset_correlation:
-            values = []
-            for s, v in asset_correlation.items():
-                values.append(v)
-
-            self.values['avg_correlation'] = numpy.average(values)
-
     def _calculate_bins(self):
         for indicator, values in self.values.items():
             if isinstance(values[0], float):

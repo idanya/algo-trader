@@ -2,7 +2,9 @@
   "groups": [
     [
       "AAPL",
-      "MSFT"
+      "MSFT",
+      "FB",
+      "GOOG"
     ]
   ]
 }
