@@ -1,3 +1,4 @@
+import os
 import random
 from datetime import datetime, timedelta
 from typing import List
@@ -54,12 +55,14 @@ class TestAssetCorrelationProcessor(TestCase):
                 if candle.symbol == 'X':
                     self.assertFalse(asset_correlation.has('X'))
                     self.assertTrue(asset_correlation.get('Y') > 0)
+                    self.assertTrue(asset_correlation.get('Z') > 0)
                 else:
                     self.assertTrue(asset_correlation.get('X') > 0)
 
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
-        asset_correlation = AssetCorrelationProcessor('../configs/correlations.json', cache_processor)
+        correlations_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../configs/correlations.json')
+        asset_correlation = AssetCorrelationProcessor(correlations_file_path, cache_processor)
         timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, asset_correlation)
         technicals = TechnicalsProcessor(timespan_change_processor)
         PipelineRunner(self.source, technicals).run()

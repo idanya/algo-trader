@@ -54,7 +54,8 @@ class TestHistoryCompareStrategy(TestCase):
     @mongomock.patch(servers=(('localhost', 27017),))
     def test_no_signals(self):
         def _check(signals: List[StrategySignal]):
-            self.fail()
+            if signals:
+                self.fail()
 
         candle = self._get_candle()
 
@@ -81,7 +82,8 @@ class TestHistoryCompareStrategy(TestCase):
     @mongomock.patch(servers=(('localhost', 27017),))
     def test_no_signal_because_timeframe(self):
         def _check(signals: List[StrategySignal]):
-            self.fail()
+            if signals:
+                self.fail()
 
         candle = self._get_candle()
 

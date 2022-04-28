@@ -106,7 +106,7 @@ class MongoDBStorage(StorageProvider):
         }
 
         return [self._deserialize_candle(candle) for candle in
-                self.candles_collection.find(query, allow_disk_use=True).sort("timestamp")]
+                self.candles_collection.find(query).sort("timestamp")]
 
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
@@ -116,7 +116,7 @@ class MongoDBStorage(StorageProvider):
         }
 
         return [self._deserialize_candle(candle) for candle in
-                self.candles_collection.find(query, allow_disk_use=True).sort("timestamp")]
+                self.candles_collection.find(query).sort("timestamp")]
 
     def __drop_collections__(self):
         self.db.drop_collection(CANDLES_COLLECTION)

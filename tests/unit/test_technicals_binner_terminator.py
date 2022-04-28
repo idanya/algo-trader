@@ -34,7 +34,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
         technicals = TechnicalsProcessor(technicals_normalizer)
 
         with patch("builtins.open", mock_open()) as mock_file:
-            binner_terminator = TechnicalsBinner([TEST_SYMBOL], "/not/a/real/path.dat")
+            binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, "/not/a/real/path.dat")
             PipelineRunner(self.source, technicals, binner_terminator).run()
 
             mock_file.assert_called_with("/not/a/real/path.dat", 'w+')
@@ -64,7 +64,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
             cache_processor = CandleCache()
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
             technicals = TechnicalsProcessor(technicals_normalizer)
-            binner_terminator = TechnicalsBinner([TEST_SYMBOL], tmpfilepath)
+            binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, tmpfilepath)
 
             PipelineRunner(self.source, technicals, binner_terminator).run()
 
