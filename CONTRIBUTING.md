@@ -12,6 +12,13 @@ For better visibility, it would be best if the branch name will have the issue n
 After forking and branching, make sure your local environment can run and pass the tests.
 Running the test can be done with the provided running scripts in the [scripts](scripts) folder.
 
+## What needs to be done
+All open issues and feature requests should be listed in the issues tab. 
+If you'd like to work on a new feature, check out the [enhancement](https://github.com/idanya/algo-trader/labels/enhancement) label. 
+For fixing existing bugs, check out the [bugs](https://github.com/idanya/algo-trader/labels/bug) label.
+
+Please make sure the feature/bug you are working on is confirmed and approved in the comments and/or added labels.  
+
 ## Make sure new code has test coverage
 Please make sure all new code has the relevant tests to cover its logic. In cases of bug fixes, make sure to change the relevant tests to reflect the new behavior. 
 If you fixed a bug and no test needed to be change, it is a good indicator that a test is missing and should be added. 

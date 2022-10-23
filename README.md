@@ -62,3 +62,7 @@ docker-compose -f docker-compose.yml up -d
 * Integration (needs IB gateway running): `./scripts/test-integration.sh`
 * All: `./scripts/test-all.sh`
 
+## Contributing
+Contributions are welcome and much needed.
+Please refer to the [guidelines](CONTRIBUTING.md).
+
