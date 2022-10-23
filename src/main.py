@@ -4,6 +4,11 @@ from pipeline.builders.loaders import LoadersPipelines
 
 BIN_COUNT = 10
 
+
+'''
+Main entry point, you can use the LoadersPipelines or the BacktestPipelines in order to run an example pipeline. 
+This should eventually be the CLI entrypoint. For now, it's for running examples.
+'''
 if __name__ == '__main__':
     setup_logger()
     # LoadersPipelines.build_daily_loader().run()

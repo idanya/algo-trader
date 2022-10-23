@@ -57,6 +57,14 @@ algo-trader is using MongoDB for data storage. In order to run Mongo locally use
 docker-compose -f docker-compose.yml up -d
 ```
 
+## Virtual environment
+It is best to use virtual environment in order to run algo-trader. 
+```shell
+python3 -m venv run
+source run/bin/activate
+pip3 install -r requirements.txt
+```
+
 ## Running tests
 * Unit: `./scripts/test-unit.sh`
 * Integration (needs IB gateway running): `./scripts/test-integration.sh`
