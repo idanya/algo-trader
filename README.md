@@ -12,7 +12,7 @@ algo-trader is written in Python, and it's current stack compose of:
 
 ## Architecture
 
-![System design](/Users/idanyael/personal-dev/algo-trader/design/algo-trader-design.png)
+![System design](design/algo-trader-design.png)
 
 ### Sources
 A [Source](src/pipeline/source.py) is an implementation of a Candle Iterator. This is the starting point of the pipeline and the "source" for the incoming candles processed.
