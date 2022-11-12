@@ -21,11 +21,7 @@ class SimpleSumSignalsExecutor(SignalsExecutor):
         # close when there is no signal
         if len(signals) == 0 and candle.symbol in self.position and self.position[candle.symbol] != 0:
 
-            if self.position[candle.symbol] > 0:
-                self.cash += candle.close * self.position[candle.symbol]
-            else:
-                self.cash -= candle.close * self.position[candle.symbol]
-
+            self.cash += candle.close * self.position[candle.symbol]
             self.position[candle.symbol] = 0
 
         for signal in signals:
