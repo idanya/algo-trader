@@ -17,6 +17,7 @@ from pipeline.runner import PipelineRunner
 from pipeline.source import Source
 from pipeline.sources.ib_history import IBHistorySource
 from pipeline.sources.mongodb_source import MongoDBSource
+from pipeline.specification import PipelineSpecification
 from pipeline.terminators.technicals_binner import TechnicalsBinner
 from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 from storage.mongodb_storage import MongoDBStorage
@@ -26,7 +27,7 @@ DEFAULT_DAYS_BACK = 365 * 1
 
 class LoadersPipelines:
     @staticmethod
-    def build_daily_loader(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+    def build_daily_loader(days_back: int = DEFAULT_DAYS_BACK) -> PipelineSpecification:
         mongodb_storage = MongoDBStorage()
 
         from_time = datetime.now() - timedelta(days=days_back)
@@ -38,7 +39,7 @@ class LoadersPipelines:
         cache_processor = CandleCache(sink)
         processor = TechnicalsProcessor(cache_processor)
 
-        return PipelineRunner(source, processor)
+        return PipelineSpecification(source, processor)
 
     @staticmethod
     def build_returns_calculator(days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:

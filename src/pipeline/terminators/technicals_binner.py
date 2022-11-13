@@ -4,12 +4,9 @@ import json
 import math
 from typing import List, Dict, Tuple
 
-import numpy
-
 from entities.bucket import Bucket
 from entities.bucketscontainer import BucketsContainer
 from entities.candle import Candle
-from pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import IndicatorValue
 from pipeline.processors.technicals_normalizer import NormalizedIndicators, NORMALIZED_INDICATORS_ATTACHMENT_KEY
@@ -79,3 +76,16 @@ class TechnicalsBinner(Terminator):
     def _save_bins(self):
         with open(self.output_file_path, 'w+') as output_file:
             output_file.write(json.dumps(self.bins.serialize()))
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'symbols': self.symbols,
+            'bins_count': self.bins_count,
+            'output_file_path': self.output_file_path,
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict):
+        return cls(data.get('symbols'), data.get('bins_count'), data.get('output_file_path'))

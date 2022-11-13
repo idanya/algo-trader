@@ -4,6 +4,7 @@ from typing import List, Dict
 import pymongo
 
 from entities.candle import Candle, str_to_timestamp, timestamp_to_str
+from entities.serializable import Serializable, Deserializable
 from entities.timespan import TimeSpan
 from storage.storage_provider import StorageProvider
 
@@ -11,11 +12,18 @@ DB_NAME = 'algo-trader'
 CANDLES_COLLECTION = 'candles'
 
 
-class MongoDBStorage(StorageProvider):
+class MongoDBStorage(StorageProvider, Serializable, Deserializable):
 
-    def __init__(self, host: str = 'localhost', port: int = 27017, database: str = DB_NAME) -> None:
+    def __init__(self, host: str = 'localhost', port: int = 27017, database: str = DB_NAME,
+                 username: str = 'root', password: str = 'root') -> None:
         super().__init__()
-        self.client = pymongo.MongoClient(f'mongodb://{host}:{port}/')
+        self.host = host
+        self.port = port
+        self.database = database
+        self.username = username
+        self.password = password
+
+        self.client = pymongo.MongoClient(f'mongodb://{host}:{port}/', username=username, password=password)
         self.db = self.client[database]
         self.candles_collection = self.db[CANDLES_COLLECTION]
         self.candles_collection.create_index([("symbol", pymongo.ASCENDING),
@@ -120,3 +128,18 @@ class MongoDBStorage(StorageProvider):
 
     def __drop_collections__(self):
         self.db.drop_collection(CANDLES_COLLECTION)
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'host': self.host,
+            'port': self.port,
+            'database': self.database,
+            'username': self.username,
+            'password': self.password,
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict):
+        return cls(data.get('host'), data.get('port'), data.get('database'), data.get('username'), data.get('password'))

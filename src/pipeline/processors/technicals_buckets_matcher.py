@@ -1,5 +1,5 @@
 import json
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict
 
 from entities.bucket import Bucket, BucketList
 from entities.bucketscontainer import BucketsContainer
@@ -23,6 +23,8 @@ IndicatorsMatchedBuckets()
 class TechnicalsBucketsMatcher(Processor):
     def __init__(self, bins_file_path: str, next_processor: Optional[Processor]) -> None:
         super().__init__(next_processor)
+
+        self.bins_file_path = bins_file_path
 
         with open(bins_file_path) as bins_file_content:
             content = bins_file_content.read()
@@ -55,3 +57,14 @@ class TechnicalsBucketsMatcher(Processor):
         for bin in bins:
             if bin.start <= value < bin.end:
                 return bin
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'bins_file_path': self.bins_file_path
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict) -> Optional[Processor]:
+        return cls(data.get('bins_file_path'), cls.__deserialize_next_processor(data))

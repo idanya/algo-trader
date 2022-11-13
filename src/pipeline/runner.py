@@ -4,6 +4,7 @@ from typing import Optional
 from pipeline.processor import Processor
 from pipeline.shared_context import SharedContext
 from pipeline.source import Source
+from pipeline.specification import PipelineSpecification
 from pipeline.terminator import Terminator
 
 
@@ -23,3 +24,11 @@ class PipelineRunner:
 
         if self.terminator:
             self.terminator.terminate(context)
+
+
+class PipelineSpecificationRunner:
+    def __init__(self, specification: PipelineSpecification):
+        self.runner = PipelineRunner(specification.source, specification.processor, specification.terminator)
+
+    def run(self):
+        self.runner.run()
