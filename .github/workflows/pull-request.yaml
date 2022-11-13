@@ -29,4 +29,4 @@ jobs:
       - name: Run unit tests
         working-directory: ./scripts
         run: |          
-          test-unit.sh
+          ./test-unit.sh
