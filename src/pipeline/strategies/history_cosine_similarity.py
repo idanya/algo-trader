@@ -17,8 +17,6 @@ class HistoryCosineSimilarityStrategy(Strategy):
     def __init__(self, storage_provider: StorageProvider, timeframe_start: datetime, timeframe_end: datetime,
                  indicators_to_compare: List[str], return_field: str, min_event_count: int,
                  min_avg_return: float) -> None:
-        super().__init__()
-
         self.timeframe_start = timeframe_start
         self.timeframe_end = timeframe_end
         self.storage_provider = storage_provider

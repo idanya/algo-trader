@@ -15,7 +15,6 @@ class MongoDBStorage(StorageProvider):
 
     def __init__(self, host: str = 'localhost', port: int = 27017, database: str = DB_NAME,
                  username: str = 'root', password: str = 'root') -> None:
-        super().__init__()
         self.host = host
         self.port = port
         self.database = database
