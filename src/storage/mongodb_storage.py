@@ -4,7 +4,6 @@ from typing import List, Dict
 import pymongo
 
 from entities.candle import Candle, str_to_timestamp, timestamp_to_str
-from entities.serializable import Serializable, Deserializable
 from entities.timespan import TimeSpan
 from storage.storage_provider import StorageProvider
 
@@ -12,7 +11,7 @@ DB_NAME = 'algo-trader'
 CANDLES_COLLECTION = 'candles'
 
 
-class MongoDBStorage(StorageProvider, Serializable, Deserializable):
+class MongoDBStorage(StorageProvider):
 
     def __init__(self, host: str = 'localhost', port: int = 27017, database: str = DB_NAME,
                  username: str = 'root', password: str = 'root') -> None:
@@ -109,7 +108,7 @@ class MongoDBStorage(StorageProvider, Serializable, Deserializable):
         Candle]:
         query = {
             'symbol': symbol,
-            'timespan': time_span.name,
+            'timespan': time_span,
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 
@@ -119,7 +118,7 @@ class MongoDBStorage(StorageProvider, Serializable, Deserializable):
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
         query = {
-            'timespan': time_span.name,
+            'timespan': time_span,
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 

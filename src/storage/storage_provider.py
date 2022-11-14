@@ -3,10 +3,11 @@ from datetime import datetime
 from typing import List, Dict
 
 from entities.candle import Candle
+from entities.serializable import Deserializable, Serializable
 from entities.timespan import TimeSpan
 
 
-class StorageProvider:
+class StorageProvider(Serializable, Deserializable):
     @abstractmethod
     def save(self, candle: Candle):
         pass

@@ -67,4 +67,4 @@ class TechnicalsBucketsMatcher(Processor):
 
     @classmethod
     def deserialize(cls, data: Dict) -> Optional[Processor]:
-        return cls(data.get('bins_file_path'), cls.__deserialize_next_processor(data))
+        return cls(data.get('bins_file_path'), cls._deserialize_next_processor(data))

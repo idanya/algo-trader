@@ -96,7 +96,7 @@ class LoadersPipelines:
     @staticmethod
     def build_technicals_with_buckets_calculator(bins_file_path: str, bins_count: int,
                                                  correlations_file_path: str,
-                                                 days_back: int = DEFAULT_DAYS_BACK) -> PipelineRunner:
+                                                 days_back: int = DEFAULT_DAYS_BACK) -> PipelineSpecification:
         source = LoadersPipelines._build_mongo_source(days_back)
         technicals = LoadersPipelines._build_technicals_base_processor_chain(
             correlations_file_path=correlations_file_path)
@@ -104,7 +104,7 @@ class LoadersPipelines:
         symbols = AssetsProvider.get_sp500_symbols()
         technicals_binner = TechnicalsBinner(symbols, bins_count, bins_file_path)
 
-        return PipelineRunner(source, technicals, technicals_binner)
+        return PipelineSpecification(source, technicals, technicals_binner)
 
     @staticmethod
     def build_technicals_with_buckets_matcher(bins_file_path: str,

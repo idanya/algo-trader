@@ -14,8 +14,8 @@ class TestSerialization(TestCase):
     def test_serialize_processor(self):
         candle_cache_processor = CandleCache(CandleCache())
         serialized = candle_cache_processor.serialize()
-        self.assertEqual('CandleCache', serialized['__class__'])
-        self.assertEqual('CandleCache', serialized['next_processor']['__class__'])
+        self.assertEqual('pipeline.processors.candle_cache:CandleCache', serialized['__class__'])
+        self.assertEqual('pipeline.processors.candle_cache:CandleCache', serialized['next_processor']['__class__'])
 
         deserialized: CandleCache = CandleCache.deserialize(serialized)
         self.assertIsNotNone(deserialized)

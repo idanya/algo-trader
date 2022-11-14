@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, Optional
 from typing import TYPE_CHECKING
-
+import importlib
 
 if TYPE_CHECKING:
     from entities.serializable import Deserializable
@@ -21,6 +21,18 @@ class DeserializationService:
 
     @staticmethod
     def deserialize(data: Dict) -> Optional[Deserializable]:
+        if data is None or data.get('__class__') is None:
+            return None
+
         class_name = data.get('__class__')
-        if class_name and class_name in deserializers:
-            return deserializers[class_name].deserialize(data)
+        mod_name, cls_name = class_name.split(':')
+        mod = importlib.import_module(mod_name)
+        cls: Deserializable = getattr(mod, cls_name)
+        return cls.deserialize(data)
+
+        # cls = __import__(class_name, globals())
+        # deserialize = getattr(cls, 'deserialize')
+        # return deserialize(data)
+
+        # if class_name and class_name in deserializers:
+        #     return deserializers[class_name].deserialize(data)

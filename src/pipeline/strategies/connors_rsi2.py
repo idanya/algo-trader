@@ -11,6 +11,7 @@ from pipeline.shared_context import SharedContext
 class ConnorsRSI2(Strategy):
 
     def __init__(self) -> None:
+        super().__init__()
         self.current_position: Dict[str, Optional[SignalDirection]] = {}
 
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:

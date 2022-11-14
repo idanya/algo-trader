@@ -27,5 +27,5 @@ class ReverseSource(Source):
 
     @classmethod
     def deserialize(cls, data: Dict):
-        source: Source = DeserializationService.deserialize(data['source'])
+        source: Source = Source.deserialize(data['source'])
         return cls(source)
