@@ -108,7 +108,7 @@ class MongoDBStorage(StorageProvider):
         Candle]:
         query = {
             'symbol': symbol,
-            'timespan': time_span,
+            'timespan': time_span.value,
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 
@@ -118,7 +118,7 @@ class MongoDBStorage(StorageProvider):
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
         query = {
-            'timespan': time_span,
+            'timespan': time_span.value,
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 

@@ -9,7 +9,6 @@ from serialization.store import DeserializationService
 
 class PipelineSpecification(Serializable, Deserializable):
     def __init__(self, source: Source, processor: Processor, terminator: Optional[Terminator] = None) -> None:
-        super().__init__()
         self.source = source
         self.processor = processor
         self.terminator = terminator

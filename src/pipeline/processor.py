@@ -12,7 +12,6 @@ from serialization.store import DeserializationService
 
 class Processor(Serializable, Deserializable):
     def __init__(self, next_processor: Optional[Processor]) -> None:
-        super().__init__()
         self.next_processor = next_processor
 
     @abstractmethod

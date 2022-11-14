@@ -11,9 +11,6 @@ from pipeline.shared_context import SharedContext
 
 class Strategy(Serializable, Deserializable):
 
-    def __init__(self) -> None:
-        super().__init__()
-
     @abstractmethod
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         pass
