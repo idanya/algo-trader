@@ -32,7 +32,7 @@ class MongoDBSource(Source):
         obj.update({
             'mongo_storage': self.mongo_storage.serialize(),
             'symbols': self.symbols,
-            'timespan': self.timespan,
+            'timespan': self.timespan.value,
             'from_time': self.from_time,
             'to_time': self.to_time,
         })
@@ -41,4 +41,4 @@ class MongoDBSource(Source):
     @classmethod
     def deserialize(cls, data: Dict):
         storage = MongoDBStorage.deserialize(data.get('mongo_storage'))
-        return cls(storage, data.get('symbols'), data.get('timespan'), data.get('from_time'), data.get('to_time'))
+        return cls(storage, data.get('symbols'), TimeSpan(data.get('timespan')), data.get('from_time'), data.get('to_time'))

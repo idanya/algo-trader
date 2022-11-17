@@ -19,7 +19,7 @@ from trade.simple_sum_signals_executor import SimpleSumSignalsExecutor
 
 class BacktestPipelines:
     @staticmethod
-    def build_mongodb_backtester() -> PipelineRunner:
+    def build_mongodb_backtester() -> PipelineSpecification:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
@@ -31,10 +31,10 @@ class BacktestPipelines:
         technicals_processor = TechnicalsProcessor(strategy_processor)
         processor = TechnicalsProcessor(technicals_processor)
 
-        return PipelineRunner(source, processor)
+        return PipelineSpecification(source, processor)
 
     @staticmethod
-    def build_mongodb_history_buckets_backtester(bins_file_path: str) -> PipelineRunner:
+    def build_mongodb_history_buckets_backtester(bins_file_path: str) -> PipelineSpecification:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
@@ -59,7 +59,7 @@ class BacktestPipelines:
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=bucket_matcher)
         processor = TechnicalsProcessor(technical_normalizer)
 
-        return PipelineRunner(source, processor)
+        return PipelineSpecification(source, processor)
 
     @staticmethod
     def build_mongodb_history_similarity_backtester(bins_file_path: str) -> PipelineSpecification:
