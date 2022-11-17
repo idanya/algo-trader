@@ -3,7 +3,7 @@ import pathlib
 import time
 
 def setup_logger():
-    log_dir = pathlib.Path(__file__).parent.parent.joinpath('logs')
+    log_dir = pathlib.Path(__file__).parent.parent.joinpath('logs').resolve()
 
     if not pathlib.Path.exists(log_dir):
         pathlib.Path.mkdir(log_dir)
