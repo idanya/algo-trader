@@ -11,7 +11,7 @@ def setup_logger():
     timefmt = '%y%m%d_%H:%M:%S'
 
     logging.basicConfig(
-        filename=f'{root_dir}/{time.strftime("algo-trader.%y%m%d_%H%M%S.log")}',
+        filename=f'{root_dir}/../logs/{time.strftime("algo-trader.%y%m%d_%H%M%S.log")}',
         filemode="w",
         level=logging.INFO,
         format=recfmt, datefmt=timefmt)
