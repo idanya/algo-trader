@@ -508,8 +508,8 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2020-11-17 23:03:36.648198",
-    "to_time": "2022-11-17 23:03:36.602214"
+    "from_time": "2020-11-18 13:40:25.958928",
+    "to_time": "2022-11-18 13:40:25.883887"
   },
   "processor": {
     "__class__": "pipeline.processors.technicals:TechnicalsProcessor",

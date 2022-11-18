@@ -2,7 +2,7 @@ import json
 import os
 from os import path
 
-from log import setup_logger
+from logger import setup_logger
 from pipeline.builders.backtest import BacktestPipelines
 from pipeline.builders.loaders import LoadersPipelines
 from pipeline.runner import PipelineSpecificationRunner

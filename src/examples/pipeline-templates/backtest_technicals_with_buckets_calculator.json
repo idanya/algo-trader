@@ -508,8 +508,8 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2021-11-17 23:03:36.710054",
-    "to_time": "2022-11-17 23:03:36.602214"
+    "from_time": "2021-11-18 13:40:26.028863",
+    "to_time": "2022-11-18 13:40:25.883887"
   },
   "processor": {
     "__class__": "pipeline.processors.timespan_change:TimeSpanChangeProcessor",
@@ -530,5 +530,5 @@
       }
     }
   },
-  "terminator": "<pipeline.terminators.technicals_binner.TechnicalsBinner object at 0x118fa1e80>"
+  "terminator": "<pipeline.terminators.technicals_binner.TechnicalsBinner object at 0x11cdbc9d0>"
 }
