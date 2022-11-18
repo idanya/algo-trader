@@ -1,26 +1,23 @@
 from __future__ import annotations
 
-from typing import Dict, Optional
-from typing import TYPE_CHECKING
+import importlib
+from typing import Dict, Optional, TypeVar, Generic
+# from typing import TYPE_CHECKING
+
+# if TYPE_CHECKING:
+from entities.serializable import Deserializable
+
+T = TypeVar('T', bound=Deserializable)
 
 
-if TYPE_CHECKING:
-    from entities.serializable import Deserializable
-
-deserializers: Dict[str, Deserializable] = {
-
-}
-
-
-class DeserializationService:
+class DeserializationService(Generic[T]):
     @staticmethod
-    def register(obj: Deserializable):
-        name = obj.__class__.__name__
-        if name not in deserializers:
-            deserializers[name] = obj
+    def deserialize(data: Dict) -> Optional[T]:
+        if data is None or data.get('__class__') is None:
+            return None
 
-    @staticmethod
-    def deserialize(data: Dict) -> Optional[Deserializable]:
         class_name = data.get('__class__')
-        if class_name and class_name in deserializers:
-            return deserializers[class_name].deserialize(data)
+        mod_name, cls_name = class_name.split(':')
+        mod = importlib.import_module(mod_name)
+        cls: Deserializable = getattr(mod, cls_name)
+        return cls.deserialize(data)

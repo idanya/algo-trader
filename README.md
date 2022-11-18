@@ -19,6 +19,14 @@ algo-trader is written in Python, and its current stack composes of:
 
 ![System design](./design/diagram.png)
 
+### Pipeline
+Pipeline is the basic facilitator of the stream. It’s the orchestrator responsible for reading data from the Source and moving it to the processors in the stream. 
+It has no actual logic except for facilitating the processors.
+A pipline and all of its child components are JSON serializable, that is for the system to be able to define, load and save entire pipelines with their configurations on file.
+This feature is an important one as it can be used as a facade for UI/CLI based runners. 
+Example serialized (and runnable) piplines can be found in the [examples/pipeline-templates](src/examples/pipeline-templates) directory.
+Example of loading them into [PipelineSpecification](src/pipeline/specification.py) and running them using the [PipelineSpecificationRunner](src/pipeline/runner.py) can be found in [main.py](src/main.py) 
+
 ### Sources
 A [Source](src/pipeline/source.py) is an implementation of a Candle Iterator. This is the starting point of the pipeline and the "source" for the incoming candles processed.
  

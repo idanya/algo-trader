@@ -1,7 +1,8 @@
-from typing import Iterator
+from typing import Iterator, Dict
 
 from entities.candle import Candle
 from pipeline.source import Source
+from serialization.store import DeserializationService
 
 
 class ReverseSource(Source):
@@ -15,3 +16,16 @@ class ReverseSource(Source):
 
         for c in candles:
             yield c
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'source': self.source.serialize()
+        })
+
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict):
+        source: Source = Source.deserialize(data['source'])
+        return cls(source)

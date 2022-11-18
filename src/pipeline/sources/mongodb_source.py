@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Iterator, List, Optional
+from typing import Iterator, List, Optional, Dict
 
 from entities.candle import Candle
 from entities.timespan import TimeSpan
@@ -26,3 +26,19 @@ class MongoDBSource(Source):
         for c in all_candles:
             if c.symbol in self.symbols:
                 yield c
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'mongo_storage': self.mongo_storage.serialize(),
+            'symbols': self.symbols,
+            'timespan': self.timespan.value,
+            'from_time': self.from_time,
+            'to_time': self.to_time,
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict):
+        storage = MongoDBStorage.deserialize(data.get('mongo_storage'))
+        return cls(storage, data.get('symbols'), TimeSpan(data.get('timespan')), data.get('from_time'), data.get('to_time'))

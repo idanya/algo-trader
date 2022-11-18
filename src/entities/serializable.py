@@ -1,20 +1,15 @@
 from abc import abstractmethod
 from typing import Dict
 
-from serialization.store import DeserializationService
-
 
 class Serializable:
-    @abstractmethod
     def serialize(self) -> Dict:
-        return {'__class__': self.__class__.__name__}
+        module = self.__class__.__module__
+        name = self.__class__.__name__
+        return {'__class__': f'{module}:{name}'}
 
 
 class Deserializable:
-    def __init__(self) -> None:
-        DeserializationService.register(self)
-
     @classmethod
-    @abstractmethod
     def deserialize(cls, data: Dict):
-        pass
+        return cls()

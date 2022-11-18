@@ -17,7 +17,7 @@ class TestTimeSpanChangeProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(hours=c), c) for c in range(1, 49)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(hours=c), c) for c in range(1, 55)])
 
     def test(self):
         def _terminate(context: SharedContext):
@@ -25,7 +25,7 @@ class TestTimeSpanChangeProcessor(TestCase):
             event_count = context.get_kv_data('event_count', 0)
             candle_count = context.get_kv_data('candle_count', 0)
             self.assertEqual(event_count, 2)
-            self.assertEqual(candle_count, 48)
+            self.assertEqual(candle_count, 54)
 
         def _process(context: SharedContext, candle: Candle):
             self.assertIsNotNone(context)

@@ -95,3 +95,14 @@ class TechnicalsNormalizerProcessor(Processor):
         typical_prices = [(candle.close + candle.high + candle.low) / 3 for candle in latest_candles]
         volumes = [candle.volume for candle in latest_candles]
         return sum(typical_prices[i] * volumes[i] for i in range(len(typical_prices))) / sum(volumes)
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'normalization_window_size': self.normalization_window_size
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict) -> Optional[TechnicalsNormalizerProcessor]:
+        return cls(data.get('normalization_window_size'), cls._deserialize_next_processor(data))

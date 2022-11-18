@@ -9,6 +9,7 @@ from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatc
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.sources.mongodb_source import MongoDBSource
+from pipeline.specification import PipelineSpecification
 from pipeline.strategies.connors_rsi2 import ConnorsRSI2
 from pipeline.strategies.history_bucket_compare import HistoryBucketCompareStrategy
 from pipeline.strategies.history_cosine_similarity import HistoryCosineSimilarityStrategy
@@ -18,7 +19,7 @@ from trade.simple_sum_signals_executor import SimpleSumSignalsExecutor
 
 class BacktestPipelines:
     @staticmethod
-    def build_mongodb_backtester() -> PipelineRunner:
+    def build_mongodb_backtester() -> PipelineSpecification:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
@@ -30,10 +31,10 @@ class BacktestPipelines:
         technicals_processor = TechnicalsProcessor(strategy_processor)
         processor = TechnicalsProcessor(technicals_processor)
 
-        return PipelineRunner(source, processor)
+        return PipelineSpecification(source, processor)
 
     @staticmethod
-    def build_mongodb_history_buckets_backtester(bins_file_path: str) -> PipelineRunner:
+    def build_mongodb_history_buckets_backtester(bins_file_path: str) -> PipelineSpecification:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
@@ -58,10 +59,10 @@ class BacktestPipelines:
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=bucket_matcher)
         processor = TechnicalsProcessor(technical_normalizer)
 
-        return PipelineRunner(source, processor)
+        return PipelineSpecification(source, processor)
 
     @staticmethod
-    def build_mongodb_history_similarity_backtester(bins_file_path: str) -> PipelineRunner:
+    def build_mongodb_history_similarity_backtester(bins_file_path: str) -> PipelineSpecification:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
@@ -85,4 +86,4 @@ class BacktestPipelines:
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=bucket_matcher)
         processor = TechnicalsProcessor(technical_normalizer)
 
-        return PipelineRunner(source, processor)
+        return PipelineSpecification(source, processor)

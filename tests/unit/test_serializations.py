@@ -2,13 +2,22 @@ from datetime import datetime
 from typing import Dict
 from unittest import TestCase
 
+from entities.bucket import Bucket
 from entities.bucketscontainer import BucketsContainer
 from entities.candle import Candle
 from entities.serializable import Serializable, Deserializable
 from entities.timespan import TimeSpan
-from entities.bucket import Bucket
 from serialization.store import DeserializationService
 from unit import generate_candle_with_price
+
+
+class NothingClass(Serializable, Deserializable):
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'nothing': 'at-all'
+        })
+        return obj
 
 
 class TestSerializations(TestCase):
@@ -28,23 +37,6 @@ class TestSerializations(TestCase):
         self.assertEqual(candle.open, new_candle.open)
 
     def test_candle_attachments(self):
-        class NothingClass(Serializable, Deserializable):
-
-            def __init__(self) -> None:
-                super().__init__()
-
-            @classmethod
-            def deserialize(cls, data: Dict):
-                return NothingClass()
-
-            def serialize(self) -> Dict:
-                obj = super().serialize()
-                obj.update({
-                    '__class__': self.__class__.__name__,
-                    'nothing': 'at-all'
-                })
-                return obj
-
         candle = generate_candle_with_price(TimeSpan.Day, datetime.now(), 888)
         candle.add_attachement('key1', NothingClass())
 

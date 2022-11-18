@@ -9,7 +9,6 @@ DEFAULT_ORDER_VALUE = 10000
 
 
 class SimpleSumSignalsExecutor(SignalsExecutor):
-
     def __init__(self) -> None:
         self.position: Dict[str, float] = {}
         self.cash = 0
@@ -20,7 +19,6 @@ class SimpleSumSignalsExecutor(SignalsExecutor):
     def execute(self, candle: Candle, signals: List[StrategySignal]):
         # close when there is no signal
         if len(signals) == 0 and candle.symbol in self.position and self.position[candle.symbol] != 0:
-
             self.cash += candle.close * self.position[candle.symbol]
             self.position[candle.symbol] = 0
 

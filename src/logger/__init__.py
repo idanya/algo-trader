@@ -2,6 +2,7 @@ import logging
 import pathlib
 import time
 
+
 def setup_logger():
     log_dir = pathlib.Path(__file__).parent.parent.joinpath('logs').resolve()
 
