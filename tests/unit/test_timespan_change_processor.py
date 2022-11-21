@@ -18,7 +18,7 @@ class TestTimeSpanChangeProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(hours=c), c) for c in range(1, 55)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c) for c in range(1, 55)])
 
     def test(self):
         def _terminate(context: SharedContext):
@@ -34,13 +34,14 @@ class TestTimeSpanChangeProcessor(TestCase):
 
         def _event(context: SharedContext, event: Event):
             self.assertIsNotNone(context)
-
+            print(event)
             if event != Event.TimeSpanChange:
                 return
 
             context.put_kv_data('event_count', context.get_kv_data('event_count', 0) + 1)
 
             candle_count = context.get_kv_data('candle_count', 0)
+
             self.assertTrue(candle_count > 0)
 
         terminator = TerminatorValidator(_terminate)
