@@ -28,7 +28,7 @@ Example serialized (and runnable) pipelines can be found in the [examples/pipeli
 Example of loading them into [Pipeline](src/pipeline/pipeline.py) and running them using the [PipelineRunner](src/pipeline/runner.py) can be found in [main.py](src/main.py)
 
 ### PipelineRunner
-A [PipelineRunner](src/pipeline/pipeline.py) will accept an initial list or singular [Pipeline](src/pipeline/pipeline.py), and an optional starting [SharedContext](src/pipeline/shared_context.py). If a [SharedContext](src/pipeline/shared_context.py) is not provided during construction, a new one will be initialized. Each [Pipeline](src/pipeline/pipeline.py) will be called through `run()` in the order that it was listed with the previous context. The context will move through each [Pipeline](src/pipeline/pipeline.py) allowing for some operations such as loading, caching and validation to occur before data collection and sink.
+A [PipelineRunner](src/pipeline/runner.py) will accept an initial list or singular [Pipeline](src/pipeline/pipeline.py), and an optional starting [SharedContext](src/pipeline/shared_context.py). If a [SharedContext](src/pipeline/shared_context.py) is not provided during construction, a new one will be initialized. Each [Pipeline](src/pipeline/pipeline.py) will be called through `run()` in the order that it was listed with the previous context. The context will move through each [Pipeline](src/pipeline/pipeline.py) allowing for some operations such as loading, caching and validation to occur before data collection and sink.
 
 ### Sources
 A [Source](src/pipeline/source.py) is an implementation of a Candle Iterator. This is the starting point of the pipeline and the "source" for the incoming candles processed.
