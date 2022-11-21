@@ -41,7 +41,6 @@ class TestTimeSpanChangeProcessor(TestCase):
             context.put_kv_data('event_count', context.get_kv_data('event_count', 0) + 1)
 
             candle_count = context.get_kv_data('candle_count', 0)
-
             self.assertTrue(candle_count > 0)
 
         terminator = TerminatorValidator(_terminate)
