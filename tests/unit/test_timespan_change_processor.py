@@ -34,7 +34,7 @@ class TestTimeSpanChangeProcessor(TestCase):
 
         def _event(context: SharedContext, event: Event):
             self.assertIsNotNone(context)
-            print(event)
+
             if event != Event.TimeSpanChange:
                 return
 
