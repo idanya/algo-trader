@@ -7,6 +7,7 @@ import mongomock
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
@@ -35,4 +36,4 @@ class TestMongoDBSinkProcessor(TestCase):
 
         validator = TerminatorValidator(_check)
         processor = MongoDBSinkProcessor(mogodb_storage)
-        PipelineRunner(self.source, processor, validator).run()
+        PipelineRunner(Pipeline(self.source, processor, validator)).run()

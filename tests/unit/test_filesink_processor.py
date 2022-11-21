@@ -8,6 +8,7 @@ from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.processors.file_sink import FileSinkProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
@@ -36,4 +37,4 @@ class TestFileSinkProcessor(TestCase):
         validator = TerminatorValidator(_check)
 
         processor = FileSinkProcessor(temp_file.name)
-        PipelineRunner(self.source, processor, validator).run()
+        PipelineRunner(Pipeline(self.source, processor, validator)).run()

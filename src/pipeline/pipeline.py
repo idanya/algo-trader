@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, Dict
 
 from entities.serializable import Serializable, Deserializable
@@ -9,6 +10,8 @@ from serialization.store import DeserializationService
 
 
 class Pipeline(Serializable, Deserializable):
+    logger = logging.getLogger('Pipeline')
+
     def __init__(self, source: Source, processor: Processor, terminator: Optional[Terminator] = None) -> None:
         self.source = source
         self.processor = processor
