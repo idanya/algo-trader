@@ -1,34 +1,21 @@
 import logging
-from typing import Optional
+from typing import List, Union
 
-from pipeline.processor import Processor
+from pipeline.pipeline import Pipeline
 from pipeline.shared_context import SharedContext
-from pipeline.source import Source
-from pipeline.specification import PipelineSpecification
-from pipeline.terminator import Terminator
 
 
 class PipelineRunner:
     logger = logging.getLogger('PipelineRunner')
 
-    def __init__(self, source: Source, processor: Processor, terminator: Optional[Terminator] = None) -> None:
-        self.source = source
-        self.processor = processor
-        self.terminator = terminator
+    def __init__(self, pipelines: Union[Pipeline, List[Pipeline]], context = SharedContext()) -> None:
+        if pipelines is not list:
+            pipelines = [pipelines]
+     
+        self.pipelines = pipelines
+        self.context = context
 
     def run(self):
-        self.logger.info('starting pipeline...')
-        context = SharedContext()
-        for candle in self.source.read():
-            self.processor.process(context, candle)
-
-        if self.terminator:
-            self.terminator.terminate(context)
-
-
-class PipelineSpecificationRunner:
-    def __init__(self, specification: PipelineSpecification):
-        self.runner = PipelineRunner(specification.source, specification.processor, specification.terminator)
-
-    def run(self):
-        self.runner.run()
+        self.logger.info('Starting pipeline runner...')
+        for pipeline in self.pipelines:
+            pipeline.run(self.context)
