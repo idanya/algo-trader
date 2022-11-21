@@ -9,14 +9,8 @@ class PipelineRunner:
     logger = logging.getLogger('PipelineRunner')
 
     def __init__(self, pipelines: Union[Pipeline, List[Pipeline]], context: Optional[SharedContext] = None) -> None:
-        if pipelines is not list:
-            pipelines = [pipelines]
-     
-        self.pipelines : List[Pipeline] = pipelines
-        if context is None:
-            self.context = SharedContext()
-        else:
-            self.context = context
+       self.pipelines = pipelines if pipelines is list else [pipelines]
+       self.context = context or SharedContext()
 
     def run(self):
         self.logger.info('Starting pipeline runner...')
