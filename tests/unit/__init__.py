@@ -20,7 +20,9 @@ def generate_candle_with_price(time_span: TimeSpan, timestamp: datetime, price: 
     candle.open = candle.close = candle.high = candle.low = candle.volume = price
     return candle
 
-def generate_candle_with_price_and_symbol(symbol: str, time_span: TimeSpan, timestamp: datetime, price: float) -> Candle:
+
+def generate_candle_with_price_and_symbol(symbol: str, time_span: TimeSpan, timestamp: datetime,
+                                          price: float) -> Candle:
     candle = generate_candle_with_symbol(symbol, time_span, timestamp)
     candle.open = candle.close = candle.high = candle.low = candle.volume = price
     return candle

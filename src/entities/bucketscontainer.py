@@ -7,7 +7,6 @@ from entities.serializable import Serializable, Deserializable
 from serialization.store import DeserializationService
 
 
-
 class BucketsContainer(Serializable, Deserializable):
     def __init__(self) -> None:
         super().__init__()

@@ -1,10 +1,9 @@
 from datetime import datetime
 from unittest import TestCase
 
-from entities.candle import Candle
 from entities.timespan import TimeSpan
-from fakes.source import FakeSource
 from fakes.pipeline_validators import TerminatorValidator
+from fakes.source import FakeSource
 from pipeline.pipeline import Pipeline
 from pipeline.processor import Processor
 from pipeline.runner import PipelineRunner
