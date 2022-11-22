@@ -103,8 +103,7 @@ class MongoDBStorage(StorageProvider):
         return Candle.deserialize(data)
 
     def get_symbol_candles(self, symbol: str, time_span: TimeSpan,
-                           from_timestamp: datetime, to_timestamp: datetime) -> List[
-        Candle]:
+                           from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
         query = {
             'symbol': symbol,
             'timespan': time_span.value,

@@ -1,0 +1,3 @@
+[flake8]
+exclude=src/libs,venv/
+max-line-length = 160

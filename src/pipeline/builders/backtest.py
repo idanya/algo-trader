@@ -7,7 +7,6 @@ from pipeline.processors.strategy import StrategyProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
-from pipeline.runner import PipelineRunner
 from pipeline.sources.mongodb_source import MongoDBSource
 from pipeline.specification import PipelineSpecification
 from pipeline.strategies.connors_rsi2 import ConnorsRSI2

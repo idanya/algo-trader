@@ -12,7 +12,7 @@ from serialization.store import DeserializationService
 BIN_COUNT = 10
 
 '''
-Main entry point, you can use the LoadersPipelines or the BacktestPipelines in order to run an example pipeline. 
+Main entry point, you can use the LoadersPipelines or the BacktestPipelines in order to run an example pipeline.
 This should eventually be the CLI entrypoint. For now, it's for running examples.
 '''
 EXAMPLE_TEMPLATES_DIR = 'examples/pipeline-templates'

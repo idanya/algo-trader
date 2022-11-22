@@ -83,7 +83,7 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
 
         try:
             bar_time = datetime.strptime(bar.date, "%Y%m%d")
-        except:
+        except Exception:
             bar_time = datetime.strptime(bar.date, "%Y%m%d %H:%M:%S")
 
         c = Candle(subscription.symbol,

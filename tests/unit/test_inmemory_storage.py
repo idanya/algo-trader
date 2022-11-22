@@ -42,4 +42,3 @@ class TestInMemoryStorage(unittest.TestCase):
         self.assertEqual(1, len(candles))
         self.assertEqual(TimeSpan.Minute, candles[0].time_span)
         self.assertEqual(minute_candle.timestamp, candles[0].timestamp)
-

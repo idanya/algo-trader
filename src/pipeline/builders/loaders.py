@@ -13,7 +13,6 @@ from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatc
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
 from pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from pipeline.reverse_source import ReverseSource
-from pipeline.runner import PipelineRunner
 from pipeline.source import Source
 from pipeline.sources.ib_history import IBHistorySource
 from pipeline.sources.mongodb_source import MongoDBSource
