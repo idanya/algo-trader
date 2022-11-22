@@ -8,6 +8,7 @@ from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY, \
     AssetCorrelationProcessor
 from pipeline.processors.candle_cache import CandleCache
@@ -61,4 +62,4 @@ class TestAssetCorrelationProcessor(TestCase):
         asset_correlation = AssetCorrelationProcessor(correlations_file_path, cache_processor)
         timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, asset_correlation)
         technicals = TechnicalsProcessor(timespan_change_processor)
-        PipelineRunner(self.source, technicals).run()
+        PipelineRunner(Pipeline(self.source, technicals)).run()

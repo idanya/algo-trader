@@ -5,6 +5,7 @@ from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.source import FakeSource
 from fakes.pipeline_validators import ValidationProcessor
+from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
@@ -28,4 +29,4 @@ class TestCandleCacheProcessor(TestCase):
 
         validator = ValidationProcessor(_check)
         processor = CandleCache(validator)
-        PipelineRunner(self.source, processor).run()
+        PipelineRunner(Pipeline(self.source, processor)).run()
