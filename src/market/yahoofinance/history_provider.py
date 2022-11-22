@@ -11,6 +11,16 @@ class YahooFinanceHistoryProvider:
     def get_symbol_history(self, symbol: str, period: TimeSpan, interval: TimeSpan,
                            start_time: datetime, end_time: datetime, auto_adjust: bool = True,
                            include_after_hours: bool = False) -> List[Candle]:
+        """
+        @param symbol: symbol
+        @param period: time span of each candle
+        @param interval: interval between candles
+        @param start_time: first candle time
+        @param end_time: latest candle time
+        @param auto_adjust: auto adjust closing price (dividends, splits)
+        @param include_after_hours: include pre and post market data
+        @return: List of candles
+        """
         ticker = yf.Ticker(symbol)
         data = ticker.history(self._translate_timespan(period),
                               self._translate_timespan(interval),

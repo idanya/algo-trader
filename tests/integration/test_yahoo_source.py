@@ -1,0 +1,34 @@
+from datetime import datetime, timedelta
+from typing import List
+from unittest import TestCase
+
+from entities.candle import Candle
+from entities.timespan import TimeSpan
+from market.yahoofinance.history_provider import YahooFinanceHistoryProvider
+from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
+
+
+class TestYahooMarketSource(TestCase):
+    provider = YahooFinanceHistoryProvider()
+    symbols = ['AAPL', 'MSFT']
+    from_time = datetime.now() - timedelta(days=50)
+    to_time = datetime.now()
+
+    def test_quick_source(self):
+        source = YahooFinanceHistorySource(self.symbols, TimeSpan.Day, self.from_time, self.to_time)
+        candles = list(source.read())
+        self._assert_sanity_response(candles)
+
+    def test_sorted_source(self):
+        source = YahooFinanceHistorySource(self.symbols, TimeSpan.Day, self.from_time, self.to_time, sort_all=True)
+        candles = list(source.read())
+        self._assert_sanity_response(candles)
+
+        for i in range(1, len(candles)):
+            self.assertTrue(candles[i].timestamp >= candles[i - 1].timestamp)
+
+    def _assert_sanity_response(self, candles: List[Candle]):
+        self.assertEqual(len(candles) % 2, 0)
+
+        for candle in candles:
+            self.assertIn(candle.symbol, self.symbols)
