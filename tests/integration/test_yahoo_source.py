@@ -8,11 +8,12 @@ from market.yahoofinance.history_provider import YahooFinanceHistoryProvider
 from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
 
 
+
 class TestYahooMarketSource(TestCase):
     provider = YahooFinanceHistoryProvider()
     symbols = ['AAPL', 'MSFT']
-    from_time = datetime.now() - timedelta(days=50)
-    to_time = datetime.now()
+    to_time = datetime.fromtimestamp(1669145312)
+    from_time = to_time - timedelta(days=50)
 
     def test_quick_source(self):
         source = YahooFinanceHistorySource(self.symbols, TimeSpan.Day, self.from_time, self.to_time)
