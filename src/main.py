@@ -9,13 +9,12 @@ from pipeline.pipeline import Pipeline
 from serialization.store import DeserializationService
 
 BIN_COUNT = 10
+EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
 
 '''
 Main entry point, you can use the LoadersPipelines or the BacktestPipelines in order to run an example pipeline. 
 This should eventually be the CLI entrypoint. For now, it's for running examples.
 '''
-EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
-ASSETS_DIR = pathlib.Path(__file__).parent.joinpath('assets').resolve()
 
 
 def save_pipeline_spec(filename: str, pipeline: Pipeline):
@@ -35,22 +34,22 @@ def generate_example_templates():
     save_pipeline_spec('backtest_mongo_source_rsi_strategy.json', BacktestPipelines.build_mongodb_backtester())
     save_pipeline_spec('backtest_history_buckets_backtester.json',
                        BacktestPipelines.build_mongodb_history_buckets_backtester(
-                           f'{ASSETS_DIR}/bins.json'))
+                           f'{EXAMPLE_TEMPLATES_DIR}/bins.json'))
 
     save_pipeline_spec('backtest_technicals_with_buckets_calculator.json',
                        LoadersPipelines.build_technicals_with_buckets_calculator(
-                           f'{ASSETS_DIR}/bins.json', BIN_COUNT,
-                           f'{ASSETS_DIR}/correlation.json'))
+                           f'{EXAMPLE_TEMPLATES_DIR}/bins.json', BIN_COUNT,
+                           f'{EXAMPLE_TEMPLATES_DIR}/correlation.json'))
 
     save_pipeline_spec('loader_simple_technicals_calculator.json', LoadersPipelines.build_technicals_calculator())
     save_pipeline_spec('loader_simple_returns_calculator.json', LoadersPipelines.build_returns_calculator())
     save_pipeline_spec('loader_technicals_with_buckets_matcher.json',
-                       LoadersPipelines.build_technicals_with_buckets_matcher(f'{ASSETS_DIR}/bins.json',
-                                                                              f'{ASSETS_DIR}/correlation.json'))
+                       LoadersPipelines.build_technicals_with_buckets_matcher(f'{EXAMPLE_TEMPLATES_DIR}/bins.json',
+                                                                              f'{EXAMPLE_TEMPLATES_DIR}/correlation.json'))
 
     save_pipeline_spec('backtest_history_similarity_backtester.json',
                        BacktestPipelines.build_mongodb_history_similarity_backtester(
-                           f'{ASSETS_DIR}/bins.json'))
+                           f'{EXAMPLE_TEMPLATES_DIR}/bins.json'))
 
     # depends on a running IB gateway
     # save_pipeline_spec('loader_simple_daily_loader.json', LoadersPipelines.build_daily_ib_loader())

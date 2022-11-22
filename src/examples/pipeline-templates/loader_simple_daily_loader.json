@@ -1,5 +1,5 @@
 {
-  "__class__": "pipeline.specification:PipelineSpecification",
+  "__class__": "pipeline.pipeline:Pipeline",
   "source": {
     "__class__": "pipeline.sources.ib_history:IBHistorySource"
   },
