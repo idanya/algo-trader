@@ -20,12 +20,15 @@ algo-trader is written in Python, and its current stack composes of:
 ![System design](./design/diagram.png)
 
 ### Pipeline
-Pipeline is the basic facilitator of the stream. It’s the orchestrator responsible for reading data from the Source and moving it to the processors in the stream. 
+[Pipeline](src/pipeline/pipeline.py) is the basic facilitator of the stream. It’s the orchestrator responsible for reading data from the [Source](src/pipeline/source.py) and moving it to the processors in the stream. 
 It has no actual logic except for facilitating the processors.
-A pipline and all of its child components are JSON serializable, that is for the system to be able to define, load and save entire pipelines with their configurations on file.
+A pipeline and all of its child components are JSON serializable, that is for the system to be able to define, load and save entire pipelines with their configurations on file.
 This feature is an important one as it can be used as a facade for UI/CLI based runners. 
-Example serialized (and runnable) piplines can be found in the [examples/pipeline-templates](src/examples/pipeline-templates) directory.
-Example of loading them into [PipelineSpecification](src/pipeline/specification.py) and running them using the [PipelineSpecificationRunner](src/pipeline/runner.py) can be found in [main.py](src/main.py) 
+Example serialized (and runnable) pipelines can be found in the [examples/pipeline-templates](src/examples/pipeline-templates) directory.
+Example of loading them into [Pipeline](src/pipeline/pipeline.py) and running them using the [PipelineRunner](src/pipeline/runner.py) can be found in [main.py](src/main.py)
+
+### PipelineRunner
+A [PipelineRunner](src/pipeline/runner.py) will accept an initial list or singular [Pipeline](src/pipeline/pipeline.py), and an optional starting [SharedContext](src/pipeline/shared_context.py). If a [SharedContext](src/pipeline/shared_context.py) is not provided during construction, a new one will be initialized. Each [Pipeline](src/pipeline/pipeline.py) will be called through `run()` in the order that it was listed with the previous context. The context will move through each [Pipeline](src/pipeline/pipeline.py) allowing for some operations such as loading, caching and validation to occur before data collection and sink.
 
 ### Sources
 A [Source](src/pipeline/source.py) is an implementation of a Candle Iterator. This is the starting point of the pipeline and the "source" for the incoming candles processed.

@@ -9,6 +9,7 @@ from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher, IndicatorsMatchedBuckets, \
@@ -35,7 +36,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
 
         with patch("builtins.open", mock_open()) as mock_file:
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, "/not/a/real/path.dat")
-            PipelineRunner(self.source, technicals, binner_terminator).run()
+            PipelineRunner(Pipeline(self.source, technicals, binner_terminator)).run()
 
             mock_file.assert_called_with("/not/a/real/path.dat", 'w+')
 
@@ -66,11 +67,11 @@ class TestTechnicalsBinnerTerminator(TestCase):
             technicals = TechnicalsProcessor(technicals_normalizer)
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, tmpfilepath)
 
-            PipelineRunner(self.source, technicals, binner_terminator).run()
+            PipelineRunner(Pipeline(self.source, technicals, binner_terminator)).run()
 
             validator = ValidationProcessor(_check)
             cache_processor = CandleCache(validator)
             matcher = TechnicalsBucketsMatcher(tmpfilepath, cache_processor)
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=matcher)
             technicals = TechnicalsProcessor(technicals_normalizer)
-            PipelineRunner(self.source, technicals).run()
+            PipelineRunner(Pipeline(self.source, technicals)).run()

@@ -6,6 +6,7 @@ from entities.event import Event
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor, TerminatorValidator
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from pipeline.runner import PipelineRunner
@@ -17,7 +18,7 @@ class TestTimeSpanChangeProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(hours=c), c) for c in range(1, 55)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c) for c in range(1, 55)])
 
     def test(self):
         def _terminate(context: SharedContext):
@@ -47,4 +48,4 @@ class TestTimeSpanChangeProcessor(TestCase):
         validator = ValidationProcessor(_process, _event)
         cache_processor = CandleCache(validator)
         processor = TimeSpanChangeProcessor(TimeSpan.Day, cache_processor)
-        PipelineRunner(self.source, processor, terminator).run()
+        PipelineRunner(Pipeline(self.source, processor, terminator)).run()

@@ -5,6 +5,7 @@ from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY, Indicators
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor, \
@@ -44,7 +45,7 @@ class TestTechnicalsProcessor(TestCase):
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
         processor = TechnicalsProcessor(cache_processor)
-        PipelineRunner(self.source, processor).run()
+        PipelineRunner(Pipeline(self.source, processor)).run()
 
     def test_normalization(self):
         def _check(context: SharedContext, candle: Candle):
@@ -67,4 +68,4 @@ class TestTechnicalsProcessor(TestCase):
         cache_processor = CandleCache(validator)
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
         technicals = TechnicalsProcessor(technicals_normalizer)
-        PipelineRunner(self.source, technicals).run()
+        PipelineRunner(Pipeline(self.source, technicals)).run()

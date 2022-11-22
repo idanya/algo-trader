@@ -5,6 +5,7 @@ from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
+from pipeline.pipeline import Pipeline
 from pipeline.reverse_source import ReverseSource
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
@@ -29,7 +30,7 @@ class TestReverseSource(TestCase):
             context.put_kv_data('last_price', candle.close)
 
         validator = ValidationProcessor(_check)
-        PipelineRunner(self.source, validator).run()
+        PipelineRunner(Pipeline(self.source, validator)).run()
 
     def test_reverse_order(self):
         def _check(context: SharedContext, candle: Candle):
@@ -42,4 +43,4 @@ class TestReverseSource(TestCase):
             context.put_kv_data('last_price', candle.close)
 
         validator = ValidationProcessor(_check)
-        PipelineRunner(ReverseSource(self.source), validator).run()
+        PipelineRunner(Pipeline(ReverseSource(self.source), validator)).run()
