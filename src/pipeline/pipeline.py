@@ -39,4 +39,3 @@ class Pipeline(Serializable, Deserializable):
 
         if self.terminator:
             self.terminator.terminate(context)
-
