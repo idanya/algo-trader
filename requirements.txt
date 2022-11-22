@@ -3,4 +3,5 @@ newtulipy==0.4.6
 pymongo==3.12.0
 mongomock==3.23.0
 scipy==1.7.3
+yfinance==0.1.87
 flake8==5.0.4
