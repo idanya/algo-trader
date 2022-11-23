@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import List
+from entities.candle import Candle
+from entities.timespan import TimeSpan
 
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.shared_context import SharedContext
@@ -15,9 +17,11 @@ class LastSymbolTimestamp(Terminator):
 
     def terminate(self, context: SharedContext):
         cache_reader = CandleCache.context_reader(context)
-        last_symbol_timestamp = datetime.now()
+        now = datetime.now()
+        last_symbol_timestamp = now
         for symbol in self.symbols:
-            last_candle_timestamp = cache_reader.get_symbol_candles(symbol)[-1].timestamp
+            symbol_candles = cache_reader.get_symbol_candles(symbol) or [Candle(symbol, TimeSpan.Minute, now, 0, 0, 0, 0, 0)]
+            last_candle_timestamp = symbol_candles[-1].timestamp
             if last_symbol_timestamp > last_candle_timestamp:
                 last_symbol_timestamp = last_candle_timestamp
 
