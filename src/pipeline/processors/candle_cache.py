@@ -6,7 +6,7 @@ from pipeline.processor import Processor
 from pipeline.shared_context import SharedContext
 
 CONTEXT_IDENT = 'CandleCache'
-CacheData = Dict[str, OrderedDict[Candle]]
+CacheData = Dict[str, OrderedDict[float, Candle]]
 
 
 class CandleCacheContextWriter:
@@ -24,7 +24,7 @@ class CandleCacheContextWriter:
         if candle.symbol not in self.data:
             self.data[candle.symbol] = OrderedDict()
 
-        self.data[candle.symbol][candle.timestamp] = candle
+        self.data[candle.symbol][candle.timestamp.timestamp] = candle
 
 
 class CandleCacheContextReader:
