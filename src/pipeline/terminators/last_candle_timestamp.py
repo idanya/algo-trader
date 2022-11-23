@@ -7,6 +7,7 @@ from pipeline.terminator import Terminator
 
 CONTEXT_IDENT = 'LastSymbolTimestamp'
 
+
 class LastSymbolTimestamp(Terminator):
     def __init__(self, symbols: List[str]) -> None:
         super().__init__()
@@ -17,7 +18,8 @@ class LastSymbolTimestamp(Terminator):
         last_symbol_timestamp = datetime.now()
         for symbol in self.symbols:
             last_candle_timestamp = cache_reader.get_symbol_candles(symbol)[-1].timestamp
-            if last_symbol_timestamp > last_candle_timestamp: last_symbol_timestamp = last_candle_timestamp
+            if last_symbol_timestamp > last_candle_timestamp:
+                last_symbol_timestamp = last_candle_timestamp
 
         context.put_kv_data(CONTEXT_IDENT, last_symbol_timestamp)
 

@@ -31,7 +31,7 @@ class TechnicalsProcessor(Processor):
     def process(self, context: SharedContext, candle: Candle):
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
-        
+
         if candle.timestamp in list(map(lambda candle: candle.timestamp, symbol_candles)):
             candles = symbol_candles
         else:

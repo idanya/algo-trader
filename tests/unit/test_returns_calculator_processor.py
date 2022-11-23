@@ -18,7 +18,7 @@ class TestReturnsCalculatorProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(days = c), random.randint(1, c)) for c in range(1, 50)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(days=c), random.randint(1, c)) for c in range(1, 50)])
 
     def test(self):
         def _check(context: SharedContext, candle: Candle):
