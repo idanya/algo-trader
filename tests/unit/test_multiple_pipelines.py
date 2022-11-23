@@ -50,32 +50,32 @@ class TestMultiplePipelines(TestCase):
         overlap_index = int((half_length - (0.1 * candle_length)))
         symbols = ['X']
 
-        def _check(context: SharedContext):
-            self.assertEqual(candle_length, len(CandleCache.context_reader(context).get_symbol_candles(symbols[0])))
-
-
-        candles = [generate_candle_with_price(TimeSpan.Minute, from_time - timedelta(minutes=c), c) for c in range(candle_length)]
+        # Create our injectable context
         context = SharedContext()
 
         # Create our first pipeline with our injected context and cache processor.
+        def _check(context: SharedContext):
+            self.assertEqual(candle_length, len(CandleCache.context_reader(context).get_symbol_candles(symbols[0])))
 
-        pipeline_one = Pipeline(ListSource(candles[half_length:]), CandleCache(), LastSymbolTimestamp(symbols))
+        candles = [generate_candle_with_price(TimeSpan.Minute, from_time - timedelta(minutes=c), c) for c in range(candle_length)]
+        source = ListSource(candles[half_length:])
 
-        # Create our second pipeline with some overlapping candles and our technical processors
-
-        cache_processor = CandleCache()
-        technical_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
-        technicals = TechnicalsProcessor(technical_normalizer)
+        pipeline_one = Pipeline(source, CandleCache(), LastSymbolTimestamp(symbols))
 
         # In production you would calculate `from_time` based on LastSymbolTimestamp and also have a sink processor to save new results.
         # We use a ContextInjectionFactorySource to inject the context back into a constructor.
-
         def _create_context_injection_factory_source(context: SharedContext):
             self.assertEqual(from_time - timedelta(minutes=candle_length / 2), LastSymbolTimestamp.get(context))
             return ListSource(candles[:-overlap_index])
 
-        pipeline_two = Pipeline(ContextInjectionFactorySource(context, _create_context_injection_factory_source), technicals, TerminatorValidator(_check))
+        source = ContextInjectionFactorySource(context, _create_context_injection_factory_source)
+
+        # Create our second pipeline with some overlapping candles and our technical processors
+        cache_processor = CandleCache()
+        technical_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
+        technicals = TechnicalsProcessor(technical_normalizer)
+
+        pipeline_two = Pipeline(source, technicals, TerminatorValidator(_check))
         
         # Finally we run the pipelines as a list.
-
         PipelineRunner([pipeline_one, pipeline_two], context).run()
