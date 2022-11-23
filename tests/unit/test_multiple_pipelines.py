@@ -49,23 +49,22 @@ class TestMultiplePipelines(TestCase):
         candle_length = 250
         half_length = int(candle_length / 2)
         overlap_index = int((half_length - (0.1 * candle_length)))
-        print(overlap_index)
-
         symbols = ['X']
+
         def _check(context: SharedContext):
             self.assertEqual(candle_length, len(CandleCache.context_reader(context).get_symbol_candles(symbols[0])))
             self.assertEqual(from_time - timedelta(minutes = candle_length / 2), LastSymbolTimestamp.get(context))
-            for candle in CandleCache.context_reader(context).get_symbol_candles(symbols[0]):
-                print(candle.timestamp)
 
         candles = [generate_candle_with_price(TimeSpan.Minute, from_time - timedelta(minutes = c), c) for c in range(candle_length)]
-   
-
         context = SharedContext()
 
-        pipeline_one = Pipeline(FakeSource(candles[half_length:]), CandleCache(), LastSymbolTimestamp(symbols))
+        # Run our first pipeline with our injected context and cache processor.
 
+        pipeline_one = Pipeline(FakeSource(candles[half_length:]), CandleCache(), LastSymbolTimestamp(symbols))
         PipelineRunner(pipeline_one, context).run()
+
+        # Run our second pipeline with some overlapping candles and our technical processors
+        # In production you would calculate `from_time` based on LastSymbolTimestamp and also have a sink processor to save new results.
 
         cache_processor = CandleCache()
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor = cache_processor)
