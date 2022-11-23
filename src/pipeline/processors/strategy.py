@@ -11,7 +11,7 @@ from trade.signals_executor import SignalsExecutor
 
 class StrategyProcessor(Processor):
     def __init__(self, strategies: List[Strategy], signals_executor: SignalsExecutor,
-                 next_processor: Optional[Processor]) -> None:
+                 next_processor: Optional[Processor] = None) -> None:
         super().__init__(next_processor)
         self.signals_executor = signals_executor
         self.strategies = strategies

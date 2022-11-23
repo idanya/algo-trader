@@ -4,7 +4,6 @@ from unittest import TestCase
 from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
-from fakes.source import FakeSource
 from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY, Indicators
@@ -12,13 +11,14 @@ from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProces
     NORMALIZED_INDICATORS_ATTACHMENT_KEY, NormalizedIndicators
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
+from pipeline.sources.list_source import ListSource
 from unit import generate_candle_with_price
 
 
 class TestTechnicalsProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
+        self.source = ListSource(
             [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(days=c), c) for c in range(1, 50)])
 
     def test(self):

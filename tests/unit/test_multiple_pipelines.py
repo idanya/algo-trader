@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from unittest import TestCase
 
 from entities.timespan import TimeSpan
-from fakes.source import FakeSource
 from fakes.pipeline_validators import TerminatorValidator
 from pipeline.pipeline import Pipeline
 from pipeline.processor import Processor
@@ -11,6 +10,8 @@ from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
+from pipeline.sources.context_injection_factory_source import ContextInjectionFactorySource
+from pipeline.sources.list_source import ListSource
 from pipeline.terminators.last_candle_timestamp import LastSymbolTimestamp
 from unit import generate_candle_with_price
 
@@ -30,7 +31,7 @@ class TestMultiplePipelines(TestCase):
             check = context.get_kv_data('check')
             self.assertTrue(check)
 
-        source = FakeSource([generate_candle_with_price(TimeSpan.Day, datetime.now(), 1)])
+        source = ListSource([generate_candle_with_price(TimeSpan.Day, datetime.now(), 1)])
         processor = Processor()
         validator_one = TerminatorValidator(_check_pipeline_one)
         validator_two = TerminatorValidator(_check_pipeline_two)
@@ -51,22 +52,30 @@ class TestMultiplePipelines(TestCase):
 
         def _check(context: SharedContext):
             self.assertEqual(candle_length, len(CandleCache.context_reader(context).get_symbol_candles(symbols[0])))
-            self.assertEqual(from_time - timedelta(minutes=candle_length / 2), LastSymbolTimestamp.get(context))
+
 
         candles = [generate_candle_with_price(TimeSpan.Minute, from_time - timedelta(minutes=c), c) for c in range(candle_length)]
         context = SharedContext()
 
-        # Run our first pipeline with our injected context and cache processor.
+        # Create our first pipeline with our injected context and cache processor.
 
-        pipeline_one = Pipeline(FakeSource(candles[half_length:]), CandleCache(), LastSymbolTimestamp(symbols))
-        PipelineRunner(pipeline_one, context).run()
+        pipeline_one = Pipeline(ListSource(candles[half_length:]), CandleCache(), LastSymbolTimestamp(symbols))
 
-        # Run our second pipeline with some overlapping candles and our technical processors
-        # In production you would calculate `from_time` based on LastSymbolTimestamp and also have a sink processor to save new results.
+        # Create our second pipeline with some overlapping candles and our technical processors
 
         cache_processor = CandleCache()
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
         technicals = TechnicalsProcessor(technical_normalizer)
 
-        pipeline_two = Pipeline(FakeSource(candles[:-overlap_index]), technicals, TerminatorValidator(_check))
-        PipelineRunner(pipeline_two, context).run()
+        # In production you would calculate `from_time` based on LastSymbolTimestamp and also have a sink processor to save new results.
+        # We use a ContextInjectionFactorySource to inject the context back into a constructor.
+
+        def _create_context_injection_factory_source(context: SharedContext):
+            self.assertEqual(from_time - timedelta(minutes=candle_length / 2), LastSymbolTimestamp.get(context))
+            return ListSource(candles[:-overlap_index])
+
+        pipeline_two = Pipeline(ContextInjectionFactorySource(context, _create_context_injection_factory_source), technicals, TerminatorValidator(_check))
+        
+        # Finally we run the pipelines as a list.
+
+        PipelineRunner([pipeline_one, pipeline_two], context).run()

@@ -7,7 +7,6 @@ from unittest import TestCase
 from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
-from fakes.source import FakeSource
 from pipeline.pipeline import Pipeline
 from pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY, \
     AssetCorrelationProcessor
@@ -16,6 +15,7 @@ from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
+from pipeline.sources.list_source import ListSource
 from unit import generate_candle_with_price_and_symbol
 
 
@@ -35,7 +35,7 @@ class TestAssetCorrelationProcessor(TestCase):
             merged.append(y[i])
             merged.append(z[i])
 
-        self.source = FakeSource(merged)
+        self.source = ListSource(merged)
 
     def test_correlation(self):
         def _check(context: SharedContext, candle: Candle):

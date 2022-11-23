@@ -6,11 +6,11 @@ import mongomock
 
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
-from fakes.source import FakeSource
 from pipeline.pipeline import Pipeline
 from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
+from pipeline.sources.list_source import ListSource
 from storage.mongodb_storage import MongoDBStorage
 from unit import generate_candle_with_price, TEST_SYMBOL
 
@@ -18,7 +18,7 @@ from unit import generate_candle_with_price, TEST_SYMBOL
 class TestMongoDBSinkProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
+        self.source = ListSource(
             [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(minutes=c), random.randint(0, c)) for c
              in range(1, 50)])
 

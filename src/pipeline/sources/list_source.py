@@ -4,7 +4,7 @@ from entities.candle import Candle
 from pipeline.source import Source
 
 
-class FakeSource(Source):
+class ListSource(Source):
     def __init__(self, candles: List[Candle]) -> None:
         super().__init__()
         self.candles = candles

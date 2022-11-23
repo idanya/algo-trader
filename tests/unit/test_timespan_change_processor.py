@@ -5,19 +5,19 @@ from entities.candle import Candle
 from entities.event import Event
 from entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor, TerminatorValidator
-from fakes.source import FakeSource
 from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
+from pipeline.sources.list_source import ListSource
 from unit import generate_candle_with_price
 
 
 class TestTimeSpanChangeProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
+        self.source = ListSource(
             [generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c) for c in range(1, 55)])
 
     def test(self):
