@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
-import random
 from unittest import TestCase
 
-from entities.candle import Candle
 from entities.timespan import TimeSpan
 from fakes.source import FakeSource
 from fakes.pipeline_validators import TerminatorValidator
