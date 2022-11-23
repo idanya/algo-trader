@@ -1,7 +1,6 @@
 from datetime import datetime
 from unittest import TestCase
 
-from entities.candle import Candle
 from entities.strategy_signal import StrategySignal, SignalDirection
 from entities.timespan import TimeSpan
 from trade.simple_sum_signals_executor import DEFAULT_ORDER_VALUE, SimpleSumSignalsExecutor

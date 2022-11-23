@@ -8,7 +8,6 @@ from market.yahoofinance.history_provider import YahooFinanceHistoryProvider
 from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
 
 
-
 class TestYahooMarketSource(TestCase):
     provider = YahooFinanceHistoryProvider()
     symbols = ['AAPL', 'MSFT']

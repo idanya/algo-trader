@@ -23,7 +23,6 @@ class ValidationProcessor(Processor):
             self.event_callback(context, event)
 
 
-
 class TerminatorValidator(Terminator):
     def __init__(self, callback: Callable[[SharedContext], None]) -> None:
         self.callback = callback

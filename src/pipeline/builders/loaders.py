@@ -3,7 +3,7 @@ from typing import Optional
 
 from assets.assets_provider import AssetsProvider
 from entities.timespan import TimeSpan
-
+from pipeline.pipeline import Pipeline
 from pipeline.processor import Processor
 from pipeline.processors.assets_correlation import AssetCorrelationProcessor
 from pipeline.processors.candle_cache import CandleCache
@@ -17,12 +17,12 @@ from pipeline.reverse_source import ReverseSource
 from pipeline.source import Source
 from pipeline.sources.ib_history import IBHistorySource
 from pipeline.sources.mongodb_source import MongoDBSource
-from pipeline.pipeline import Pipeline
 from pipeline.terminators.technicals_binner import TechnicalsBinner
 from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 from storage.mongodb_storage import MongoDBStorage
 
 DEFAULT_DAYS_BACK = 365 * 1
+
 
 class LoadersPipelines:
     @staticmethod

@@ -2,7 +2,6 @@ from typing import Iterator, Dict
 
 from entities.candle import Candle
 from pipeline.source import Source
-from serialization.store import DeserializationService
 
 
 class ReverseSource(Source):
