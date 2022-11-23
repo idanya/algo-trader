@@ -1,6 +1,6 @@
 import os
 import tempfile
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
@@ -27,7 +27,7 @@ class TestTechnicalsBinnerTerminator(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now(), c) for c in range(1, 80)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(days = c), c) for c in range(1, 80)])
 
     def test(self):
         cache_processor = CandleCache()

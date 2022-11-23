@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Optional, List, Dict
 
 from entities.candle import Candle
@@ -5,7 +6,7 @@ from pipeline.processor import Processor
 from pipeline.shared_context import SharedContext
 
 CONTEXT_IDENT = 'CandleCache'
-CacheData = Dict[str, List[Candle]]
+CacheData = Dict[str, OrderedDict[Candle]]
 
 
 class CandleCacheContextWriter:
@@ -21,9 +22,9 @@ class CandleCacheContextWriter:
         self.data = self.context.get_kv_data(CONTEXT_IDENT)
 
         if candle.symbol not in self.data:
-            self.data[candle.symbol] = []
+            self.data[candle.symbol] = OrderedDict()
 
-        self.data[candle.symbol].append(candle)
+        self.data[candle.symbol][candle.timestamp] = candle
 
 
 class CandleCacheContextReader:
@@ -34,7 +35,7 @@ class CandleCacheContextReader:
     def get_symbol_candles(self, symbol: str) -> Optional[List[Candle]]:
         data = self.context.get_kv_data(CONTEXT_IDENT)
         if data and symbol in data:
-            return data[symbol]
+            return list(data[symbol].values())
 
     def get_symbols_list(self) -> Optional[List[str]]:
         data = self.context.get_kv_data(CONTEXT_IDENT)
