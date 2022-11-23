@@ -1,12 +1,12 @@
 from collections import OrderedDict
-from typing import Optional, List, Dict, OrderedDict
+from typing import Optional, List, Dict
 
 from entities.candle import Candle
 from pipeline.processor import Processor
 from pipeline.shared_context import SharedContext
 
 CONTEXT_IDENT = 'CandleCache'
-CacheData = Dict[str, OrderedDict[float, Candle]]
+CacheData = Dict[str, Dict[float, Candle]]
 
 
 class CandleCacheContextWriter:
