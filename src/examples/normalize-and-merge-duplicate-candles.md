@@ -1,4 +1,4 @@
-```json
+```python
 [
     {
         '$set': {
