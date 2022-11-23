@@ -76,6 +76,6 @@ class TestMultiplePipelines(TestCase):
         technicals = TechnicalsProcessor(technical_normalizer)
 
         pipeline_two = Pipeline(source, technicals, TerminatorValidator(_check))
-        
+
         # Finally we run the pipelines as a list.
         PipelineRunner([pipeline_one, pipeline_two], context).run()
