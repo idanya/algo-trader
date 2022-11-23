@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, OrderedDict
 
 from entities.candle import Candle
 from pipeline.processor import Processor
