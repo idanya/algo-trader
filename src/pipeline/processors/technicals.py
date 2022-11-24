@@ -32,8 +32,9 @@ class TechnicalsProcessor(Processor):
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
 
-        if candle.timestamp in list(map(lambda candle: candle.timestamp, symbol_candles)):
-            candles = symbol_candles
+        candle_index = [x for x in range(len(symbol_candles)) if symbol_candles[x].timestamp == candle.timestamp] or None
+        if candle_index and candle_index[0] > 0:
+            candles = symbol_candles[0:candle_index[0] - 1] + [candle]
         else:
             candles = symbol_candles + [candle]
 
