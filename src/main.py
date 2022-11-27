@@ -1,6 +1,7 @@
 import json
 import pathlib
 
+from cli.main import initiate_cli
 from logger import setup_logger
 from pipeline.builders.backtest import BacktestPipelines
 from pipeline.builders.loaders import LoadersPipelines
@@ -9,8 +10,8 @@ from pipeline.pipeline import Pipeline
 from serialization.store import DeserializationService
 
 BIN_COUNT = 10
-EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
 
+EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
 '''
 Main entry point, you can use the LoadersPipelines or the BacktestPipelines in order to run an example pipeline.
 This should eventually be the CLI entrypoint. For now, it's for running examples.
@@ -25,9 +26,6 @@ def save_pipeline_spec(filename: str, pipeline: Pipeline):
         output_file.write(json.dumps(pipeline.serialize(), indent=2, default=str))
 
 
-def load_pipeline_spec(filename: str) -> Pipeline:
-    with open(pathlib.Path(EXAMPLE_TEMPLATES_DIR).joinpath(filename), 'r') as input_file:
-        return DeserializationService.deserialize(json.loads(input_file.read()))
 
 
 def generate_example_templates():
@@ -61,5 +59,7 @@ if __name__ == '__main__':
     # generate_example_templates()
 
     # LOAD SAVED JSON PIPELINE AND RUN IT
-    pipeline = load_pipeline_spec('backtest_history_similarity_backtester.json')
-    PipelineRunner(pipeline).run()
+    # pipeline = load_pipeline_spec('backtest_history_similarity_backtester.json')
+    # PipelineRunner(pipeline).run()
+
+    initiate_cli()

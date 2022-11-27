@@ -9,6 +9,10 @@ from pipeline.shared_context import SharedContext
 
 
 class SimpleSMA(Strategy):
+    """
+    Simple Moving average strategy
+    """
+
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol)

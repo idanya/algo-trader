@@ -28,7 +28,14 @@ class CorrelationConfig:
 
 
 class AssetCorrelationProcessor(Processor):
+    """
+    This is the description
+    """
     def __init__(self, config_path: str, next_processor: Optional[Processor]) -> None:
+        """
+        @param config_path: path to the correlation's config file
+        @param next_processor: the next processor in chain
+        """
         with open(config_path, 'r') as config_content:
             c: Dict = json.loads(config_content.read())
             self.config = CorrelationConfig(c.get('groups', []))
