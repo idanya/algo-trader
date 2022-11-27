@@ -29,7 +29,7 @@ class CorrelationConfig:
 
 class AssetCorrelationProcessor(Processor):
     """
-    This is the description
+    Calculates correlations between groups of symbols
     """
     def __init__(self, config_path: str, next_processor: Optional[Processor]) -> None:
         """

@@ -10,8 +10,17 @@ from trade.signals_executor import SignalsExecutor
 
 
 class StrategyProcessor(Processor):
+    """
+    Main strategy processor. Receives a list of strategies and executes them all on each processed candle.
+    Forward all strategies signals to a SignalsExecutor implementation
+    """
+
     def __init__(self, strategies: List[Strategy], signals_executor: SignalsExecutor,
                  next_processor: Optional[Processor]) -> None:
+        """
+        @param strategies: List of strategies (Strategy implementations)
+        @param signals_executor: SignalsExecutor implementation
+        """
         super().__init__(next_processor)
         self.signals_executor = signals_executor
         self.strategies = strategies

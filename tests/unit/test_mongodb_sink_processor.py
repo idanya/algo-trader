@@ -8,7 +8,7 @@ from entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
 from fakes.source import FakeSource
 from pipeline.pipeline import Pipeline
-from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
+from pipeline.processors.storage_provider_sink import StorageSinkProcessor
 from pipeline.runner import PipelineRunner
 from pipeline.shared_context import SharedContext
 from storage.mongodb_storage import MongoDBStorage
@@ -35,5 +35,5 @@ class TestMongoDBSinkProcessor(TestCase):
             self.assertEqual(49, len(candles))
 
         validator = TerminatorValidator(_check)
-        processor = MongoDBSinkProcessor(mogodb_storage)
+        processor = StorageSinkProcessor(mogodb_storage)
         PipelineRunner(Pipeline(self.source, processor, validator)).run()

@@ -7,7 +7,7 @@ from pipeline.pipeline import Pipeline
 from pipeline.processor import Processor
 from pipeline.processors.assets_correlation import AssetCorrelationProcessor
 from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
+from pipeline.processors.storage_provider_sink import StorageSinkProcessor
 from pipeline.processors.returns import ReturnsCalculatorProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
@@ -34,7 +34,7 @@ class LoadersPipelines:
 
         source = IBHistorySource(InteractiveBrokersConnector(), symbols, TimeSpan.Day, from_time)
 
-        sink = MongoDBSinkProcessor(mongodb_storage)
+        sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
         processor = TechnicalsProcessor(cache_processor)
 
@@ -49,7 +49,7 @@ class LoadersPipelines:
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
         source = ReverseSource(source)
 
-        sink = MongoDBSinkProcessor(mongodb_storage)
+        sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
         processor = ReturnsCalculatorProcessor(cache_processor)
 
@@ -68,7 +68,7 @@ class LoadersPipelines:
     def _build_technicals_base_processor_chain(bins_file_path: Optional[str] = None,
                                                correlations_file_path: Optional[str] = None) -> Processor:
         mongodb_storage = MongoDBStorage()
-        sink = MongoDBSinkProcessor(mongodb_storage)
+        sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
 
         latest_processor = cache_processor

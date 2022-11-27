@@ -1,9 +1,9 @@
 import inspect
-from typing import Set
+from typing import Set, List
 
 import pipeline
-import pipeline.strategies
 import pipeline.processors
+import pipeline.strategies
 
 
 def _get_all_of_class(base_class):
@@ -18,6 +18,14 @@ def _get_all_of_class(base_class):
 
     list_module_childs(pipeline)
     return results
+
+
+def _get_all_of_class_names(base_class) -> List[str]:
+    return [p.__name__ for p in _get_all_of_class(base_class)]
+
+
+def _get_single_by_name(base_class, name: str):
+    return next(filter(lambda p: p.__name__ == name, _get_all_of_class(base_class)))
 
 
 def _describe_object(obj):

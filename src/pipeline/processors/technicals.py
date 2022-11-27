@@ -9,7 +9,6 @@ from pipeline.processor import Processor
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.shared_context import SharedContext
 
-
 INDICATORS_ATTACHMENT_KEY = 'indicators'
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
@@ -24,6 +23,10 @@ Indicators()
 
 
 class TechnicalsProcessor(Processor):
+    """
+    Technical indicators processor. Using Tulip indicators to calculate and attach technicals to the processed candles.
+    Make use of the SharedContext to keep track of earlier candles.
+    """
 
     def __init__(self, next_processor: Optional[Processor]) -> None:
         super().__init__(next_processor)

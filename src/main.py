@@ -5,9 +5,7 @@ from cli.main import initiate_cli
 from logger import setup_logger
 from pipeline.builders.backtest import BacktestPipelines
 from pipeline.builders.loaders import LoadersPipelines
-from pipeline.runner import PipelineRunner
 from pipeline.pipeline import Pipeline
-from serialization.store import DeserializationService
 
 BIN_COUNT = 10
 
@@ -24,8 +22,6 @@ def save_pipeline_spec(filename: str, pipeline: Pipeline):
 
     with open(pathlib.Path(EXAMPLE_TEMPLATES_DIR).joinpath(filename), 'w') as output_file:
         output_file.write(json.dumps(pipeline.serialize(), indent=2, default=str))
-
-
 
 
 def generate_example_templates():
@@ -57,9 +53,5 @@ if __name__ == '__main__':
     setup_logger()
 
     # generate_example_templates()
-
-    # LOAD SAVED JSON PIPELINE AND RUN IT
-    # pipeline = load_pipeline_spec('backtest_history_similarity_backtester.json')
-    # PipelineRunner(pipeline).run()
 
     initiate_cli()

@@ -8,9 +8,9 @@ from pipeline.pipeline import Pipeline
 from pipeline.runner import PipelineRunner
 from serialization.store import DeserializationService
 
-app = typer.Typer()
-app.add_typer(processors.app, name='processor')
-app.add_typer(strategies.app, name='strategy')
+app = typer.Typer(no_args_is_help=True)
+app.add_typer(processors.app, name='processor', short_help='Processors related commands')
+app.add_typer(strategies.app, name='strategy', short_help='Strategies related commands')
 
 EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
 
