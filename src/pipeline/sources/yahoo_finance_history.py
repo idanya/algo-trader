@@ -8,6 +8,9 @@ from pipeline.source import Source
 
 
 class YahooFinanceHistorySource(Source):
+    """
+    Source for fetching historical data from Yahoo Finance
+    """
 
     def __init__(self, symbols: List[str], timespan: TimeSpan,
                  start_time: datetime, end_time: datetime, auto_adjust: bool = True,

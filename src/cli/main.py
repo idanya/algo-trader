@@ -3,7 +3,7 @@ import pathlib
 
 import typer
 
-from cli import processors, strategies
+from cli import processors, strategies, sources
 from pipeline.pipeline import Pipeline
 from pipeline.runner import PipelineRunner
 from serialization.store import DeserializationService
@@ -11,6 +11,7 @@ from serialization.store import DeserializationService
 app = typer.Typer(no_args_is_help=True)
 app.add_typer(processors.app, name='processor', short_help='Processors related commands')
 app.add_typer(strategies.app, name='strategy', short_help='Strategies related commands')
+app.add_typer(sources.app, name='source', short_help='Sources related commands')
 
 EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
 

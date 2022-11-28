@@ -10,8 +10,18 @@ from providers.ib.interactive_brokers_connector import InteractiveBrokersConnect
 
 
 class IBHistorySource(Source):
+    """
+    Source for fetching data from Interactive Brokers
+    """
     def __init__(self, ib_connector: InteractiveBrokersConnector, symbols: List[str], timespan: TimeSpan,
                  from_time: datetime, to_time: Optional[datetime] = datetime.now()) -> None:
+        """
+        @param ib_connector: InteractiveBrokersConnector instance
+        @param symbols: symbols to fetch
+        @param timespan: timespan of candles
+        @param from_time: time to start fetching from
+        @param to_time: time to fetch to
+        """
         self.timespan = timespan
         self.to_time = to_time
         self.from_time = from_time
