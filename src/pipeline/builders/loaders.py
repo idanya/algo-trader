@@ -7,8 +7,8 @@ from pipeline.pipeline import Pipeline
 from pipeline.processor import Processor
 from pipeline.processors.assets_correlation import AssetCorrelationProcessor
 from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.storage_provider_sink import StorageSinkProcessor
 from pipeline.processors.returns import ReturnsCalculatorProcessor
+from pipeline.processors.storage_provider_sink import StorageSinkProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
@@ -55,7 +55,6 @@ class LoadersPipelines:
         processor = TechnicalsProcessor(cache_processor)
 
         return Pipeline(source, processor)
-
 
     @staticmethod
     def build_returns_calculator(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
