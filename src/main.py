@@ -25,6 +25,7 @@ def save_pipeline_spec(filename: str, pipeline: Pipeline):
 
 
 def generate_example_templates():
+    save_pipeline_spec('build_daily_yahoo_loader.json', LoadersPipelines.build_daily_yahoo_loader())
     save_pipeline_spec('backtest_mongo_source_rsi_strategy.json', BacktestPipelines.build_mongodb_backtester())
     save_pipeline_spec('backtest_history_buckets_backtester.json',
                        BacktestPipelines.build_mongodb_history_buckets_backtester(
@@ -52,6 +53,6 @@ def generate_example_templates():
 if __name__ == '__main__':
     setup_logger()
 
-    # generate_example_templates()
+    generate_example_templates()
 
     initiate_cli()

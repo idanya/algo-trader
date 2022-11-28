@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Optional, Dict
 
 from entities.candle import Candle
 from pipeline.processor import Processor
 from pipeline.shared_context import SharedContext
+from serialization.store import DeserializationService
 from storage.storage_provider import StorageProvider
 
 
@@ -16,12 +17,24 @@ class StorageSinkProcessor(Processor):
         @param storage_provider: StorageProvider implementation
         """
         super().__init__(next_processor)
-        self.mongo_storage = storage_provider
+        self.storage_provider = storage_provider
 
     def process(self, context: SharedContext, candle: Candle):
-        self.mongo_storage.save(candle)
+        self.storage_provider.save(candle)
         super().process(context, candle)
 
     def reprocess(self, context: SharedContext, candle: Candle):
-        self.mongo_storage.save(candle)
+        self.storage_provider.save(candle)
         super().reprocess(context, candle)
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'storage_provider': self.storage_provider.serialize(),
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict):
+        storage_provider = DeserializationService.deserialize(data['storage_provider'])
+        return cls(storage_provider, cls._deserialize_next_processor(data))

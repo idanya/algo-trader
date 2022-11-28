@@ -17,6 +17,7 @@ from pipeline.reverse_source import ReverseSource
 from pipeline.source import Source
 from pipeline.sources.ib_history import IBHistorySource
 from pipeline.sources.mongodb_source import MongoDBSource
+from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
 from pipeline.terminators.technicals_binner import TechnicalsBinner
 from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 from storage.mongodb_storage import MongoDBStorage
@@ -39,6 +40,22 @@ class LoadersPipelines:
         processor = TechnicalsProcessor(cache_processor)
 
         return Pipeline(source, processor)
+
+    @staticmethod
+    def build_daily_yahoo_loader(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
+        mongodb_storage = MongoDBStorage()
+
+        from_time = datetime.now() - timedelta(days=days_back)
+        symbols = AssetsProvider.get_sp500_symbols()
+
+        source = YahooFinanceHistorySource(symbols, TimeSpan.Day, from_time, datetime.now())
+
+        sink = StorageSinkProcessor(mongodb_storage)
+        cache_processor = CandleCache(sink)
+        processor = TechnicalsProcessor(cache_processor)
+
+        return Pipeline(source, processor)
+
 
     @staticmethod
     def build_returns_calculator(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:

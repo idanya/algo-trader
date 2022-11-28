@@ -1,33 +1,12 @@
-import json
-import pathlib
-
 import typer
 
-from cli import processors, strategies, sources
-from pipeline.pipeline import Pipeline
-from pipeline.runner import PipelineRunner
-from serialization.store import DeserializationService
+from cli import processors, strategies, sources, pipeline
 
 app = typer.Typer(no_args_is_help=True)
 app.add_typer(processors.app, name='processor', short_help='Processors related commands')
 app.add_typer(strategies.app, name='strategy', short_help='Strategies related commands')
 app.add_typer(sources.app, name='source', short_help='Sources related commands')
-
-EXAMPLE_TEMPLATES_DIR = pathlib.Path(__file__).parent.joinpath('examples/pipeline-templates').resolve()
-
-
-def load_pipeline_spec(filename: str) -> Pipeline:
-    with open(pathlib.Path(EXAMPLE_TEMPLATES_DIR).joinpath(filename), 'r') as input_file:
-        return DeserializationService.deserialize(json.loads(input_file.read()))
-
-
-@app.command()
-def run_template(path: str):
-    """
-    Create and run a JSON serialized pipeline from file
-    """
-    pipeline = load_pipeline_spec(path)
-    PipelineRunner(pipeline).run()
+app.add_typer(pipeline.app, name='pipeline', short_help='Pipelines related commands')
 
 
 def initiate_cli():

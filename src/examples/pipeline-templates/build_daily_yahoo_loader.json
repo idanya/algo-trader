@@ -1,15 +1,7 @@
 {
   "__class__": "pipeline.pipeline:Pipeline",
   "source": {
-    "__class__": "pipeline.sources.mongodb_source:MongoDBSource",
-    "mongo_storage": {
-      "__class__": "storage.mongodb_storage:MongoDBStorage",
-      "host": "localhost",
-      "port": 27017,
-      "database": "algo-trader",
-      "username": "root",
-      "password": "root"
-    },
+    "__class__": "pipeline.sources.yahoo_finance_history:YahooFinanceHistorySource",
     "symbols": [
       "A",
       "AAL",
@@ -508,57 +500,27 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2022-06-01 22:27:34.322965",
-    "to_time": "2022-11-28 22:27:34.025677"
+    "start_time": 1638131254.25025,
+    "end_time": 1669667254.250613,
+    "auto_adjust": true,
+    "include_after_hours": false,
+    "sort_all": false
   },
   "processor": {
     "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
     "next_processor": {
-      "__class__": "pipeline.processors.technicals_normalizer:TechnicalsNormalizerProcessor",
+      "__class__": "pipeline.processors.candle_cache:CandleCache",
       "next_processor": {
-        "__class__": "pipeline.processors.technicals_buckets_matcher:TechnicalsBucketsMatcher",
-        "next_processor": {
-          "__class__": "pipeline.processors.strategy:StrategyProcessor",
-          "next_processor": {
-            "__class__": "pipeline.processors.candle_cache:CandleCache"
-          },
-          "strategies": [
-            {
-              "__class__": "pipeline.strategies.history_bucket_compare:HistoryBucketCompareStrategy",
-              "storage_provider": {
-                "__class__": "storage.mongodb_storage:MongoDBStorage",
-                "host": "localhost",
-                "port": 27017,
-                "database": "algo-trader",
-                "username": "root",
-                "password": "root"
-              },
-              "timeframe_start": "2019-11-29 22:27:34.322972",
-              "timeframe_end": "2022-06-01 22:27:34.322965",
-              "indicators_to_compare": [
-                "sma5",
-                "sma20",
-                "cci7",
-                "cci14",
-                "rsi7",
-                "rsi14",
-                "stddev5",
-                "ema5",
-                "ema20",
-                "correlation"
-              ],
-              "return_field": "ctc1",
-              "min_event_count": 50,
-              "min_avg_return": 0.2
-            }
-          ],
-          "signals_executor": {
-            "__class__": "trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
-          }
-        },
-        "bins_file_path": "examples/pipeline-templates/bins.json"
-      },
-      "normalization_window_size": 3
+        "__class__": "pipeline.processors.storage_provider_sink:StorageSinkProcessor",
+        "storage_provider": {
+          "__class__": "storage.mongodb_storage:MongoDBStorage",
+          "host": "localhost",
+          "port": 27017,
+          "database": "algo-trader",
+          "username": "root",
+          "password": "root"
+        }
+      }
     }
   },
   "terminator": null
