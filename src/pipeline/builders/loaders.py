@@ -62,7 +62,7 @@ class LoadersPipelines:
         symbols = AssetsProvider.get_sp500_symbols()
 
         from_time = STATIC_NOW - timedelta(days=days_back)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time, STATIC_NOW)
         source = ReverseSource(source)
 
         sink = StorageSinkProcessor(mongodb_storage)
@@ -77,7 +77,7 @@ class LoadersPipelines:
         symbols = AssetsProvider.get_sp500_symbols()
 
         from_time = STATIC_NOW - timedelta(days=days_back)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time, STATIC_NOW)
         return source
 
     @staticmethod
