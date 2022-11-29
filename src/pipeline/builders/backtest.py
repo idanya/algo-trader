@@ -15,6 +15,7 @@ from pipeline.strategies.history_cosine_similarity import HistoryCosineSimilarit
 from storage.mongodb_storage import MongoDBStorage
 from trade.simple_sum_signals_executor import SimpleSumSignalsExecutor
 
+STATIC_NOW = datetime(2022, 1, 1)
 
 class BacktestPipelines:
     @staticmethod
@@ -22,7 +23,7 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=365 * 2)
+        from_time = STATIC_NOW - timedelta(days=365 * 2)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
 
         cache_processor = CandleCache()
@@ -37,8 +38,8 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        backtest_from_time = datetime.now() - timedelta(days=30 * 6)
-        data_from_time = datetime.now() - timedelta(days=365 * 3)
+        backtest_from_time = STATIC_NOW - timedelta(days=30 * 6)
+        data_from_time = STATIC_NOW - timedelta(days=365 * 3)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time)
 
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
@@ -65,8 +66,8 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        backtest_from_time = datetime.now() - timedelta(days=30 * 6)
-        data_from_time = datetime.now() - timedelta(days=365 * 3)
+        backtest_from_time = STATIC_NOW - timedelta(days=30 * 6)
+        data_from_time = STATIC_NOW - timedelta(days=365 * 3)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time)
 
         history_compare_strategy = HistoryCosineSimilarityStrategy(mongodb_storage,

@@ -508,8 +508,8 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2021-11-28 22:27:34.593954",
-    "to_time": "2022-11-28 22:27:34.025677"
+    "from_time": "2021-01-01 00:00:00",
+    "to_time": "2022-11-29 09:11:12.408859"
   },
   "processor": {
     "__class__": "pipeline.processors.timespan_change:TimeSpanChangeProcessor",
@@ -535,7 +535,7 @@
                 }
               }
             },
-            "bins_file_path": "examples/pipeline-templates/bins.json"
+            "bins_file_path": "/Users/idanyael/personal-dev/algo-trader/src/examples/pipeline-templates/bins.json"
           }
         },
         "normalization_window_size": 3

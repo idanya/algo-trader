@@ -23,14 +23,14 @@ from providers.ib.interactive_brokers_connector import InteractiveBrokersConnect
 from storage.mongodb_storage import MongoDBStorage
 
 DEFAULT_DAYS_BACK = 365 * 1
-
+STATIC_NOW = datetime(2022, 1, 1)
 
 class LoadersPipelines:
     @staticmethod
     def build_daily_ib_loader(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
         mongodb_storage = MongoDBStorage()
 
-        from_time = datetime.now() - timedelta(days=days_back)
+        from_time = STATIC_NOW - timedelta(days=days_back)
         symbols = AssetsProvider.get_sp500_symbols()
 
         source = IBHistorySource(InteractiveBrokersConnector(), symbols, TimeSpan.Day, from_time)
@@ -45,10 +45,10 @@ class LoadersPipelines:
     def build_daily_yahoo_loader(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
         mongodb_storage = MongoDBStorage()
 
-        from_time = datetime.now() - timedelta(days=days_back)
+        from_time = STATIC_NOW - timedelta(days=days_back)
         symbols = AssetsProvider.get_sp500_symbols()
 
-        source = YahooFinanceHistorySource(symbols, TimeSpan.Day, from_time, datetime.now())
+        source = YahooFinanceHistorySource(symbols, TimeSpan.Day, from_time, STATIC_NOW)
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
@@ -61,7 +61,7 @@ class LoadersPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=days_back)
+        from_time = STATIC_NOW - timedelta(days=days_back)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
         source = ReverseSource(source)
 
@@ -76,7 +76,7 @@ class LoadersPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=days_back)
+        from_time = STATIC_NOW - timedelta(days=days_back)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
         return source
 
