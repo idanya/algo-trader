@@ -509,7 +509,7 @@
     ],
     "timespan": 86400,
     "from_time": "2021-01-01 00:00:00",
-    "to_time": "2022-11-29 09:12:31.207817"
+    "to_time": "2022-01-01 00:00:00"
   },
   "processor": {
     "__class__": "pipeline.processors.timespan_change:TimeSpanChangeProcessor",
