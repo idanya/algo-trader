@@ -53,6 +53,6 @@ def generate_example_templates():
 if __name__ == '__main__':
     setup_logger()
 
-    generate_example_templates()
+    # generate_example_templates()
 
     initiate_cli()
