@@ -508,8 +508,8 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2021-11-18 13:40:26.168299",
-    "to_time": "2022-11-18 13:40:25.883887"
+    "from_time": "2021-01-01 00:00:00",
+    "to_time": "2022-01-01 00:00:00"
   },
   "processor": {
     "__class__": "pipeline.processors.timespan_change:TimeSpanChangeProcessor",
@@ -524,10 +524,18 @@
             "next_processor": {
               "__class__": "pipeline.processors.candle_cache:CandleCache",
               "next_processor": {
-                "__class__": "pipeline.processors.mongodb_sink:MongoDBSinkProcessor"
+                "__class__": "pipeline.processors.storage_provider_sink:StorageSinkProcessor",
+                "storage_provider": {
+                  "__class__": "storage.mongodb_storage:MongoDBStorage",
+                  "host": "localhost",
+                  "port": 27017,
+                  "database": "algo-trader",
+                  "username": "root",
+                  "password": "root"
+                }
               }
             },
-            "bins_file_path": "examples/pipeline-templates/bins.json"
+            "bins_file_path": "/Users/idanyael/personal-dev/algo-trader/src/examples/pipeline-templates/bins.json"
           }
         },
         "normalization_window_size": 3

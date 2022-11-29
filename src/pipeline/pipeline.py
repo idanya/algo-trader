@@ -22,7 +22,7 @@ class Pipeline(Serializable, Deserializable):
         obj.update({
             'source': self.source.serialize(),
             'processor': self.processor.serialize(),
-            'terminator': self.terminator
+            'terminator': self.terminator.serialize() if self.terminator else None,
         })
         return obj
 

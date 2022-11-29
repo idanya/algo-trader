@@ -2,18 +2,20 @@ from datetime import datetime, timedelta
 
 from assets.assets_provider import AssetsProvider
 from entities.timespan import TimeSpan
+from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.strategy import StrategyProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
-from pipeline.pipeline import Pipeline
 from pipeline.sources.mongodb_source import MongoDBSource
 from pipeline.strategies.connors_rsi2 import ConnorsRSI2
 from pipeline.strategies.history_bucket_compare import HistoryBucketCompareStrategy
 from pipeline.strategies.history_cosine_similarity import HistoryCosineSimilarityStrategy
 from storage.mongodb_storage import MongoDBStorage
 from trade.simple_sum_signals_executor import SimpleSumSignalsExecutor
+
+STATIC_NOW = datetime(2022, 1, 1)
 
 
 class BacktestPipelines:
@@ -22,8 +24,8 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=365 * 2)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+        from_time = STATIC_NOW - timedelta(days=365 * 2)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time, STATIC_NOW)
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([ConnorsRSI2()], SimpleSumSignalsExecutor(), cache_processor)
@@ -37,9 +39,9 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        backtest_from_time = datetime.now() - timedelta(days=30 * 6)
-        data_from_time = datetime.now() - timedelta(days=365 * 3)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time)
+        backtest_from_time = STATIC_NOW - timedelta(days=30 * 6)
+        data_from_time = STATIC_NOW - timedelta(days=365 * 3)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time, STATIC_NOW)
 
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
                                                                 data_from_time,
@@ -65,9 +67,9 @@ class BacktestPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        backtest_from_time = datetime.now() - timedelta(days=30 * 6)
-        data_from_time = datetime.now() - timedelta(days=365 * 3)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time)
+        backtest_from_time = STATIC_NOW - timedelta(days=30 * 6)
+        data_from_time = STATIC_NOW - timedelta(days=365 * 3)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time, STATIC_NOW)
 
         history_compare_strategy = HistoryCosineSimilarityStrategy(mongodb_storage,
                                                                    data_from_time,

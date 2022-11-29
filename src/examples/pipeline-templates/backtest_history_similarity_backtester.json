@@ -508,8 +508,8 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2022-05-22 13:40:26.234883",
-    "to_time": "2022-11-18 13:40:25.883887"
+    "from_time": "2021-07-05 00:00:00",
+    "to_time": "2022-01-01 00:00:00"
   },
   "processor": {
     "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
@@ -533,8 +533,8 @@
                 "username": "root",
                 "password": "root"
               },
-              "timeframe_start": "2019-11-19 13:40:26.234893",
-              "timeframe_end": "2022-05-22 13:40:26.234883",
+              "timeframe_start": "2019-01-02 00:00:00",
+              "timeframe_end": "2021-07-05 00:00:00",
               "indicators_to_compare": [
                 "sma5",
                 "sma20",
@@ -555,7 +555,7 @@
             "__class__": "trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
           }
         },
-        "bins_file_path": "examples/pipeline-templates/bins.json"
+        "bins_file_path": "/Users/idanyael/personal-dev/algo-trader/src/examples/pipeline-templates/bins.json"
       },
       "normalization_window_size": 3
     }

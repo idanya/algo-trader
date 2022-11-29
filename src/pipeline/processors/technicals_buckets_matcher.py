@@ -21,7 +21,18 @@ IndicatorsMatchedBuckets()
 
 
 class TechnicalsBucketsMatcher(Processor):
+    """
+    Match technical indicators to buckets and saves them on the candle attachments objects.
+    This processor is a companion for the TechnicalsBinner terminator which in charge of creating the bins and
+    saving them to file.
+    Use the TechnicalsBinner on historical data to create the bins, then run realtime date with
+    this processor and get the matching bins.
+    """
+
     def __init__(self, bins_file_path: str, next_processor: Optional[Processor]) -> None:
+        """
+        @param bins_file_path: path to the bins file created by TechnicalsBinner
+        """
         super().__init__(next_processor)
 
         self.bins_file_path = bins_file_path

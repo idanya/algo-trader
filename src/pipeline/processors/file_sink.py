@@ -7,7 +7,14 @@ from pipeline.shared_context import SharedContext
 
 
 class FileSinkProcessor(Processor):
+    """
+    Write processed candles to file
+    """
+
     def __init__(self, file_path: str, next_processor: Optional[Processor] = None) -> None:
+        """
+        @param file_path: file path to write to
+        """
         super().__init__(next_processor)
         self.file_path = file_path
 

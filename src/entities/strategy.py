@@ -10,6 +10,8 @@ from pipeline.shared_context import SharedContext
 
 
 class Strategy(Serializable, Deserializable):
+    def __init__(self):
+        pass
 
     @abstractmethod
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:

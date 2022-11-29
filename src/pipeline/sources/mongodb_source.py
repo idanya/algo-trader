@@ -9,10 +9,20 @@ from storage.mongodb_storage import MongoDBStorage
 
 
 class MongoDBSource(Source):
+    """
+    Source for fetching data from MongoDB
+    """
     logger = logging.getLogger('MongoDBSource')
 
     def __init__(self, mongo_storage: MongoDBStorage, symbols: List[str], timespan: TimeSpan,
                  from_time: datetime, to_time: Optional[datetime] = datetime.now()) -> None:
+        """
+        @param mongo_storage: MongoDBStorage instance
+        @param symbols: list of symbols to fetch
+        @param timespan: timespan of candles
+        @param from_time: time to start fetching from
+        @param to_time: time to fetch to
+        """
         self.timespan = timespan
         self.to_time = to_time
         self.from_time = from_time

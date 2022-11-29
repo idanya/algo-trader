@@ -43,6 +43,9 @@ class CandleCacheContextReader:
 
 
 class CandleCache(Processor):
+    """
+    Provides a cache facade for processed candles
+    """
     def __init__(self, next_processor: Optional[Processor] = None) -> None:
         super().__init__(next_processor)
         self.data: CacheData = {}

@@ -7,8 +7,8 @@ from pipeline.pipeline import Pipeline
 from pipeline.processor import Processor
 from pipeline.processors.assets_correlation import AssetCorrelationProcessor
 from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.mongodb_sink import MongoDBSinkProcessor
 from pipeline.processors.returns import ReturnsCalculatorProcessor
+from pipeline.processors.storage_provider_sink import StorageSinkProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
@@ -17,11 +17,13 @@ from pipeline.reverse_source import ReverseSource
 from pipeline.source import Source
 from pipeline.sources.ib_history import IBHistorySource
 from pipeline.sources.mongodb_source import MongoDBSource
+from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
 from pipeline.terminators.technicals_binner import TechnicalsBinner
 from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 from storage.mongodb_storage import MongoDBStorage
 
 DEFAULT_DAYS_BACK = 365 * 1
+STATIC_NOW = datetime(2022, 1, 1)
 
 
 class LoadersPipelines:
@@ -29,12 +31,27 @@ class LoadersPipelines:
     def build_daily_ib_loader(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
         mongodb_storage = MongoDBStorage()
 
-        from_time = datetime.now() - timedelta(days=days_back)
+        from_time = STATIC_NOW - timedelta(days=days_back)
         symbols = AssetsProvider.get_sp500_symbols()
 
         source = IBHistorySource(InteractiveBrokersConnector(), symbols, TimeSpan.Day, from_time)
 
-        sink = MongoDBSinkProcessor(mongodb_storage)
+        sink = StorageSinkProcessor(mongodb_storage)
+        cache_processor = CandleCache(sink)
+        processor = TechnicalsProcessor(cache_processor)
+
+        return Pipeline(source, processor)
+
+    @staticmethod
+    def build_daily_yahoo_loader(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
+        mongodb_storage = MongoDBStorage()
+
+        from_time = STATIC_NOW - timedelta(days=days_back)
+        symbols = AssetsProvider.get_sp500_symbols()
+
+        source = YahooFinanceHistorySource(symbols, TimeSpan.Day, from_time, STATIC_NOW)
+
+        sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
         processor = TechnicalsProcessor(cache_processor)
 
@@ -45,11 +62,11 @@ class LoadersPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=days_back)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+        from_time = STATIC_NOW - timedelta(days=days_back)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time, STATIC_NOW)
         source = ReverseSource(source)
 
-        sink = MongoDBSinkProcessor(mongodb_storage)
+        sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
         processor = ReturnsCalculatorProcessor(cache_processor)
 
@@ -60,15 +77,15 @@ class LoadersPipelines:
         mongodb_storage = MongoDBStorage()
         symbols = AssetsProvider.get_sp500_symbols()
 
-        from_time = datetime.now() - timedelta(days=days_back)
-        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time)
+        from_time = STATIC_NOW - timedelta(days=days_back)
+        source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, from_time, STATIC_NOW)
         return source
 
     @staticmethod
     def _build_technicals_base_processor_chain(bins_file_path: Optional[str] = None,
                                                correlations_file_path: Optional[str] = None) -> Processor:
         mongodb_storage = MongoDBStorage()
-        sink = MongoDBSinkProcessor(mongodb_storage)
+        sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
 
         latest_processor = cache_processor

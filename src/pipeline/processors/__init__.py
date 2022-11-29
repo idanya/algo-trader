@@ -1,0 +1,10 @@
+import pipeline.processors.assets_correlation
+import pipeline.processors.candle_cache
+import pipeline.processors.file_sink
+import pipeline.processors.returns
+import pipeline.processors.storage_provider_sink
+import pipeline.processors.strategy
+import pipeline.processors.technicals
+import pipeline.processors.technicals_buckets_matcher
+import pipeline.processors.technicals_normalizer
+import pipeline.processors.timespan_change

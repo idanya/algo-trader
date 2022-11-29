@@ -1,15 +1,7 @@
 {
   "__class__": "pipeline.pipeline:Pipeline",
   "source": {
-    "__class__": "pipeline.sources.mongodb_source:MongoDBSource",
-    "mongo_storage": {
-      "__class__": "storage.mongodb_storage:MongoDBStorage",
-      "host": "localhost",
-      "port": 27017,
-      "database": "algo-trader",
-      "username": "root",
-      "password": "root"
-    },
+    "__class__": "pipeline.sources.yahoo_finance_history:YahooFinanceHistorySource",
     "symbols": [
       "A",
       "AAL",
@@ -508,25 +500,25 @@
       "ZTS"
     ],
     "timespan": 86400,
-    "from_time": "2020-01-02 00:00:00",
-    "to_time": "2022-01-01 00:00:00"
+    "start_time": 1609452000.0,
+    "end_time": 1640988000.0,
+    "auto_adjust": true,
+    "include_after_hours": false,
+    "sort_all": false
   },
   "processor": {
     "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
     "next_processor": {
-      "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+      "__class__": "pipeline.processors.candle_cache:CandleCache",
       "next_processor": {
-        "__class__": "pipeline.processors.strategy:StrategyProcessor",
-        "next_processor": {
-          "__class__": "pipeline.processors.candle_cache:CandleCache"
-        },
-        "strategies": [
-          {
-            "__class__": "pipeline.strategies.connors_rsi2:ConnorsRSI2"
-          }
-        ],
-        "signals_executor": {
-          "__class__": "trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
+        "__class__": "pipeline.processors.storage_provider_sink:StorageSinkProcessor",
+        "storage_provider": {
+          "__class__": "storage.mongodb_storage:MongoDBStorage",
+          "host": "localhost",
+          "port": 27017,
+          "database": "algo-trader",
+          "username": "root",
+          "password": "root"
         }
       }
     }

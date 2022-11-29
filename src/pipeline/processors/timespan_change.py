@@ -9,7 +9,14 @@ from pipeline.shared_context import SharedContext
 
 
 class TimeSpanChangeProcessor(Processor):
+    """
+    Event emitter.
+    Keeps track of processed candles timestamps and emits a Event.TimeSpanChange upon a TimeSpan change.
+    """
     def __init__(self, timespan: TimeSpan, next_processor: Optional[Processor]) -> None:
+        """
+        @param timespan: What TimeSpan we are tracking
+        """
         super().__init__(next_processor)
         self.timespan = timespan
         self.latest_candle: Optional[Candle] = None

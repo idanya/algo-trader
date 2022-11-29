@@ -5,3 +5,4 @@ mongomock==3.23.0
 scipy==1.7.3
 yfinance==0.1.87
 flake8==5.0.4
+typer[all]==0.7.0

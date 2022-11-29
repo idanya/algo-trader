@@ -27,7 +27,16 @@ NormalizeFunc = Callable[[List[Candle], IndicatorValue], IndicatorValue]
 
 
 class TechnicalsNormalizerProcessor(Processor):
+    """
+    A skeleton with some custom normalization functions for indicators and candle base values.
+    This processor is taking candle indicators and correlation data and normalize their scale.
+    Add custom normalization patterns by implementing a NormalizeFunc and adding it to self.normalizers
+    """
+
     def __init__(self, normalization_window_size: int = 3, next_processor: Optional[Processor] = None) -> None:
+        """
+        @param normalization_window_size: how many candles to go back in order to normalize value (used for vwap)
+        """
         super().__init__(next_processor)
         self.normalization_window_size = normalization_window_size
         self.normalizers: Dict[str, NormalizeFunc] = {}
