@@ -2,12 +2,12 @@ from datetime import datetime, timedelta
 
 from assets.assets_provider import AssetsProvider
 from entities.timespan import TimeSpan
+from pipeline.pipeline import Pipeline
 from pipeline.processors.candle_cache import CandleCache
 from pipeline.processors.strategy import StrategyProcessor
 from pipeline.processors.technicals import TechnicalsProcessor
 from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
 from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
-from pipeline.pipeline import Pipeline
 from pipeline.sources.mongodb_source import MongoDBSource
 from pipeline.strategies.connors_rsi2 import ConnorsRSI2
 from pipeline.strategies.history_bucket_compare import HistoryBucketCompareStrategy
@@ -16,6 +16,7 @@ from storage.mongodb_storage import MongoDBStorage
 from trade.simple_sum_signals_executor import SimpleSumSignalsExecutor
 
 STATIC_NOW = datetime(2022, 1, 1)
+
 
 class BacktestPipelines:
     @staticmethod

@@ -25,6 +25,7 @@ from storage.mongodb_storage import MongoDBStorage
 DEFAULT_DAYS_BACK = 365 * 1
 STATIC_NOW = datetime(2022, 1, 1)
 
+
 class LoadersPipelines:
     @staticmethod
     def build_daily_ib_loader(days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
