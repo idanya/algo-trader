@@ -141,7 +141,8 @@ In order to run a pipeline, you'll need to create a pipeline template file. and 
 python main.py pipeline run <pipeline_template_file>
 ```
 
-to run the example yahoo finance loader pipeline, run:
+An example data loader from Yahoo finance can be found in [examples/pipeline-templates/build_daily_yahoo_loader.py](src/examples/pipeline-templates/build_daily_yahoo_loader.json). 
+Running this example pipeline will load historical data from Yahoo finance to MongoDB:
 
 ```shell
 python main.py pipeline run examples/pipeline-templates/yahoo-finance-loader.json
