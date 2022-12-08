@@ -1,7 +1,10 @@
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 import pymongo
+from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.database import Database
 
 from entities.candle import Candle, str_to_timestamp, timestamp_to_str
 from entities.timespan import TimeSpan
@@ -21,8 +24,19 @@ class MongoDBStorage(StorageProvider):
         self.username = username
         self.password = password
 
-        self.client = pymongo.MongoClient(f'mongodb://{host}:{port}/', username=username, password=password)
-        self.db = self.client[database]
+        self.client: Optional[MongoClient] = None
+        self.db: Optional[Database] = None
+        self.candles_collection: Optional[Collection] = None
+
+    def _ensure_connection(self):
+        if self.client:
+            return
+
+        self.client = pymongo.MongoClient(f'mongodb://{self.host}:{self.port}/',
+                                          username=self.username, password=self.password)
+
+        self.db = self.client[self.database]
+
         self.candles_collection = self.db[CANDLES_COLLECTION]
         self.candles_collection.create_index([("symbol", pymongo.ASCENDING),
                                               ("timespan", pymongo.ASCENDING),
@@ -32,6 +46,9 @@ class MongoDBStorage(StorageProvider):
     def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
                                return_field: str, min_count: int, min_avg: float) -> \
             List[Dict[str, int]]:
+
+        self._ensure_connection()
+
         pipeline = [
             self._generate_history_match_clause(from_timestamp, to_timestamp, groupby_fields + [return_field]),
             self._generate_group_stage(groupby_fields, return_field),
@@ -82,6 +99,8 @@ class MongoDBStorage(StorageProvider):
         }
 
     def save(self, candle: Candle):
+        self._ensure_connection()
+
         self.candles_collection.replace_one(self._serialize_candle_key(candle), self._serialize_candle(candle),
                                             upsert=True)
 
@@ -104,6 +123,8 @@ class MongoDBStorage(StorageProvider):
 
     def get_symbol_candles(self, symbol: str, time_span: TimeSpan,
                            from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
+        self._ensure_connection()
+
         query = {
             'symbol': symbol,
             'timespan': time_span.value,
@@ -115,6 +136,8 @@ class MongoDBStorage(StorageProvider):
 
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
+        self._ensure_connection()
+
         query = {
             'timespan': time_span.value,
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
@@ -124,6 +147,7 @@ class MongoDBStorage(StorageProvider):
                 self.candles_collection.find(query).sort("timestamp")]
 
     def __drop_collections__(self):
+        self._ensure_connection()
         self.db.drop_collection(CANDLES_COLLECTION)
 
     def serialize(self) -> Dict:
