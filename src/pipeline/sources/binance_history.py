@@ -22,7 +22,6 @@ class BinanceHistorySource(Source):
             for candle in candles:
                 yield candle
 
-
     def serialize(self) -> Dict:
         obj = super().serialize()
         obj.update({
@@ -37,4 +36,5 @@ class BinanceHistorySource(Source):
     @classmethod
     def deserialize(cls, data: Dict):
         provider = BinanceProvider.deserialize(data.get('binanceProvider'))
-        return cls(provider, data.get('symbols'), TimeSpan(data.get('timeSpan')), data.get('startTime'), data.get('endTime'))
+        return cls(provider, data.get('symbols'), TimeSpan(data.get('timeSpan')), data.get('startTime'),
+                   data.get('endTime'))
