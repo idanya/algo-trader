@@ -141,12 +141,21 @@ In order to run a pipeline, you'll need to create a pipeline template file. and 
 python main.py pipeline run <pipeline_template_file>
 ```
 
-An example data loader from Yahoo finance can be found in [examples/pipeline-templates/build_daily_yahoo_loader.py](src/examples/pipeline-templates/build_daily_yahoo_loader.json). 
+### Easy to run examples:
+
+* Data loader from Yahoo finance can be found in [examples/pipeline-templates/build_daily_yahoo_loader.py](src/examples/pipeline-templates/build_daily_yahoo_loader.json). 
 Running this example pipeline will load historical data from Yahoo finance to MongoDB:
 
-```shell
-python main.py pipeline run examples/pipeline-templates/yahoo-finance-loader.json
-```
+   ```shell
+   python main.py pipeline run examples/pipeline-templates/build_daily_yahoo_loader.json
+   ```
+* Data loader from Binance can be found in [examples/pipeline-templates/build_daily_binance_loader.json](src/examples/pipeline-templates/build_daily_binance_loader.json). 
+Running this example pipeline will load historical data from Binance to MongoDB:
+
+   ```shell
+   python main.py pipeline run examples/pipeline-templates/build_daily_binance_loader.json
+   ```
+  
 
 ## Virtual environment
 
