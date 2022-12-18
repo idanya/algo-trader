@@ -28,13 +28,14 @@ class BinanceHistorySource(Source):
             'binanceProvider': self.binance_provider.serialize(),
             'symbols': self.symbols,
             'timeSpan': self.time_span.value,
-            'startTime': self.start_time,
-            'endTime': self.end_time,
+            'startTime': self.start_time.timestamp(),
+            'endTime': self.end_time.timestamp(),
         })
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict):
         provider = BinanceProvider.deserialize(data.get('binanceProvider'))
-        return cls(provider, data.get('symbols'), TimeSpan(data.get('timeSpan')), data.get('startTime'),
-                   data.get('endTime'))
+        return cls(provider, data.get('symbols'), TimeSpan(data.get('timeSpan')),
+                   datetime.fromtimestamp(data.get('startTime')),
+                   datetime.fromtimestamp(data.get('endTime')))
