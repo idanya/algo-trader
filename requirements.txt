@@ -7,4 +7,5 @@ yfinance==0.1.87
 flake8==5.0.4
 typer[all]==0.7.0
 coverage==6.5.0
-python-binance==1.0.16
+binance-connector==1.18.0
+python-dotenv==0.21.0
