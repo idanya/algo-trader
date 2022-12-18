@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 source test-setup.sh
 
-python -m unittest discover -s ../tests/unit
+coverage run --rcfile=../.coveragerc -m unittest discover -s ../tests/unit
+coverage report -m

@@ -1,0 +1,35 @@
+{
+  "__class__": "pipeline.pipeline:Pipeline",
+  "source": {
+    "__class__": "pipeline.sources.binance_history:BinanceHistorySource",
+    "binanceProvider": {
+      "apiKey": "",
+      "apiSecret": "",
+      "enableWebsocket": false
+    },
+    "symbols": [
+      "BTCUSDT"
+    ],
+    "timeSpan": 86400,
+    "startTime": 1609452000.0,
+    "endTime": 1640988000.0
+  },
+  "processor": {
+    "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+    "next_processor": {
+      "__class__": "pipeline.processors.candle_cache:CandleCache",
+      "next_processor": {
+        "__class__": "pipeline.processors.storage_provider_sink:StorageSinkProcessor",
+        "storage_provider": {
+          "__class__": "storage.mongodb_storage:MongoDBStorage",
+          "host": "localhost",
+          "port": 27017,
+          "database": "algo-trader",
+          "username": "root",
+          "password": "root"
+        }
+      }
+    }
+  },
+  "terminator": null
+}

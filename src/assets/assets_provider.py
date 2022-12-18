@@ -2,6 +2,7 @@ from os import path
 from typing import List
 
 SP500_SYMBOLS = 'sp500.symbols'
+CRYPTO_SYMBOLS = 'crypto.symbols'
 
 
 class AssetsProvider:
@@ -9,6 +10,10 @@ class AssetsProvider:
     @staticmethod
     def get_sp500_symbols() -> List[str]:
         return AssetsProvider._get_file_lines(SP500_SYMBOLS)
+
+    @staticmethod
+    def get_crypto_symbols() -> List[str]:
+        return AssetsProvider._get_file_lines(CRYPTO_SYMBOLS)
 
     @staticmethod
     def _get_file_lines(filename: str) -> List[str]:
