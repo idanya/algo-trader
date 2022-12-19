@@ -1,13 +1,14 @@
 import logging
 from typing import Optional, Dict
 
+from rich.progress import Progress, TextColumn, BarColumn
+
 from entities.serializable import Serializable, Deserializable
 from pipeline.processor import Processor
 from pipeline.shared_context import SharedContext
 from pipeline.source import Source
 from pipeline.terminator import Terminator
 from serialization.store import DeserializationService
-from rich.progress import Progress, TextColumn, BarColumn
 
 
 class Pipeline(Serializable, Deserializable):
@@ -46,4 +47,3 @@ class Pipeline(Serializable, Deserializable):
 
         if self.terminator:
             self.terminator.terminate(context)
-
