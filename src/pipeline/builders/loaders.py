@@ -16,6 +16,7 @@ from pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from pipeline.reverse_source import ReverseSource
 from pipeline.source import Source
 from pipeline.sources.binance_history import BinanceHistorySource
+from pipeline.sources.binance_realtime import BinanceRealtimeSource
 from pipeline.sources.ib_history import IBHistorySource
 from pipeline.sources.mongodb_source import MongoDBSource
 from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
@@ -68,6 +69,21 @@ class LoadersPipelines:
 
         provider = BinanceProvider(enable_websocket=False)
         source = BinanceHistorySource(provider, symbols, TimeSpan.Day, from_time, STATIC_NOW)
+
+        sink = StorageSinkProcessor(mongodb_storage)
+        cache_processor = CandleCache(sink)
+        processor = TechnicalsProcessor(cache_processor)
+
+        return Pipeline(source, processor)
+
+    @staticmethod
+    def build_realtime_binance() -> Pipeline:
+        mongodb_storage = MongoDBStorage()
+
+        symbols = AssetsProvider.get_crypto_symbols()
+
+        provider = BinanceProvider(enable_websocket=True)
+        source = BinanceRealtimeSource(provider, symbols, TimeSpan.Second)
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)

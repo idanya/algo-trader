@@ -27,9 +27,12 @@ class BinanceProvider(Serializable, Deserializable):
             self.wsManager.start()
 
     def stop(self):
-        if self.wsManager.isAlive():
+        if self.is_socket_alive():
             self.logger.info('Stopping websocket manager...')
             self.wsManager.stop()
+
+    def is_socket_alive(self) -> bool:
+        return self.wsManager.is_alive()
 
     def start_kline_socket(self, symbol: str, interval: TimeSpan, handler: StreamedCandleCallback):
         self.logger.info(f'Starting kline socket for {symbol}...')
