@@ -155,6 +155,14 @@ Running this example pipeline will load historical data from Binance to MongoDB:
    ```shell
    python main.py pipeline run examples/pipeline-templates/build_daily_binance_loader.json
    ```
+
+* Realtime Crypto pipeline from Binance can be found in [examples/pipeline-templates/build_realtime_binance.json](src/examples/pipeline-templates/build_realtime_binance.json). 
+Running this example pipeline will process realtime, second candles from Binance:
+
+   ```shell
+   python main.py pipeline run examples/pipeline-templates/build_realtime_binance.json
+   ```
+
   
 
 ## Virtual environment
