@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from assets.assets_provider import AssetsProvider
+from algotrader.assets.assets_provider import AssetsProvider
 
 
 class TestAssestProvider(TestCase):

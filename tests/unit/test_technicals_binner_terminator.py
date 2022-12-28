@@ -4,21 +4,21 @@ from datetime import datetime
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
-from entities.bucket import Bucket
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.bucket import Bucket
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
-from pipeline.pipeline import Pipeline
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import TechnicalsProcessor
-from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher, IndicatorsMatchedBuckets, \
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals import TechnicalsProcessor
+from algotrader.pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher, IndicatorsMatchedBuckets, \
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY
-from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor, NormalizedIndicators, \
+from algotrader.pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor, NormalizedIndicators, \
     NORMALIZED_INDICATORS_ATTACHMENT_KEY
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
-from pipeline.terminators.technicals_binner import TechnicalsBinner
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.pipeline.terminators.technicals_binner import TechnicalsBinner
 from unit import generate_candle_with_price, TEST_SYMBOL
 
 

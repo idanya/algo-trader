@@ -3,9 +3,9 @@ from unittest import TestCase
 
 import mongomock
 
-from entities.timespan import TimeSpan
-from pipeline.sources.mongodb_source import MongoDBSource
-from storage.mongodb_storage import MongoDBStorage
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.sources.mongodb_source import MongoDBSource
+from algotrader.storage.mongodb_storage import MongoDBStorage
 from unit import generate_candle, TEST_SYMBOL
 
 

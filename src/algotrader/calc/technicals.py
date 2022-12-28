@@ -5,7 +5,7 @@ from typing import List
 import numpy as np
 import tulipy as ti
 
-from entities.candle import Candle
+from algotrader.entities.candle import Candle
 
 
 class TechnicalCalculator:

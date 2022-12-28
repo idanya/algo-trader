@@ -2,12 +2,12 @@ from datetime import datetime
 from typing import Dict
 from unittest import TestCase
 
-from entities.bucket import Bucket
-from entities.bucketscontainer import BucketsContainer
-from entities.candle import Candle
-from entities.serializable import Serializable, Deserializable
-from entities.timespan import TimeSpan
-from serialization.store import DeserializationService
+from algotrader.entities.bucket import Bucket
+from algotrader.entities.bucketscontainer import BucketsContainer
+from algotrader.entities.candle import Candle
+from algotrader.entities.serializable import Serializable, Deserializable
+from algotrader.entities.timespan import TimeSpan
+from algotrader.serialization.store import DeserializationService
 from unit import generate_candle_with_price
 
 

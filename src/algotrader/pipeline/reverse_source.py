@@ -1,7 +1,7 @@
 from typing import Iterator, Dict
 
-from entities.candle import Candle
-from pipeline.source import Source
+from algotrader.entities.candle import Candle
+from algotrader.pipeline.source import Source
 
 
 class ReverseSource(Source):

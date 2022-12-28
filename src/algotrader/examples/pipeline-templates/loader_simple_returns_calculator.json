@@ -1,11 +1,11 @@
 {
-  "__class__": "pipeline.pipeline:Pipeline",
+  "__class__": "algotrader.pipeline.pipeline:Pipeline",
   "source": {
-    "__class__": "pipeline.reverse_source:ReverseSource",
+    "__class__": "algotrader.pipeline.reverse_source:ReverseSource",
     "source": {
-      "__class__": "pipeline.sources.mongodb_source:MongoDBSource",
+      "__class__": "algotrader.pipeline.sources.mongodb_source:MongoDBSource",
       "mongo_storage": {
-        "__class__": "storage.mongodb_storage:MongoDBStorage",
+        "__class__": "algotrader.storage.mongodb_storage:MongoDBStorage",
         "host": "localhost",
         "port": 27017,
         "database": "algo-trader",
@@ -515,21 +515,7 @@
     }
   },
   "processor": {
-    "__class__": "pipeline.processors.returns:ReturnsCalculatorProcessor",
-    "next_processor": {
-      "__class__": "pipeline.processors.candle_cache:CandleCache",
-      "next_processor": {
-        "__class__": "pipeline.processors.storage_provider_sink:StorageSinkProcessor",
-        "storage_provider": {
-          "__class__": "storage.mongodb_storage:MongoDBStorage",
-          "host": "localhost",
-          "port": 27017,
-          "database": "algo-trader",
-          "username": "root",
-          "password": "root"
-        }
-      }
-    }
+    "returnsCount": 5
   },
   "terminator": null
 }

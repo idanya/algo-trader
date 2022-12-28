@@ -1,14 +1,15 @@
 import json
 from typing import Optional, List, Union, Dict
 
-from entities.bucket import Bucket, BucketList
-from entities.bucketscontainer import BucketsContainer
-from entities.candle import Candle
-from entities.generic_candle_attachment import GenericCandleAttachment
-from pipeline.processor import Processor
-from pipeline.processors.technicals_normalizer import NormalizedIndicators, NORMALIZED_INDICATORS_ATTACHMENT_KEY
-from pipeline.shared_context import SharedContext
-from serialization.store import DeserializationService
+from algotrader.entities.bucket import Bucket, BucketList
+from algotrader.entities.bucketscontainer import BucketsContainer
+from algotrader.entities.candle import Candle
+from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.processors.technicals_normalizer import NormalizedIndicators, \
+    NORMALIZED_INDICATORS_ATTACHMENT_KEY
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.serialization.store import DeserializationService
 
 INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY = 'indicators_matched_buckets'
 
@@ -36,15 +37,19 @@ class TechnicalsBucketsMatcher(Processor):
         super().__init__(next_processor)
 
         self.bins_file_path = bins_file_path
+        self.bins: Optional[BucketsContainer] = None
 
-        with open(bins_file_path) as bins_file_content:
-            content = bins_file_content.read()
-            self.bins: BucketsContainer = DeserializationService.deserialize(json.loads(content))
+    def _lazy_load_bins_file(self):
+        if not self.bins:
+            with open(self.bins_file_path) as bins_file_content:
+                content = bins_file_content.read()
+                self.bins: BucketsContainer = DeserializationService.deserialize(json.loads(content))
 
     def process(self, context: SharedContext, candle: Candle):
         normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
             NORMALIZED_INDICATORS_ATTACHMENT_KEY)
 
+        self._lazy_load_bins_file()
         matched_buckets = IndicatorsMatchedBuckets()
 
         for indicator, value in normalized_indicators.items():

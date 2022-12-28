@@ -1,9 +1,9 @@
 import json
 from typing import Optional
 
-from entities.candle import Candle
-from pipeline.processor import Processor
-from pipeline.shared_context import SharedContext
+from algotrader.entities.candle import Candle
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.shared_context import SharedContext
 
 
 class FileSinkProcessor(Processor):

@@ -2,9 +2,9 @@ import json
 
 import typer
 
-from pipeline.pipeline import Pipeline
-from pipeline.runner import PipelineRunner
-from serialization.store import DeserializationService
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.serialization.store import DeserializationService
 
 app = typer.Typer(no_args_is_help=True)
 

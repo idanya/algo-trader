@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Union
 
-from entities.serializable import Serializable, Deserializable
+from algotrader.entities.serializable import Serializable, Deserializable
 
 
 class Bucket(Serializable, Deserializable):

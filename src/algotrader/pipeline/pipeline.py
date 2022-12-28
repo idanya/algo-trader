@@ -3,12 +3,12 @@ from typing import Optional, Dict
 
 from rich.progress import Progress, TextColumn, BarColumn
 
-from entities.serializable import Serializable, Deserializable
-from pipeline.processor import Processor
-from pipeline.shared_context import SharedContext
-from pipeline.source import Source
-from pipeline.terminator import Terminator
-from serialization.store import DeserializationService
+from algotrader.entities.serializable import Serializable, Deserializable
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.pipeline.source import Source
+from algotrader.pipeline.terminator import Terminator
+from algotrader.serialization.store import DeserializationService
 
 
 class Pipeline(Serializable, Deserializable):

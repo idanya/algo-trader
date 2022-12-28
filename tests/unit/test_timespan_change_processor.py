@@ -1,16 +1,16 @@
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.event import Event
-from entities.timespan import TimeSpan
-from fakes.pipeline_validators import ValidationProcessor, TerminatorValidator
+from algotrader.entities.candle import Candle
+from algotrader.entities.event import Event
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.timespan_change import TimeSpanChangeProcessor
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
+from fakes.pipeline_validators import TerminatorValidator, ValidationProcessor
 from fakes.source import FakeSource
-from pipeline.pipeline import Pipeline
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.timespan_change import TimeSpanChangeProcessor
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
 from unit import generate_candle_with_price
 
 
@@ -18,7 +18,8 @@ class TestTimeSpanChangeProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c) for c in range(1, 55)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c) for c
+             in range(1, 55)])
 
     def test(self):
         def _terminate(context: SharedContext):

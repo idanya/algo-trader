@@ -2,15 +2,15 @@ from datetime import datetime
 from typing import List, Tuple
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.strategy_signal import StrategySignal, SignalDirection
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.entities.timespan import TimeSpan
 from fakes.strategy_executor import FakeSignalsExecutor
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.strategy import StrategyProcessor
-from pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
-from pipeline.shared_context import SharedContext
-from pipeline.strategies.simple_sma import SimpleSMA
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.strategy import StrategyProcessor
+from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.pipeline.strategies.simple_sma import SimpleSMA
 from unit import generate_candle, TEST_SYMBOL
 
 

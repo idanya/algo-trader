@@ -5,19 +5,19 @@ from unittest import TestCase
 
 import mongomock
 
-from entities.bucket import Bucket
-from entities.candle import Candle
-from entities.strategy_signal import StrategySignal, SignalDirection
-from entities.timespan import TimeSpan
+from algotrader.entities.bucket import Bucket
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.entities.timespan import TimeSpan
 from fakes.strategy_executor import FakeSignalsExecutor
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.returns import Returns, RETURNS_ATTACHMENT_KEY
-from pipeline.processors.strategy import StrategyProcessor
-from pipeline.processors.technicals_buckets_matcher import IndicatorsMatchedBuckets, \
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.returns import Returns, RETURNS_ATTACHMENT_KEY
+from algotrader.pipeline.processors.strategy import StrategyProcessor
+from algotrader.pipeline.processors.technicals_buckets_matcher import IndicatorsMatchedBuckets, \
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY
-from pipeline.shared_context import SharedContext
-from pipeline.strategies.history_bucket_compare import HistoryBucketCompareStrategy
-from storage.mongodb_storage import MongoDBStorage
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.pipeline.strategies.history_bucket_compare import HistoryBucketCompareStrategy
+from algotrader.storage.mongodb_storage import MongoDBStorage
 from unit import TEST_SYMBOL, generate_candle
 
 

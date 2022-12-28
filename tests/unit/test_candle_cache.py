@@ -1,14 +1,14 @@
 from datetime import datetime
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 from fakes.source import FakeSource
 from fakes.pipeline_validators import ValidationProcessor
-from pipeline.pipeline import Pipeline
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
 from unit import generate_candle
 
 

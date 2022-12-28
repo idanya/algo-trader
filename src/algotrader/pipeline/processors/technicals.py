@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import Optional, List, Dict, Union, Tuple
 
-from calc.technicals import TechnicalCalculator
-from entities.candle import Candle
-from entities.generic_candle_attachment import GenericCandleAttachment
-from pipeline.processor import Processor
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.shared_context import SharedContext
+from algotrader.calc.technicals import TechnicalCalculator
+from algotrader.entities.candle import Candle
+from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.shared_context import SharedContext
 
 INDICATORS_ATTACHMENT_KEY = 'indicators'
 TechnicalsData = Dict[str, Dict[str, List[float]]]

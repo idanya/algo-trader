@@ -1,11 +1,11 @@
 from datetime import datetime
 from typing import Optional
 
-from entities.candle import Candle
-from entities.event import Event
-from entities.timespan import TimeSpan
-from pipeline.processor import Processor
-from pipeline.shared_context import SharedContext
+from algotrader.entities.candle import Candle
+from algotrader.entities.event import Event
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.shared_context import SharedContext
 
 
 class TimeSpanChangeProcessor(Processor):

@@ -1,9 +1,9 @@
 from datetime import datetime
 from unittest import TestCase
 
-from entities.strategy_signal import StrategySignal, SignalDirection
-from entities.timespan import TimeSpan
-from trade.simple_sum_signals_executor import DEFAULT_ORDER_VALUE, SimpleSumSignalsExecutor
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.entities.timespan import TimeSpan
+from algotrader.trade.simple_sum_signals_executor import DEFAULT_ORDER_VALUE, SimpleSumSignalsExecutor
 from unit import TEST_SYMBOL, generate_candle_with_price
 
 

@@ -4,14 +4,14 @@ import json
 import math
 from typing import List, Dict, Tuple
 
-from entities.bucket import Bucket
-from entities.bucketscontainer import BucketsContainer
-from entities.candle import Candle
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import IndicatorValue
-from pipeline.processors.technicals_normalizer import NormalizedIndicators, NORMALIZED_INDICATORS_ATTACHMENT_KEY
-from pipeline.shared_context import SharedContext
-from pipeline.terminator import Terminator
+from algotrader.entities.bucket import Bucket
+from algotrader.entities.bucketscontainer import BucketsContainer
+from algotrader.entities.candle import Candle
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals import IndicatorValue
+from algotrader.pipeline.processors.technicals_normalizer import NormalizedIndicators, NORMALIZED_INDICATORS_ATTACHMENT_KEY
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.pipeline.terminator import Terminator
 
 
 class TechnicalsBinner(Terminator):

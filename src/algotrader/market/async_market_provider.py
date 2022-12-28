@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from datetime import datetime
 
-from entities.timespan import TimeSpan
-from market.async_query_result import AsyncQueryResult
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.async_query_result import AsyncQueryResult
 
 
 class AsyncMarketProvider:

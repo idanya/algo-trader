@@ -3,13 +3,13 @@ from typing import Optional, List, Dict
 
 from scipy import spatial
 
-from entities.candle import Candle
-from entities.event import Event
-from entities.generic_candle_attachment import GenericCandleAttachment
-from pipeline.processor import Processor
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import IndicatorValue
-from pipeline.shared_context import SharedContext
+from algotrader.entities.candle import Candle
+from algotrader.entities.event import Event
+from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals import IndicatorValue
+from algotrader.pipeline.shared_context import SharedContext
 
 CORRELATIONS_ATTACHMENT_KEY = 'correlations'
 CORRELATION_ELEMENTS_COUNT = 4

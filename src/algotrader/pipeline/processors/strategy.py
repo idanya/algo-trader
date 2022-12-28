@@ -1,12 +1,12 @@
 from typing import Optional, List, Dict
 
-from entities.candle import Candle
-from entities.strategy import Strategy
-from entities.strategy_signal import StrategySignal
-from pipeline.processor import Processor
-from pipeline.shared_context import SharedContext
-from serialization.store import DeserializationService
-from trade.signals_executor import SignalsExecutor
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy import Strategy
+from algotrader.entities.strategy_signal import StrategySignal
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.serialization.store import DeserializationService
+from algotrader.trade.signals_executor import SignalsExecutor
 
 
 class StrategyProcessor(Processor):

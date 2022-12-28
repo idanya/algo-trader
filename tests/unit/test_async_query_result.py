@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from entities.timespan import TimeSpan
-from market.async_query_result import AsyncQueryResult
-from providers.ib.query_subscription import QuerySubscription
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.async_query_result import AsyncQueryResult
+from algotrader.providers.ib.query_subscription import QuerySubscription
 from unit import generate_candle
 
 

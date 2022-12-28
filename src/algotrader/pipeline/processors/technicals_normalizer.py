@@ -4,13 +4,13 @@ from typing import Optional, Callable, Dict, List
 
 import numpy
 
-from entities.candle import Candle
-from entities.generic_candle_attachment import GenericCandleAttachment
-from pipeline.processor import Processor
-from pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import Indicators, INDICATORS_ATTACHMENT_KEY, IndicatorValue
-from pipeline.shared_context import SharedContext
+from algotrader.entities.candle import Candle
+from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals import Indicators, INDICATORS_ATTACHMENT_KEY, IndicatorValue
+from algotrader.pipeline.shared_context import SharedContext
 
 NORMALIZED_INDICATORS_ATTACHMENT_KEY = 'normalized_indicators'
 

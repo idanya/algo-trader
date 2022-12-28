@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 
 TEST_SYMBOL = 'X'
 

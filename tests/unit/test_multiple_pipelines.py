@@ -1,13 +1,13 @@
 from datetime import datetime
 from unittest import TestCase
 
-from entities.timespan import TimeSpan
+from algotrader.entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
 from fakes.source import FakeSource
-from pipeline.pipeline import Pipeline
-from pipeline.processor import Processor
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
 from unit import generate_candle_with_price
 
 

@@ -1,9 +1,9 @@
 {
-  "__class__": "pipeline.pipeline:Pipeline",
+  "__class__": "algotrader.pipeline.pipeline:Pipeline",
   "source": {
-    "__class__": "pipeline.sources.mongodb_source:MongoDBSource",
+    "__class__": "algotrader.pipeline.sources.mongodb_source:MongoDBSource",
     "mongo_storage": {
-      "__class__": "storage.mongodb_storage:MongoDBStorage",
+      "__class__": "algotrader.storage.mongodb_storage:MongoDBStorage",
       "host": "localhost",
       "port": 27017,
       "database": "algo-trader",
@@ -512,21 +512,21 @@
     "to_time": "2022-01-01 00:00:00"
   },
   "processor": {
-    "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+    "__class__": "algotrader.pipeline.processors.technicals:TechnicalsProcessor",
     "next_processor": {
-      "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+      "__class__": "algotrader.pipeline.processors.technicals:TechnicalsProcessor",
       "next_processor": {
-        "__class__": "pipeline.processors.strategy:StrategyProcessor",
+        "__class__": "algotrader.pipeline.processors.strategy:StrategyProcessor",
         "next_processor": {
-          "__class__": "pipeline.processors.candle_cache:CandleCache"
+          "__class__": "algotrader.pipeline.processors.candle_cache:CandleCache"
         },
         "strategies": [
           {
-            "__class__": "pipeline.strategies.connors_rsi2:ConnorsRSI2"
+            "__class__": "algotrader.pipeline.strategies.connors_rsi2:ConnorsRSI2"
           }
         ],
         "signals_executor": {
-          "__class__": "trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
+          "__class__": "algotrader.trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
         }
       }
     }

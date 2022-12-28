@@ -1,9 +1,9 @@
 {
-  "__class__": "pipeline.pipeline:Pipeline",
+  "__class__": "algotrader.pipeline.pipeline:Pipeline",
   "source": {
-    "__class__": "pipeline.sources.mongodb_source:MongoDBSource",
+    "__class__": "algotrader.pipeline.sources.mongodb_source:MongoDBSource",
     "mongo_storage": {
-      "__class__": "storage.mongodb_storage:MongoDBStorage",
+      "__class__": "algotrader.storage.mongodb_storage:MongoDBStorage",
       "host": "localhost",
       "port": 27017,
       "database": "algo-trader",
@@ -512,21 +512,21 @@
     "to_time": "2022-01-01 00:00:00"
   },
   "processor": {
-    "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+    "__class__": "algotrader.pipeline.processors.technicals:TechnicalsProcessor",
     "next_processor": {
-      "__class__": "pipeline.processors.technicals_normalizer:TechnicalsNormalizerProcessor",
+      "__class__": "algotrader.pipeline.processors.technicals_normalizer:TechnicalsNormalizerProcessor",
       "next_processor": {
-        "__class__": "pipeline.processors.technicals_buckets_matcher:TechnicalsBucketsMatcher",
+        "__class__": "algotrader.pipeline.processors.technicals_buckets_matcher:TechnicalsBucketsMatcher",
         "next_processor": {
-          "__class__": "pipeline.processors.strategy:StrategyProcessor",
+          "__class__": "algotrader.pipeline.processors.strategy:StrategyProcessor",
           "next_processor": {
-            "__class__": "pipeline.processors.candle_cache:CandleCache"
+            "__class__": "algotrader.pipeline.processors.candle_cache:CandleCache"
           },
           "strategies": [
             {
-              "__class__": "pipeline.strategies.history_bucket_compare:HistoryBucketCompareStrategy",
+              "__class__": "algotrader.pipeline.strategies.history_bucket_compare:HistoryBucketCompareStrategy",
               "storage_provider": {
-                "__class__": "storage.mongodb_storage:MongoDBStorage",
+                "__class__": "algotrader.storage.mongodb_storage:MongoDBStorage",
                 "host": "localhost",
                 "port": 27017,
                 "database": "algo-trader",
@@ -553,10 +553,10 @@
             }
           ],
           "signals_executor": {
-            "__class__": "trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
+            "__class__": "algotrader.trade.simple_sum_signals_executor:SimpleSumSignalsExecutor"
           }
         },
-        "bins_file_path": "/Users/idanyael/personal-dev/algo-trader/src/examples/pipeline-templates/bins.json"
+        "bins_file_path": "/Users/idanyael/personal-dev/algo-trader/src/algotrader/examples/pipeline-templates/bins.json"
       },
       "normalization_window_size": 3
     }

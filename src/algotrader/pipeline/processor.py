@@ -3,11 +3,11 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Optional, Dict
 
-from entities.candle import Candle
-from entities.event import Event
-from entities.serializable import Deserializable, Serializable
-from pipeline.shared_context import SharedContext
-from serialization.store import DeserializationService
+from algotrader.entities.candle import Candle
+from algotrader.entities.event import Event
+from algotrader.entities.serializable import Deserializable, Serializable
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.serialization.store import DeserializationService
 
 
 class Processor(Serializable, Deserializable):

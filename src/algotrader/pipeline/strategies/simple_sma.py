@@ -1,11 +1,11 @@
 from typing import List
 
-from entities.candle import Candle
-from entities.strategy import Strategy
-from entities.strategy_signal import StrategySignal, SignalDirection
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
-from pipeline.shared_context import SharedContext
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy import Strategy
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
+from algotrader.pipeline.shared_context import SharedContext
 
 
 class SimpleSMA(Strategy):

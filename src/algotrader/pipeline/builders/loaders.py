@@ -2,28 +2,28 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from assets.assets_provider import AssetsProvider
-from entities.timespan import TimeSpan
-from pipeline.pipeline import Pipeline
-from pipeline.processor import Processor
-from pipeline.processors.assets_correlation import AssetCorrelationProcessor
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.returns import ReturnsCalculatorProcessor
-from pipeline.processors.storage_provider_sink import StorageSinkProcessor
-from pipeline.processors.technicals import TechnicalsProcessor
-from pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
-from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
-from pipeline.processors.timespan_change import TimeSpanChangeProcessor
-from pipeline.reverse_source import ReverseSource
-from pipeline.source import Source
-from pipeline.sources.binance_history import BinanceHistorySource
-from pipeline.sources.binance_realtime import BinanceRealtimeSource
-from pipeline.sources.ib_history import IBHistorySource
-from pipeline.sources.mongodb_source import MongoDBSource
-from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
-from pipeline.terminators.technicals_binner import TechnicalsBinner
-from providers.binance import BinanceProvider
-from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
-from storage.mongodb_storage import MongoDBStorage
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.processors.assets_correlation import AssetCorrelationProcessor
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.returns import ReturnsCalculatorProcessor
+from algotrader.pipeline.processors.storage_provider_sink import StorageSinkProcessor
+from algotrader.pipeline.processors.technicals import TechnicalsProcessor
+from algotrader.pipeline.processors.technicals_buckets_matcher import TechnicalsBucketsMatcher
+from algotrader.pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
+from algotrader.pipeline.processors.timespan_change import TimeSpanChangeProcessor
+from algotrader.pipeline.reverse_source import ReverseSource
+from algotrader.pipeline.source import Source
+from algotrader.pipeline.sources.binance_history import BinanceHistorySource
+from algotrader.pipeline.sources.binance_realtime import BinanceRealtimeSource
+from algotrader.pipeline.sources.ib_history import IBHistorySource
+from algotrader.pipeline.sources.mongodb_source import MongoDBSource
+from algotrader.pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
+from algotrader.pipeline.terminators.technicals_binner import TechnicalsBinner
+from algotrader.providers.binance import BinanceProvider
+from algotrader.providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
+from algotrader.storage.mongodb_storage import MongoDBStorage
 
 DEFAULT_DAYS_BACK = 365 * 1
 STATIC_NOW = datetime(2022, 1, 1)
@@ -102,7 +102,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = ReturnsCalculatorProcessor(cache_processor)
+        processor = ReturnsCalculatorProcessor(5, cache_processor)
 
         return Pipeline(source, processor)
 

@@ -1,9 +1,9 @@
 {
-  "__class__": "pipeline.pipeline:Pipeline",
+  "__class__": "algotrader.pipeline.pipeline:Pipeline",
   "source": {
-    "__class__": "pipeline.sources.mongodb_source:MongoDBSource",
+    "__class__": "algotrader.pipeline.sources.mongodb_source:MongoDBSource",
     "mongo_storage": {
-      "__class__": "storage.mongodb_storage:MongoDBStorage",
+      "__class__": "algotrader.storage.mongodb_storage:MongoDBStorage",
       "host": "localhost",
       "port": 27017,
       "database": "algo-trader",
@@ -512,17 +512,17 @@
     "to_time": "2022-01-01 00:00:00"
   },
   "processor": {
-    "__class__": "pipeline.processors.timespan_change:TimeSpanChangeProcessor",
+    "__class__": "algotrader.pipeline.processors.timespan_change:TimeSpanChangeProcessor",
     "next_processor": {
-      "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+      "__class__": "algotrader.pipeline.processors.technicals:TechnicalsProcessor",
       "next_processor": {
-        "__class__": "pipeline.processors.technicals_normalizer:TechnicalsNormalizerProcessor",
+        "__class__": "algotrader.pipeline.processors.technicals_normalizer:TechnicalsNormalizerProcessor",
         "next_processor": {
-          "__class__": "pipeline.processors.candle_cache:CandleCache",
+          "__class__": "algotrader.pipeline.processors.candle_cache:CandleCache",
           "next_processor": {
-            "__class__": "pipeline.processors.storage_provider_sink:StorageSinkProcessor",
+            "__class__": "algotrader.pipeline.processors.storage_provider_sink:StorageSinkProcessor",
             "storage_provider": {
-              "__class__": "storage.mongodb_storage:MongoDBStorage",
+              "__class__": "algotrader.storage.mongodb_storage:MongoDBStorage",
               "host": "localhost",
               "port": 27017,
               "database": "algo-trader",

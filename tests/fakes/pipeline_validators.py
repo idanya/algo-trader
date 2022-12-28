@@ -1,10 +1,10 @@
 from typing import Callable
 
-from entities.candle import Candle
-from entities.event import Event
-from pipeline.processor import Processor
-from pipeline.shared_context import SharedContext
-from pipeline.terminator import Terminator
+from algotrader.entities.candle import Candle
+from algotrader.entities.event import Event
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.pipeline.terminator import Terminator
 
 
 class ValidationProcessor(Processor):

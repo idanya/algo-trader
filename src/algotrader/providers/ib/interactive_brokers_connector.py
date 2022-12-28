@@ -10,11 +10,11 @@ from ibapi.contract import Contract
 from ibapi.order import Order
 from ibapi.wrapper import EWrapper, iswrapper
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from market.async_market_provider import AsyncMarketProvider, AsyncQueryResult
-from providers.ib.ib_interval import timespan_to_api_str, datetime_to_api_string
-from providers.ib.query_subscription import QuerySubscription
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.async_market_provider import AsyncMarketProvider, AsyncQueryResult
+from algotrader.providers.ib.ib_interval import timespan_to_api_str, datetime_to_api_string
+from algotrader.providers.ib.query_subscription import QuerySubscription
 
 
 class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):

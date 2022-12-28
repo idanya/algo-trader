@@ -3,8 +3,8 @@ from typing import List
 
 import yfinance as yf
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 
 
 class YahooFinanceHistoryProvider:

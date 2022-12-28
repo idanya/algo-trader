@@ -1,8 +1,8 @@
 import threading
 from typing import List
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 
 
 class QuerySubscription:

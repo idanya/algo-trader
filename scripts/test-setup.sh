@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-export PYTHONPATH=$PYTHONPATH:../src/algotrader:../tests
+export PYTHONPATH=$PYTHONPATH:../src:../tests

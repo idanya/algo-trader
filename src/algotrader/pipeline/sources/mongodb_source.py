@@ -2,10 +2,10 @@ import logging
 from datetime import datetime
 from typing import Iterator, List, Optional, Dict
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from pipeline.source import Source
-from storage.mongodb_storage import MongoDBStorage
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.source import Source
+from algotrader.storage.mongodb_storage import MongoDBStorage
 
 
 class MongoDBSource(Source):

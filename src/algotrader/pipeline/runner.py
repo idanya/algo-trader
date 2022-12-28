@@ -1,8 +1,8 @@
 import logging
 from typing import List, Optional, Union
 
-from pipeline.pipeline import Pipeline
-from pipeline.shared_context import SharedContext
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.shared_context import SharedContext
 
 
 class PipelineRunner:

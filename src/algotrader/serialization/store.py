@@ -5,7 +5,7 @@ from typing import Dict, Optional, TypeVar, Generic
 # from typing import TYPE_CHECKING
 
 # if TYPE_CHECKING:
-from entities.serializable import Deserializable
+from algotrader.entities.serializable import Deserializable
 
 T = TypeVar('T', bound=Deserializable)
 

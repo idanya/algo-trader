@@ -2,9 +2,9 @@ import unittest
 from datetime import datetime
 from typing import List
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from storage.inmemory_storage import InMemoryStorage
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.storage.inmemory_storage import InMemoryStorage
 from unit import generate_candle, TEST_SYMBOL
 
 

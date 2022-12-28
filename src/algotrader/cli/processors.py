@@ -1,7 +1,7 @@
 import typer
 
 from cli.helpers import _describe_object, _get_all_of_class_names, _get_single_by_name
-from pipeline.processor import Processor
+from algotrader.pipeline.processor import Processor
 
 app = typer.Typer(no_args_is_help=True)
 

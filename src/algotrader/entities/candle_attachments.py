@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, Optional
 
-from entities.serializable import Serializable, Deserializable
-from serialization.store import DeserializationService
+from algotrader.entities.serializable import Serializable, Deserializable
+from algotrader.serialization.store import DeserializationService
 
 
 class CandleAttachments(Serializable, Deserializable):

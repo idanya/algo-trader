@@ -2,9 +2,9 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import List, Dict
 
-from entities.candle import Candle
-from entities.serializable import Deserializable, Serializable
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.serializable import Deserializable, Serializable
+from algotrader.entities.timespan import TimeSpan
 
 
 class StorageProvider(Serializable, Deserializable):

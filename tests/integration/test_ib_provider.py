@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from entities.timespan import TimeSpan
-from market.async_market_provider import AsyncQueryResult
-from market.ib_market import IBMarketProvider
-from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.async_market_provider import AsyncQueryResult
+from algotrader.market.ib_market import IBMarketProvider
+from algotrader.providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 
 
 class TestIBMarketProvider(TestCase):

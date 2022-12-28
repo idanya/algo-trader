@@ -3,19 +3,19 @@ from unittest import TestCase
 
 import mongomock
 
-from entities.timespan import TimeSpan
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
-from pipeline.sources.mongodb_source import MongoDBSource
-from storage.mongodb_storage import MongoDBStorage
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
+from algotrader.pipeline.sources.mongodb_source import MongoDBSource
+from algotrader.storage.mongodb_storage import MongoDBStorage
 
 
 class TestSerialization(TestCase):
     def test_serialize_processor(self):
         candle_cache_processor = CandleCache(CandleCache())
         serialized = candle_cache_processor.serialize()
-        self.assertEqual('pipeline.processors.candle_cache:CandleCache', serialized['__class__'])
-        self.assertEqual('pipeline.processors.candle_cache:CandleCache', serialized['next_processor']['__class__'])
+        self.assertEqual('algotrader.pipeline.processors.candle_cache:CandleCache', serialized['__class__'])
+        self.assertEqual('algotrader.pipeline.processors.candle_cache:CandleCache', serialized['next_processor']['__class__'])
 
         deserialized: CandleCache = CandleCache.deserialize(serialized)
         self.assertIsNotNone(deserialized)

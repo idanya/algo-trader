@@ -3,10 +3,10 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import List
 
-from entities.candle import Candle
-from entities.serializable import Deserializable, Serializable
-from entities.strategy_signal import StrategySignal
-from pipeline.shared_context import SharedContext
+from algotrader.entities.candle import Candle
+from algotrader.entities.serializable import Deserializable, Serializable
+from algotrader.entities.strategy_signal import StrategySignal
+from algotrader.pipeline.shared_context import SharedContext
 
 
 class Strategy(Serializable, Deserializable):

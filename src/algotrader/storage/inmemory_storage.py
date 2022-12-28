@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List, Dict, Iterator
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from storage.storage_provider import StorageProvider
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.storage.storage_provider import StorageProvider
 
 
 class InMemoryStorage(StorageProvider):

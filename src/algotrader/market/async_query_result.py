@@ -2,8 +2,8 @@ import threading
 from datetime import datetime
 from typing import List
 
-from entities.candle import Candle
-from providers.ib.query_subscription import QuerySubscription
+from algotrader.entities.candle import Candle
+from algotrader.providers.ib.query_subscription import QuerySubscription
 
 
 class AsyncQueryResult:

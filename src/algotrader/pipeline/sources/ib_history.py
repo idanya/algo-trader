@@ -2,11 +2,11 @@ import logging
 from datetime import datetime
 from typing import Iterator, List, Optional
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from market.ib_market import IBMarketProvider
-from pipeline.source import Source
-from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.ib_market import IBMarketProvider
+from algotrader.pipeline.source import Source
+from algotrader.providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 
 
 class IBHistorySource(Source):

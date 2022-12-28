@@ -2,10 +2,10 @@ from datetime import datetime, timedelta
 from typing import List
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from market.yahoofinance.history_provider import YahooFinanceHistoryProvider
-from pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.yahoofinance.history_provider import YahooFinanceHistoryProvider
+from algotrader.pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
 
 
 class TestYahooMarketSource(TestCase):

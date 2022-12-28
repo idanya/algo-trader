@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import List
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.strategy import Strategy
-from entities.strategy_signal import StrategySignal, SignalDirection
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy import Strategy
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.entities.timespan import TimeSpan
 from fakes.strategy_executor import FakeSignalsExecutor
-from pipeline.processors.strategy import StrategyProcessor
-from pipeline.shared_context import SharedContext
+from algotrader.pipeline.processors.strategy import StrategyProcessor
+from algotrader.pipeline.shared_context import SharedContext
 from unit import TEST_SYMBOL, generate_candle
 
 

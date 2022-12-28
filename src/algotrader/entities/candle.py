@@ -3,10 +3,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Callable, Dict, Optional
 
-from entities.candle_attachments import CandleAttachments
-from entities.serializable import Serializable, Deserializable
-from entities.timespan import TimeSpan
-from serialization.store import DeserializationService
+from algotrader.entities.candle_attachments import CandleAttachments
+from algotrader.entities.serializable import Serializable, Deserializable
+from algotrader.entities.timespan import TimeSpan
+from algotrader.serialization.store import DeserializationService
 
 timestamp_to_str: Callable[[datetime], str] = lambda d: d.strftime("%Y%m%d %H:%M:%S.%f")
 str_to_timestamp: Callable[[str], datetime] = lambda d: datetime.strptime(d, "%Y%m%d %H:%M:%S.%f")

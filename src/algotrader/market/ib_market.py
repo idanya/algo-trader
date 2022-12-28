@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from entities.timespan import TimeSpan
-from market.async_market_provider import AsyncMarketProvider, AsyncQueryResult
-from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.async_market_provider import AsyncMarketProvider, AsyncQueryResult
+from algotrader.providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 
 
 class IBMarketProvider(AsyncMarketProvider):

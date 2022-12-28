@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, TypeVar, Generic, Optional, ItemsView, Union
 
-from entities.serializable import Serializable, Deserializable
+from algotrader.entities.serializable import Serializable, Deserializable
 
 T = TypeVar('T')
 

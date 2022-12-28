@@ -1,8 +1,8 @@
 from typing import Callable, List
 
-from entities.candle import Candle
-from entities.strategy_signal import StrategySignal
-from trade.signals_executor import SignalsExecutor
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy_signal import StrategySignal
+from algotrader.trade.signals_executor import SignalsExecutor
 
 ExecuterCallback = Callable[[List[StrategySignal]], None]
 

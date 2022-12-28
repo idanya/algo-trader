@@ -6,9 +6,9 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
 
-from entities.candle import Candle, str_to_timestamp, timestamp_to_str
-from entities.timespan import TimeSpan
-from storage.storage_provider import StorageProvider
+from algotrader.entities.candle import Candle, str_to_timestamp, timestamp_to_str
+from algotrader.entities.timespan import TimeSpan
+from algotrader.storage.storage_provider import StorageProvider
 
 DB_NAME = 'algo-trader'
 CANDLES_COLLECTION = 'candles'

@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from entities.timespan import TimeSpan
-from pipeline.sources.ib_history import IBHistorySource
-from providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.sources.ib_history import IBHistorySource
+from algotrader.providers.ib.interactive_brokers_connector import InteractiveBrokersConnector
 
 
 class TestIBSource(TestCase):

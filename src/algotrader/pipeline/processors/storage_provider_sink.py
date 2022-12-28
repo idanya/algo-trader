@@ -1,10 +1,10 @@
 from typing import Optional, Dict
 
-from entities.candle import Candle
-from pipeline.processor import Processor
-from pipeline.shared_context import SharedContext
-from serialization.store import DeserializationService
-from storage.storage_provider import StorageProvider
+from algotrader.entities.candle import Candle
+from algotrader.pipeline.processor import Processor
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.serialization.store import DeserializationService
+from algotrader.storage.storage_provider import StorageProvider
 
 
 class StorageSinkProcessor(Processor):

@@ -4,14 +4,14 @@ from unittest import TestCase
 
 import mongomock
 
-from entities.timespan import TimeSpan
+from algotrader.entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
 from fakes.source import FakeSource
-from pipeline.pipeline import Pipeline
-from pipeline.processors.storage_provider_sink import StorageSinkProcessor
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
-from storage.mongodb_storage import MongoDBStorage
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.storage_provider_sink import StorageSinkProcessor
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.storage.mongodb_storage import MongoDBStorage
 from unit import generate_candle_with_price, TEST_SYMBOL
 
 

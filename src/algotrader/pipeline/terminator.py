@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from entities.serializable import Deserializable, Serializable
-from pipeline.shared_context import SharedContext
+from algotrader.entities.serializable import Deserializable, Serializable
+from algotrader.pipeline.shared_context import SharedContext
 
 
 class Terminator(Serializable, Deserializable):

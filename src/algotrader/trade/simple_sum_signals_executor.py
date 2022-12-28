@@ -1,9 +1,9 @@
 import logging
 from typing import List, Dict
 
-from entities.candle import Candle
-from entities.strategy_signal import StrategySignal, SignalDirection
-from trade.signals_executor import SignalsExecutor
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.trade.signals_executor import SignalsExecutor
 
 DEFAULT_ORDER_VALUE = 10000
 
@@ -42,4 +42,5 @@ class SimpleSumSignalsExecutor(SignalsExecutor):
                 self.cash += candle.close * order_size
 
         non_zero_postitions = {k: v for k, v in self.position.items() if v > 0}
-        logging.info(f"Position: {non_zero_postitions} | Cash: {self.cash}")
+        if len(non_zero_postitions) > 0:
+            logging.info(f"Position: {non_zero_postitions} | Cash: {self.cash}")

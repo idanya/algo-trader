@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Callable
 
-from entities.timespan import TimeSpan
+from algotrader.entities.timespan import TimeSpan
 
 datetime_to_api_string: Callable[[datetime], str] = lambda d: d.strftime("%Y%m%d %H:%M:%S")
 

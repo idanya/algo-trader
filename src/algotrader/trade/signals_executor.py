@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import List
 
-from entities.candle import Candle
-from entities.serializable import Deserializable, Serializable
-from entities.strategy_signal import StrategySignal
+from algotrader.entities.candle import Candle
+from algotrader.entities.serializable import Deserializable, Serializable
+from algotrader.entities.strategy_signal import StrategySignal
 
 
 class SignalsExecutor(Serializable, Deserializable):

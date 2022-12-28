@@ -3,9 +3,9 @@ import pathlib
 
 from cli.main import initiate_cli
 from logger import setup_logger
-from pipeline.builders.backtest import BacktestPipelines
-from pipeline.builders.loaders import LoadersPipelines
-from pipeline.pipeline import Pipeline
+from algotrader.pipeline.builders.backtest import BacktestPipelines
+from algotrader.pipeline.builders.loaders import LoadersPipelines
+from algotrader.pipeline.pipeline import Pipeline
 
 BIN_COUNT = 10
 

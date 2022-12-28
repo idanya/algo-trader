@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Dict, Optional, ItemsView
 
-from entities.bucket import Bucket, CompoundBucketList
-from entities.serializable import Serializable, Deserializable
-from serialization.store import DeserializationService
+from algotrader.entities.bucket import Bucket, CompoundBucketList
+from algotrader.entities.serializable import Serializable, Deserializable
+from algotrader.serialization.store import DeserializationService
 
 
 class BucketsContainer(Serializable, Deserializable):

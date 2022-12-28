@@ -2,10 +2,10 @@ import logging
 from datetime import datetime
 from typing import Iterator, List, Dict
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from market.yahoofinance.history_provider import YahooFinanceHistoryProvider
-from pipeline.source import Source
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.yahoofinance.history_provider import YahooFinanceHistoryProvider
+from algotrader.pipeline.source import Source
 
 
 class YahooFinanceHistorySource(Source):

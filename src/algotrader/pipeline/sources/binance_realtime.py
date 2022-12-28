@@ -1,10 +1,10 @@
 from queue import Queue
 from typing import List, Dict, Iterator
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
-from pipeline.source import Source
-from providers.binance import BinanceProvider
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.source import Source
+from algotrader.providers.binance import BinanceProvider
 
 
 class BinanceRealtimeSource(Source):

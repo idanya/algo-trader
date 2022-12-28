@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Iterator
 
-from entities.candle import Candle
-from entities.serializable import Deserializable, Serializable
+from algotrader.entities.candle import Candle
+from algotrader.entities.serializable import Deserializable, Serializable
 
 
 class Source(Serializable, Deserializable):

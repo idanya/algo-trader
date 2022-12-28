@@ -5,14 +5,14 @@ import tempfile
 from datetime import datetime
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 from fakes.pipeline_validators import TerminatorValidator
 from fakes.source import FakeSource
-from pipeline.pipeline import Pipeline
-from pipeline.processors.file_sink import FileSinkProcessor
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.file_sink import FileSinkProcessor
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
 from unit import generate_candle_with_price
 
 

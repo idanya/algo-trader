@@ -3,14 +3,14 @@ from typing import List, Dict
 
 from scipy import spatial
 
-from entities.candle import Candle
-from entities.strategy import Strategy
-from entities.strategy_signal import StrategySignal, SignalDirection
-from pipeline.processors.technicals_buckets_matcher import IndicatorsMatchedBuckets, \
+from algotrader.entities.candle import Candle
+from algotrader.entities.strategy import Strategy
+from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
+from algotrader.pipeline.processors.technicals_buckets_matcher import IndicatorsMatchedBuckets, \
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY
-from pipeline.shared_context import SharedContext
-from serialization.store import DeserializationService
-from storage.storage_provider import StorageProvider
+from algotrader.pipeline.shared_context import SharedContext
+from algotrader.serialization.store import DeserializationService
+from algotrader.storage.storage_provider import StorageProvider
 
 
 class HistoryCosineSimilarityStrategy(Strategy):

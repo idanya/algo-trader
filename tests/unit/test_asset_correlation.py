@@ -4,18 +4,18 @@ from datetime import datetime, timedelta
 from typing import List
 from unittest import TestCase
 
-from entities.candle import Candle
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.timespan import TimeSpan
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
-from pipeline.pipeline import Pipeline
-from pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY, \
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY, \
     AssetCorrelationProcessor
-from pipeline.processors.candle_cache import CandleCache
-from pipeline.processors.technicals import TechnicalsProcessor
-from pipeline.processors.timespan_change import TimeSpanChangeProcessor
-from pipeline.runner import PipelineRunner
-from pipeline.shared_context import SharedContext
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.technicals import TechnicalsProcessor
+from algotrader.pipeline.processors.timespan_change import TimeSpanChangeProcessor
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.shared_context import SharedContext
 from unit import generate_candle_with_price_and_symbol
 
 

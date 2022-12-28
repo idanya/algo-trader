@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from entities.timespan import TimeSpan
-from market.yahoofinance.history_provider import YahooFinanceHistoryProvider
+from algotrader.entities.timespan import TimeSpan
+from algotrader.market.yahoofinance.history_provider import YahooFinanceHistoryProvider
 
 
 class TestYahooMarketProvider(TestCase):

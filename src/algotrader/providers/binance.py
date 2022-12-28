@@ -5,9 +5,9 @@ from typing import List, Optional, Dict, Callable
 from binance.spot import Spot
 from binance.websocket.spot.websocket_client import SpotWebsocketClient as WebsocketClient
 
-from entities.candle import Candle
-from entities.serializable import Deserializable, Serializable
-from entities.timespan import TimeSpan
+from algotrader.entities.candle import Candle
+from algotrader.entities.serializable import Deserializable, Serializable
+from algotrader.entities.timespan import TimeSpan
 
 StreamedCandleCallback = Callable[[Candle], None]
 
@@ -75,13 +75,24 @@ class BinanceProvider(Serializable, Deserializable):
         self.logger.info(f'Getting {symbol} history from {start_time} to {end_time}...')
 
         candles: List[Candle] = []
-        lines = self.client.klines(symbol,
-                                   self._timespan_to_interval(interval),
-                                   startTime=int(start_time.timestamp() * 1000),
-                                   endTime=int(end_time.timestamp() * 1000))
 
-        for line in lines:
-            candles.append(self._deserialize_candle(symbol, interval, line))
+        last_timestamp = start_time
+
+        while last_timestamp < end_time:
+            self.logger.info(f'Fetching from {last_timestamp} to {end_time}...')
+            lines = self.client.klines(symbol,
+                                       self._timespan_to_interval(interval),
+                                       startTime=int(last_timestamp.timestamp() * 1000),
+                                       endTime=int(end_time.timestamp() * 1000),
+                                       limit=1000)
+
+            for line in lines:
+                candle = self._deserialize_candle(symbol, interval, line)
+                candles.append(candle)
+                last_timestamp = max(last_timestamp, candle.timestamp)
+
+            if len(lines) <= 1:
+                break
 
         return candles
 
