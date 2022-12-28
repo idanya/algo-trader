@@ -29,7 +29,9 @@ dependencies = [
     "python-dotenv==0.21.0"
 ]
 
-version = "1.0.0"
+dynamic = ["version"]
+
+[tool.setuptools_scm]
 
 [tool.setuptools.packages.find]
 where = ["src"]
