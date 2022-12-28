@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "algo_trader"
+name = "algorithmic-trader"
 description = "Trading bot with support for realtime trading, backtesting, custom strategies and much more"
 authors = [{ name = "Idan Yael" }]
 maintainers = [{ name = "Idan Yael" }]
