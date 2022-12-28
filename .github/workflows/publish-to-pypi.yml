@@ -1,8 +1,9 @@
 name: Publish Python distributions to PyPI
-
-on: push
-tags:
-  - 'v\d+\.\d+\.\d+'
+on:
+  push:
+    branches: [ main ]
+  tags:
+    - 'v\d+\.\d+\.\d+'
 
 jobs:
   build-n-publish:
