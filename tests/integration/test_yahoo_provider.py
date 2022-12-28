@@ -18,5 +18,5 @@ class TestYahooMarketProvider(TestCase):
             self.assertTrue(0 < candle.open)
             self.assertTrue(0 < candle.close)
             self.assertTrue(0 < candle.volume)
-            self.assertTrue(to_time.astimezone() > candle.timestamp > from_time.astimezone())
+            self.assertTrue(to_time.date() >= candle.timestamp.date() >= from_time.date())
             self.assertTrue(0 < candle.low < candle.high)
