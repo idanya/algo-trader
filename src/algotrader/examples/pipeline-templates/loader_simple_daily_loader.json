@@ -1,0 +1,16 @@
+{
+  "__class__": "pipeline.pipeline:Pipeline",
+  "source": {
+    "__class__": "pipeline.sources.ib_history:IBHistorySource"
+  },
+  "processor": {
+    "__class__": "pipeline.processors.technicals:TechnicalsProcessor",
+    "next_processor": {
+      "__class__": "pipeline.processors.candle_cache:CandleCache",
+      "next_processor": {
+        "__class__": "pipeline.processors.mongodb_sink:MongoDBSinkProcessor"
+      }
+    }
+  },
+  "terminator": null
+}
