@@ -24,6 +24,7 @@ algo-trader is written in Python, and its current stack composes of:
 3. ib_client (Optional) - Python library to communicate with Interactive Brokers gateway. Only needed if you plan on
    doing real trading via IB.
 
+
 ## Architecture
 
 ![System design](./design/diagram.png)
@@ -168,6 +169,55 @@ Running this example pipeline will process realtime, second candles from Binance
    algo-trader pipeline run examples/pipeline-templates/build_realtime_binance.json
    ```
 
+### Code example
+
+Short code example with comments. This is how one would typically use `algo-trader` as a library to 
+load and calculate technical indicators on stocks data from Yahoo finance to MongoDB
+
+```python
+from datetime import datetime, timedelta
+
+from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.pipeline import Pipeline
+from algotrader.pipeline.processors.candle_cache import CandleCache
+from algotrader.pipeline.processors.storage_provider_sink import StorageSinkProcessor
+from algotrader.pipeline.processors.technicals import TechnicalsProcessor
+from algotrader.pipeline.runner import PipelineRunner
+from algotrader.pipeline.sources.yahoo_finance_history import YahooFinanceHistorySource
+from algotrader.storage.mongodb_storage import MongoDBStorage
+
+
+def main():
+    # create a MongoDB Storage connector
+    mongodb_storage = MongoDBStorage()
+
+    # Create a Yahoo finance Source connector
+    source = YahooFinanceHistorySource(
+        ['AAPL', 'MSFT', 'GOOG'],  # Pass in the list of symbols to fetch
+        TimeSpan.Day,  # Choose the candles interval
+        datetime.now() - timedelta(days=100),  # Date to start fetching from
+        datetime.now()  # The last date to fetch to
+    )
+
+    # Create a MongoDB Sink processor that will save all processed candles to mongo
+    # using the storage connector.
+    sink = StorageSinkProcessor(mongodb_storage)
+
+    # Cache processor acts like an in-memory cache and enable processors to share data between on another
+    cache_processor = CandleCache(sink)
+    # Create a technical indicators process that will add each candle with indicators data.
+    # We then pass the candles to the cache processor, so we can later use this data and share it
+    # with other processors if needed.
+    processor = TechnicalsProcessor(cache_processor)
+
+    # Construct the pipline object. This object can be serialized as JSON, saved, and reloaded whenever we need it.
+    pipeline = Pipeline(source, processor)
+
+    # Provide the Pipline object to the runner which will execute it.
+    # The Runner can execute multiple pipelines one after the other.
+    # This enabled the ability to construct a pipelines flow where each pipeline depends on another.
+    PipelineRunner(pipeline).run()
+```
   
 ## Using this repo locally
 
