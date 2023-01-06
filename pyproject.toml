@@ -31,6 +31,9 @@ dependencies = [
 
 dynamic = ["version"]
 
+[project.scripts]
+algo-trader = "algotrader.cli.main:initiate_cli"
+
 [tool.setuptools_scm]
 
 [tool.setuptools.packages.find]

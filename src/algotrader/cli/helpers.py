@@ -1,9 +1,10 @@
 import inspect
 from typing import Set, List
 
-import pipeline
-import pipeline.processors
-import pipeline.strategies
+import algotrader.pipeline
+import algotrader.pipeline.processors
+import algotrader.pipeline.sources
+import algotrader.pipeline.strategies
 
 
 def _get_all_of_class(base_class):
@@ -16,7 +17,7 @@ def _get_all_of_class(base_class):
             elif inspect.isclass(obj) and issubclass(obj, base_class) and obj.__name__ != base_class.__name__:
                 results.add(obj)
 
-    list_module_childs(pipeline)
+    list_module_childs(algotrader.pipeline)
     return results
 
 

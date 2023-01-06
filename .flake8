@@ -1,3 +1,3 @@
 [flake8]
-exclude=run/,libs/,venv/,src/algotrader/pipeline/processors/__init__.py,src/algotrader/pipeline/strategies/__init__.py,src/algotrader/pipeline/sources/__init__.py
+exclude=build/,run/,libs/,venv/,src/algotrader/pipeline/processors/__init__.py,src/algotrader/pipeline/strategies/__init__.py,src/algotrader/pipeline/sources/__init__.py
 max-line-length=160
