@@ -521,6 +521,130 @@
           "password": "root"
         }
       }
+    },
+    "config": {
+      "technicals": [
+        {
+          "name": "sma5",
+          "type": "sma",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "sma20",
+          "type": "sma",
+          "params": [
+            20
+          ]
+        },
+        {
+          "name": "cci7",
+          "type": "cci",
+          "params": [
+            7
+          ]
+        },
+        {
+          "name": "cci14",
+          "type": "cci",
+          "params": [
+            14
+          ]
+        },
+        {
+          "name": "macd",
+          "type": "macd",
+          "params": [
+            2,
+            5,
+            9
+          ]
+        },
+        {
+          "name": "rsi7",
+          "type": "cci",
+          "params": [
+            7
+          ]
+        },
+        {
+          "name": "rsi14",
+          "type": "cci",
+          "params": [
+            14
+          ]
+        },
+        {
+          "name": "adxr5",
+          "type": "adxr",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "stddev5",
+          "type": "stddev",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "ema5",
+          "type": "ema",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "ema20",
+          "type": "ema",
+          "params": [
+            20
+          ]
+        },
+        {
+          "name": "mom5",
+          "type": "mom",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "natr5",
+          "type": "natr",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "meandev5",
+          "type": "meandev",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "obv",
+          "type": "obv",
+          "params": []
+        },
+        {
+          "name": "var5",
+          "type": "var",
+          "params": [
+            5
+          ]
+        },
+        {
+          "name": "vosc",
+          "type": "var",
+          "params": [
+            2,
+            5
+          ]
+        }
+      ]
     }
   },
   "terminator": null

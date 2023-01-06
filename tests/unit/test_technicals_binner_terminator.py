@@ -4,9 +4,12 @@ from datetime import datetime
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
+from algotrader.calc.calculations import TechnicalCalculation
 from algotrader.entities.bucket import Bucket
 from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.configs.indicator_config import IndicatorConfig
+from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from fakes.pipeline_validators import ValidationProcessor
 from fakes.source import FakeSource
 from algotrader.pipeline.pipeline import Pipeline
@@ -32,7 +35,12 @@ class TestTechnicalsBinnerTerminator(TestCase):
     def test(self):
         cache_processor = CandleCache()
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
-        technicals = TechnicalsProcessor(technicals_normalizer)
+
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+        ])
+
+        technicals = TechnicalsProcessor(config, technicals_normalizer)
 
         with patch("builtins.open", mock_open()) as mock_file:
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, "/not/a/real/path.dat")
@@ -64,7 +72,12 @@ class TestTechnicalsBinnerTerminator(TestCase):
 
             cache_processor = CandleCache()
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
-            technicals = TechnicalsProcessor(technicals_normalizer)
+
+            config = TechnicalsProcessorConfig([
+                IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+            ])
+
+            technicals = TechnicalsProcessor(config, technicals_normalizer)
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, tmpfilepath)
 
             PipelineRunner(Pipeline(self.source, technicals, binner_terminator)).run()
@@ -73,5 +86,5 @@ class TestTechnicalsBinnerTerminator(TestCase):
             cache_processor = CandleCache(validator)
             matcher = TechnicalsBucketsMatcher(tmpfilepath, cache_processor)
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=matcher)
-            technicals = TechnicalsProcessor(technicals_normalizer)
+            technicals = TechnicalsProcessor(config, technicals_normalizer)
             PipelineRunner(Pipeline(self.source, technicals)).run()

@@ -1,10 +1,11 @@
 from datetime import datetime
 from unittest import TestCase
 
+from algotrader.calc.calculations import TechnicalCalculation
 from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
-from fakes.pipeline_validators import ValidationProcessor
-from fakes.source import FakeSource
+from algotrader.pipeline.configs.indicator_config import IndicatorConfig
+from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY, Indicators
@@ -12,6 +13,8 @@ from algotrader.pipeline.processors.technicals_normalizer import TechnicalsNorma
     NORMALIZED_INDICATORS_ATTACHMENT_KEY, NormalizedIndicators
 from algotrader.pipeline.runner import PipelineRunner
 from algotrader.pipeline.shared_context import SharedContext
+from fakes.pipeline_validators import ValidationProcessor
+from fakes.source import FakeSource
 from unit import generate_candle_with_price
 
 
@@ -44,7 +47,14 @@ class TestTechnicalsProcessor(TestCase):
 
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
-        processor = TechnicalsProcessor(cache_processor)
+
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+            IndicatorConfig('macd', TechnicalCalculation.MACD, [2, 5, 9]),
+            IndicatorConfig('cci7', TechnicalCalculation.CCI, [7]),
+        ])
+
+        processor = TechnicalsProcessor(config, cache_processor)
         PipelineRunner(Pipeline(self.source, processor)).run()
 
     def test_normalization(self):
@@ -67,5 +77,10 @@ class TestTechnicalsProcessor(TestCase):
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
-        technicals = TechnicalsProcessor(technicals_normalizer)
+
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+        ])
+
+        technicals = TechnicalsProcessor(config, technicals_normalizer)
         PipelineRunner(Pipeline(self.source, technicals)).run()

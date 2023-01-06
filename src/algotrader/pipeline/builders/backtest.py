@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 
-from assets.assets_provider import AssetsProvider
+from algotrader.assets.assets_provider import AssetsProvider
 from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.builders import TECHNICAL_PROCESSOR_CONFIG
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.strategy import StrategyProcessor
@@ -29,10 +30,9 @@ class BacktestPipelines:
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([ConnorsRSI2()], SimpleSumSignalsExecutor(), cache_processor)
-        technicals_processor = TechnicalsProcessor(strategy_processor)
-        processor = TechnicalsProcessor(technicals_processor)
+        technicals_processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, strategy_processor)
 
-        return Pipeline(source, processor)
+        return Pipeline(source, technicals_processor)
 
     @staticmethod
     def build_mongodb_history_buckets_backtester(bins_file_path: str) -> Pipeline:
@@ -58,7 +58,7 @@ class BacktestPipelines:
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)
         bucket_matcher = TechnicalsBucketsMatcher(bins_file_path, next_processor=strategy_processor)
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=bucket_matcher)
-        processor = TechnicalsProcessor(technical_normalizer)
+        processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, technical_normalizer)
 
         return Pipeline(source, processor)
 
@@ -85,6 +85,6 @@ class BacktestPipelines:
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)
         bucket_matcher = TechnicalsBucketsMatcher(bins_file_path, next_processor=strategy_processor)
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=bucket_matcher)
-        processor = TechnicalsProcessor(technical_normalizer)
+        processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, technical_normalizer)
 
         return Pipeline(source, processor)

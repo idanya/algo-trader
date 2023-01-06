@@ -5,16 +5,21 @@ from typing import List
 import numpy as np
 import tulipy as ti
 
+from algotrader.calc.calculations import TechnicalCalculation
 from algotrader.entities.candle import Candle
 
 
 class TechnicalCalculator:
+
     def __init__(self, candles: List[Candle]):
         self._candles = candles
         self._closes = np.array([float(c.close) for c in candles])
         self._highs = np.array([float(c.high) for c in candles])
         self._lows = np.array([float(c.low) for c in candles])
         self._volumes = np.array([float(c.volume) for c in candles])
+
+    def execute(self, calculation: TechnicalCalculation, params: List[any]) -> List[float]:
+        return self.__getattribute__(calculation.value)(*params)
 
     def sma(self, period: int) -> List[float]:
         if len(self._candles) < period:

@@ -5,6 +5,7 @@ from typing import Optional, List, Dict, Union, Tuple
 from algotrader.calc.technicals import TechnicalCalculator
 from algotrader.entities.candle import Candle
 from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
+from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.shared_context import SharedContext
@@ -28,8 +29,9 @@ class TechnicalsProcessor(Processor):
     Make use of the SharedContext to keep track of earlier candles.
     """
 
-    def __init__(self, next_processor: Optional[Processor]) -> None:
+    def __init__(self, config: TechnicalsProcessorConfig, next_processor: Optional[Processor]) -> None:
         super().__init__(next_processor)
+        self.config = config
 
     def process(self, context: SharedContext, candle: Candle):
         cache_reader = CandleCache.context_reader(context)
@@ -42,29 +44,11 @@ class TechnicalsProcessor(Processor):
 
         super().process(context, candle)
 
-    @staticmethod
-    def _calculate(calculator: TechnicalCalculator, candle_indicators: Indicators):
-        candle_indicators.set('typical', TechnicalsProcessor._get_last_value(calculator.typical()))
-        candle_indicators.set('sma5', TechnicalsProcessor._get_last_value(calculator.sma(5)))
-        candle_indicators.set('sma20', TechnicalsProcessor._get_last_value(calculator.sma(20)))
-        candle_indicators.set('sma50', TechnicalsProcessor._get_last_value(calculator.sma(50)))
-        candle_indicators.set('cci7', TechnicalsProcessor._get_last_value(calculator.cci(7)))
-        candle_indicators.set('cci14', TechnicalsProcessor._get_last_value(calculator.cci(14)))
-        candle_indicators.set('macd', TechnicalsProcessor._get_last_value(calculator.macd(2, 5, 9)))
-        candle_indicators.set('rsi2', TechnicalsProcessor._get_last_value(calculator.rsi(2)))
-        candle_indicators.set('rsi7', TechnicalsProcessor._get_last_value(calculator.rsi(7)))
-        candle_indicators.set('rsi14', TechnicalsProcessor._get_last_value(calculator.rsi(14)))
-        candle_indicators.set('adxr5', TechnicalsProcessor._get_last_value(calculator.adxr(5)))
-        candle_indicators.set('stddev5', TechnicalsProcessor._get_last_value(calculator.stddev(5)))
-        candle_indicators.set('ema5', TechnicalsProcessor._get_last_value(calculator.ema(5)))
-        candle_indicators.set('ema20', TechnicalsProcessor._get_last_value(calculator.ema(20)))
-        candle_indicators.set('ema50', TechnicalsProcessor._get_last_value(calculator.ema(50)))
-        candle_indicators.set('mom5', TechnicalsProcessor._get_last_value(calculator.mom(5)))
-        candle_indicators.set('natr5', TechnicalsProcessor._get_last_value(calculator.natr(5)))
-        candle_indicators.set('meandev5', TechnicalsProcessor._get_last_value(calculator.meandev(5)))
-        candle_indicators.set('obv', TechnicalsProcessor._get_last_value(calculator.obv()))
-        candle_indicators.set('var5', TechnicalsProcessor._get_last_value(calculator.var(5)))
-        candle_indicators.set('vosc', TechnicalsProcessor._get_last_value(calculator.vosc(2, 5)))
+    def _calculate(self, calculator: TechnicalCalculator, candle_indicators: Indicators):
+
+        for technicalConfig in self.config.technicals:
+            results = calculator.execute(technicalConfig.type, technicalConfig.params)
+            candle_indicators.set(technicalConfig.name, TechnicalsProcessor._get_last_value(results))
 
     @staticmethod
     def _get_last_value(values: Union[Tuple[List[float]], List[float]]) -> Optional[IndicatorValue]:
@@ -72,3 +56,15 @@ class TechnicalsProcessor(Processor):
             return [v[-1] for v in values]
         elif isinstance(values, list) and values:
             return values[-1]
+
+    def serialize(self) -> Dict:
+        obj = super().serialize()
+        obj.update({
+            'config': self.config.serialize()
+        })
+        return obj
+
+    @classmethod
+    def deserialize(cls, data: Dict) -> Optional[Processor]:
+        config = TechnicalsProcessorConfig.deserialize(data['config'])
+        return cls(config, cls._deserialize_next_processor(data))

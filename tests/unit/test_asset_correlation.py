@@ -4,10 +4,11 @@ from datetime import datetime, timedelta
 from typing import List
 from unittest import TestCase
 
+from algotrader.calc.calculations import TechnicalCalculation
 from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
-from fakes.pipeline_validators import ValidationProcessor
-from fakes.source import FakeSource
+from algotrader.pipeline.configs.indicator_config import IndicatorConfig
+from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY, \
     AssetCorrelationProcessor
@@ -16,6 +17,8 @@ from algotrader.pipeline.processors.technicals import TechnicalsProcessor
 from algotrader.pipeline.processors.timespan_change import TimeSpanChangeProcessor
 from algotrader.pipeline.runner import PipelineRunner
 from algotrader.pipeline.shared_context import SharedContext
+from fakes.pipeline_validators import ValidationProcessor
+from fakes.source import FakeSource
 from unit import generate_candle_with_price_and_symbol
 
 
@@ -61,5 +64,10 @@ class TestAssetCorrelationProcessor(TestCase):
                                               '../configs/correlations.json')
         asset_correlation = AssetCorrelationProcessor(correlations_file_path, cache_processor)
         timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, asset_correlation)
-        technicals = TechnicalsProcessor(timespan_change_processor)
+
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+        ])
+
+        technicals = TechnicalsProcessor(config, timespan_change_processor)
         PipelineRunner(Pipeline(self.source, technicals)).run()
