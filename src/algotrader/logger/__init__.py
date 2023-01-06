@@ -2,10 +2,9 @@ import logging
 import os
 import pathlib
 import time
-from rich.logging import RichHandler
 
 
-def setup_logger():
+def setup_default_logger():
     log_dir = pathlib.Path(__file__).parent.parent.joinpath('logs').resolve()
     level = logging.DEBUG if os.environ.get('DEBUG') else logging.INFO
 
@@ -22,8 +21,6 @@ def setup_logger():
         level=level,
         format=recfmt, datefmt=timefmt)
     logger = logging.getLogger()
-    console = RichHandler()
+    console = logging.StreamHandler()
     console.setLevel(level)
     logger.addHandler(console)
-
-    logging.getLogger('ibapi.wrapper').setLevel(logging.WARNING)

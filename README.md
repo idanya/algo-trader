@@ -2,6 +2,8 @@
 
 Trading strategies builder, backtester, and real-time trader.
 
+>pip install algorithmic-trader
+
 ## Intro
 
 algo-trader is an implementation of an algorithmic trading strategy executor and backtester.

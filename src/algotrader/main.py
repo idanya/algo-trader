@@ -1,8 +1,8 @@
 import json
 import pathlib
 
-from cli.main import initiate_cli
-from logger import setup_logger
+from algotrader.cli.main import initiate_cli
+from logger import setup_default_logger
 from algotrader.pipeline.builders.backtest import BacktestPipelines
 from algotrader.pipeline.builders.loaders import LoadersPipelines
 from algotrader.pipeline.pipeline import Pipeline
@@ -53,7 +53,7 @@ def generate_example_templates():
 
 
 if __name__ == '__main__':
-    setup_logger()
+    # setup_default_logger()
 
     # generate_example_templates()
 

@@ -1,6 +1,6 @@
 import typer
 
-from cli import processors, strategies, sources, pipeline
+from algotrader.cli import processors, strategies, sources, pipeline
 
 app = typer.Typer(no_args_is_help=True)
 app.add_typer(processors.app, name='processor', short_help='Processors related commands')
