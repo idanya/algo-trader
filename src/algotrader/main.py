@@ -2,7 +2,7 @@ import json
 import pathlib
 
 from algotrader.cli.main import initiate_cli
-from logger import setup_default_logger
+# from logger import setup_default_logger
 from algotrader.pipeline.builders.backtest import BacktestPipelines
 from algotrader.pipeline.builders.loaders import LoadersPipelines
 from algotrader.pipeline.pipeline import Pipeline
