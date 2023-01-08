@@ -2,7 +2,9 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from assets.assets_provider import AssetsProvider
+
 from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.builders import TECHNICAL_PROCESSOR_CONFIG
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.assets_correlation import AssetCorrelationProcessor
@@ -41,7 +43,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = TechnicalsProcessor(cache_processor)
+        processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, cache_processor)
 
         return Pipeline(source, processor)
 
@@ -56,7 +58,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = TechnicalsProcessor(cache_processor)
+        processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, cache_processor)
 
         return Pipeline(source, processor)
 
@@ -72,7 +74,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = TechnicalsProcessor(cache_processor)
+        processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, cache_processor)
 
         return Pipeline(source, processor)
 
@@ -87,7 +89,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = TechnicalsProcessor(cache_processor)
+        processor = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, cache_processor)
 
         return Pipeline(source, processor)
 
@@ -133,7 +135,7 @@ class LoadersPipelines:
             latest_processor = asset_correlation
 
         technical_normalizer = TechnicalsNormalizerProcessor(next_processor=latest_processor)
-        technicals = TechnicalsProcessor(technical_normalizer)
+        technicals = TechnicalsProcessor(TECHNICAL_PROCESSOR_CONFIG, technical_normalizer)
         timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, technicals)
         return timespan_change_processor
 
