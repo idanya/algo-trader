@@ -177,7 +177,10 @@ load and calculate technical indicators on stocks data from Yahoo finance to Mon
 ```python
 from datetime import datetime, timedelta
 
+from algotrader.calc.calculations import TechnicalCalculation
 from algotrader.entities.timespan import TimeSpan
+from algotrader.pipeline.configs.indicator_config import IndicatorConfig
+from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.storage_provider_sink import StorageSinkProcessor
@@ -208,7 +211,17 @@ def main():
     # Create a technical indicators process that will add each candle with indicators data.
     # We then pass the candles to the cache processor, so we can later use this data and share it
     # with other processors if needed.
-    processor = TechnicalsProcessor(cache_processor)
+    technicals_config = TechnicalsProcessorConfig([
+        IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+        IndicatorConfig('sma20', TechnicalCalculation.SMA, [20]),
+        IndicatorConfig('cci7', TechnicalCalculation.CCI, [7]),
+        IndicatorConfig('cci14', TechnicalCalculation.CCI, [14]),
+        IndicatorConfig('rsi7', TechnicalCalculation.CCI, [7]),
+        IndicatorConfig('rsi14', TechnicalCalculation.CCI, [14]),
+        IndicatorConfig('stddev5', TechnicalCalculation.STDDEV, [5]),
+    ])
+
+    processor = TechnicalsProcessor(technicals_config, cache_processor)
 
     # Construct the pipline object. This object can be serialized as JSON, saved, and reloaded whenever we need it.
     pipeline = Pipeline(source, processor)
@@ -217,6 +230,7 @@ def main():
     # The Runner can execute multiple pipelines one after the other.
     # This enabled the ability to construct a pipelines flow where each pipeline depends on another.
     PipelineRunner(pipeline).run()
+
 ```
   
 ## Using this repo locally
