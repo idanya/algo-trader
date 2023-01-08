@@ -19,6 +19,6 @@ TECHNICAL_PROCESSOR_CONFIG = TechnicalsProcessorConfig([
     IndicatorConfig('meandev5', TechnicalCalculation.MEANDEV, [5]),
     IndicatorConfig('obv', TechnicalCalculation.OBV, []),
     IndicatorConfig('var5', TechnicalCalculation.VAR, [5]),
-    IndicatorConfig('vosc', TechnicalCalculation.VAR, [2, 5]),
+    IndicatorConfig('vosc', TechnicalCalculation.VOSC, [2, 5]),
 ]
 )
