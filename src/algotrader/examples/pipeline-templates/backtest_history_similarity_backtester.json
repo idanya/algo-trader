@@ -675,7 +675,7 @@
         },
         {
           "name": "vosc",
-          "type": "var",
+          "type": "vosc",
           "params": [
             2,
             5
