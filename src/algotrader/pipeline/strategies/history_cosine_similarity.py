@@ -28,8 +28,10 @@ class HistoryCosineSimilarityStrategy(Strategy):
         groupby_fields = [f'attachments.indicators_matched_buckets.{ind}.ident' for ind in self.indicators_to_compare]
         return_field = f'attachments.returns.{return_field}'
 
-        self.matchers = storage_provider.get_aggregated_history(timeframe_start, timeframe_end, groupby_fields,
-                                                                return_field, min_event_count, min_avg_return)
+        self.long_matchers, self.short_matchers = storage_provider.get_aggregated_history(timeframe_start,
+                                                                                          timeframe_end, groupby_fields,
+                                                                                          return_field, min_event_count,
+                                                                                          min_avg_return)
 
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         indicators_buckets: IndicatorsMatchedBuckets = \
@@ -42,7 +44,7 @@ class HistoryCosineSimilarityStrategy(Strategy):
 
             candle_values.append(indicators_buckets.get(indicator).ident)
 
-        for matcher in self.matchers:
+        for matcher in self.long_matchers:
             matcher_values: list[int] = []
             for indicator in self.indicators_to_compare:
                 matcher_values.append(matcher[f'attachments.indicators_matched_buckets.{indicator}.ident'])

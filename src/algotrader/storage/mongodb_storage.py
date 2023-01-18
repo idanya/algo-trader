@@ -1,5 +1,7 @@
+import json
+import logging
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 
 import pymongo
 from pymongo import MongoClient
@@ -44,16 +46,31 @@ class MongoDBStorage(StorageProvider):
                                              unique=True, background=True)
 
     def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
-                               return_field: str, min_count: int, min_avg: float) -> \
-            List[Dict[str, int]]:
+                               return_fields: List[str], min_count: int, min_return: float) -> \
+            Tuple[List[Dict[str, int]], List[Dict[str, int]]]:
 
         self._ensure_connection()
 
-        pipeline = [
-            self._generate_history_match_clause(from_timestamp, to_timestamp, groupby_fields + [return_field]),
-            self._generate_group_stage(groupby_fields, return_field),
-            self._generate_min_fields_match_stage(min_count, min_avg)
+        stage_and_match = [
+            self._generate_history_match_clause(from_timestamp, to_timestamp, groupby_fields + return_fields),
+            self._generate_group_stage(groupby_fields, return_fields),
         ]
+
+        long_pipeline = stage_and_match + [
+            self._generate_min_fields_match_stage_long(min_count, return_fields, min_return)]
+
+        short_pipeline = stage_and_match + [
+            self._generate_min_fields_match_stage_short(min_count, return_fields, min_return)]
+
+        long_matches = self._run_and_parse_aggregate(long_pipeline)
+        short_matches = self._run_and_parse_aggregate(short_pipeline)
+
+        return long_matches, short_matches
+
+    def _run_and_parse_aggregate(self, pipeline: List):
+        self._ensure_connection()
+
+        logging.info(f'Running pipeline: {json.dumps(pipeline, indent=4, sort_keys=True, default=str)}')
 
         results = self.candles_collection.aggregate(pipeline, allowDiskUse=True)
         matches: List[Dict[str, int]] = []
@@ -65,18 +82,21 @@ class MongoDBStorage(StorageProvider):
         return matches
 
     @staticmethod
-    def _generate_history_match_clause(from_timestamp: datetime, to_timestamp: datetime,
-                                       fields: List[str]) -> object:
+    def _generate_history_match_clause(from_timestamp: datetime, to_timestamp: datetime, fields: List[str]) -> object:
         existing_fields_query = {field: {'$exists': True} for field in fields}
         existing_fields_query.update({'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}})
         return {'$match': existing_fields_query}
 
     @staticmethod
-    def _generate_group_stage(groupby_fields: List[str], return_field: str) -> object:
+    def _generate_group_stage(groupby_fields: List[str], return_fields: List[str]) -> object:
+        avgs = {}
+        for return_field in return_fields:
+            avgs.update({MongoDBStorage._serialize_group_field_name(return_field): {'$avg': f'${return_field}'}})
+
         return {
             "$group": {
                 "_id": {MongoDBStorage._serialize_group_field_name(field): f'${field}' for field in groupby_fields},
-                "avg": {'$avg': f'${return_field}'},
+                **avgs,
                 "count": {"$sum": 1},
             }
         }
@@ -90,11 +110,26 @@ class MongoDBStorage(StorageProvider):
         return field.replace('*', '.')
 
     @staticmethod
-    def _generate_min_fields_match_stage(min_count: int, min_avg: float) -> object:
+    def _generate_min_fields_match_stage_long(min_count: int, return_fields: List[str], min_return: float) -> object:
+        min_returns = {'$or': [{MongoDBStorage._serialize_group_field_name(field): {'$gte': min_return}} for field in
+                               return_fields]}
+
         return {
             '$match': {
+                **min_returns,
                 "count": {'$gte': min_count},
-                "avg": {'$gte': min_avg},
+            }
+        }
+
+    @staticmethod
+    def _generate_min_fields_match_stage_short(min_count: int, return_fields: List[str], min_return: float) -> object:
+        min_returns = {'$or': [{MongoDBStorage._serialize_group_field_name(field): {'$lte': -min_return}} for field in
+                               return_fields]}
+
+        return {
+            '$match': {
+                **min_returns,
+                "count": {'$gte': min_count},
             }
         }
 
@@ -122,7 +157,7 @@ class MongoDBStorage(StorageProvider):
         return Candle.deserialize(data)
 
     def get_symbol_candles(self, symbol: str, time_span: TimeSpan,
-                           from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
+                           from_timestamp: datetime, to_timestamp: datetime, limit: int = 0) -> List[Candle]:
         self._ensure_connection()
 
         query = {
@@ -132,7 +167,7 @@ class MongoDBStorage(StorageProvider):
         }
 
         return [self._deserialize_candle(candle) for candle in
-                self.candles_collection.find(query).sort("timestamp")]
+                self.candles_collection.find(query).sort("timestamp").limit(limit)]
 
     def get_candles(self, time_span: TimeSpan,
                     from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:

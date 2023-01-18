@@ -13,14 +13,19 @@ class InMemoryStorage(StorageProvider):
         self.candles: Dict[str, List[Candle]] = {}
 
     def get_symbol_candles(self, symbol: str, time_span: TimeSpan, from_timestamp: datetime,
-                           to_timestamp: datetime) -> List[Candle]:
+                           to_timestamp: datetime, limit: int = 0) -> List[Candle]:
 
         if symbol not in self.candles:
             return []
 
-        return list(filter(lambda candle:
-                           candle.time_span == time_span and
-                           from_timestamp <= candle.timestamp <= to_timestamp, self.candles[symbol]))
+        results = list(filter(lambda candle:
+                              candle.time_span == time_span and
+                              from_timestamp <= candle.timestamp <= to_timestamp, self.candles[symbol]))
+
+        if limit > 0:
+            return results[:limit]
+
+        return results
 
     def get_candles(self, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
 

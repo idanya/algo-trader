@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from algotrader.entities.candle import Candle
 from algotrader.entities.serializable import Deserializable, Serializable
@@ -14,7 +14,7 @@ class StorageProvider(Serializable, Deserializable):
 
     @abstractmethod
     def get_symbol_candles(self, symbol: str, time_span: TimeSpan, from_timestamp: datetime,
-                           to_timestamp: datetime) -> List[Candle]:
+                           to_timestamp: datetime, limit: int) -> List[Candle]:
         pass
 
     @abstractmethod
@@ -23,5 +23,6 @@ class StorageProvider(Serializable, Deserializable):
 
     @abstractmethod
     def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
-                               return_field: str, min_count: int, min_avg: float) -> List[Dict[str, int]]:
+                               return_fields: List[str], min_count: int, min_return: float) -> Tuple[
+        List[Dict[str, int]], List[Dict[str, int]]]:
         pass
