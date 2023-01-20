@@ -75,12 +75,18 @@ class BinanceProvider(Serializable, Deserializable):
 
         return Candle(symbol, interval, timestamp, open, close, high, low, volume)
 
-    def send_order(self, symbol: str, direction: OrderDirection, quantity: float,
-                   triggering_price: float, time_in_force: str = 'GTC'):
+    def send_bracket_order(self, symbol: str, direction: OrderDirection, quantity: float,
+                           triggering_price: float, position_entry_grace: float, spread: float,
+                           time_in_force: str = 'GTC'):
 
-        grace_price = triggering_price * 1.005 if direction == OrderDirection.BUY else triggering_price * 0.995
-        take_profit_price = triggering_price * 1.02 if direction == OrderDirection.BUY else triggering_price * 0.98
-        stop_loss_price = triggering_price * 0.98 if direction == OrderDirection.BUY else triggering_price * 1.02
+        grace_price = triggering_price * (1 + position_entry_grace) if direction == OrderDirection.BUY else \
+            triggering_price * (1 - position_entry_grace)
+
+        take_profit_price = triggering_price * (1 + spread) if direction == OrderDirection.BUY else \
+            triggering_price * (1 - spread)
+
+        stop_loss_price = triggering_price * (1 - spread) if direction == OrderDirection.BUY else \
+            triggering_price * (1 + spread)
 
         side = self._direction_to_side(direction)
         logging.info(f'Sending order for {symbol} {side} {quantity} at {grace_price}...')
