@@ -70,7 +70,6 @@ class HistoryBucketCompareStrategy(Strategy):
 
         return []
 
-
     def serialize(self) -> Dict:
         obj = super().serialize()
         obj.update({

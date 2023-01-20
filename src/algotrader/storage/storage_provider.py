@@ -23,6 +23,6 @@ class StorageProvider(Serializable, Deserializable):
 
     @abstractmethod
     def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
-                               return_fields: List[str], min_count: int, min_return: float) -> Tuple[
-        List[Dict[str, int]], List[Dict[str, int]]]:
+                               return_fields: List[str], min_count: int, min_return: float) -> \
+            Tuple[List[Dict[str, int]], List[Dict[str, int]]]:
         pass
