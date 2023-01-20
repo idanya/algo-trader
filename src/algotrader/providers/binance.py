@@ -6,20 +6,25 @@ from binance.spot import Spot
 from binance.websocket.spot.websocket_client import SpotWebsocketClient as WebsocketClient
 
 from algotrader.entities.candle import Candle
+from algotrader.entities.order_direction import OrderDirection
 from algotrader.entities.serializable import Deserializable, Serializable
 from algotrader.entities.timespan import TimeSpan
 
 StreamedCandleCallback = Callable[[Candle], None]
 
+PRODUCTION = 'https://api.binance.com'
+TESTNET = 'https://testnet.binance.vision'
+
 
 class BinanceProvider(Serializable, Deserializable):
     logger = logging.getLogger('BinanceProvider')
 
-    def __init__(self, api_key: Optional[str] = '', api_secret: Optional[str] = '', enable_websocket: bool = False):
+    def __init__(self, api_key: Optional[str] = '', api_secret: Optional[str] = '',
+                 enable_websocket: bool = False, testnet: bool = False):
         self.api_key = api_key
         self.api_secret = api_secret
         self.enable_websocket = enable_websocket
-        self.client = Spot(api_key, api_secret)
+        self.client = Spot(api_key, api_secret, base_url=TESTNET if testnet else PRODUCTION)
 
         self.wsManager = WebsocketClient()
         if enable_websocket:
@@ -70,6 +75,35 @@ class BinanceProvider(Serializable, Deserializable):
 
         return Candle(symbol, interval, timestamp, open, close, high, low, volume)
 
+    def send_bracket_order(self, symbol: str, direction: OrderDirection, quantity: float,
+                           triggering_price: float, position_entry_grace: float, spread: float,
+                           time_in_force: str = 'GTC'):
+
+        grace_price = triggering_price * (1 + position_entry_grace) if direction == OrderDirection.BUY else \
+            triggering_price * (1 - position_entry_grace)
+
+        take_profit_price = triggering_price * (1 + spread) if direction == OrderDirection.BUY else \
+            triggering_price * (1 - spread)
+
+        stop_loss_price = triggering_price * (1 - spread) if direction == OrderDirection.BUY else \
+            triggering_price * (1 + spread)
+
+        side = self._direction_to_side(direction)
+        logging.info(f'Sending order for {symbol} {side} {quantity} at {grace_price}...')
+        order_response = self.client.new_order(symbol=symbol, side=side, type='LIMIT',
+                                               quantity=quantity, price=grace_price,
+                                               timeInForce=time_in_force)
+
+        logging.info(f'Order response: {order_response}')
+        if order_response['status'] == 'FILLED':
+            logging.info(f'Order filled, sending take profit and stop loss... '
+                         f'take profit: {take_profit_price}, stop loss: {stop_loss_price}')
+
+            opposite_side = self._direction_to_opposite_side(direction)
+            self.client.new_oco_order(symbol=symbol, side=opposite_side, quantity=quantity, price=take_profit_price,
+                                      stopPrice=stop_loss_price, time_in_force='GTC')
+        return order_response
+
     def get_symbol_history(self, symbol: str, interval: TimeSpan, start_time: datetime,
                            end_time: datetime = datetime.now()) -> List[Candle]:
         self.logger.info(f'Getting {symbol} history from {start_time} to {end_time}...')
@@ -110,6 +144,14 @@ class BinanceProvider(Serializable, Deserializable):
     @staticmethod
     def _timestamp_to_datetime(timestamp: int) -> datetime:
         return datetime.fromtimestamp(timestamp / 1000)
+
+    @staticmethod
+    def _direction_to_side(direction: OrderDirection) -> str:
+        return 'BUY' if direction == OrderDirection.Buy else 'SELL'
+
+    @staticmethod
+    def _direction_to_opposite_side(direction: OrderDirection) -> str:
+        return 'SELL' if direction == OrderDirection.Buy else 'BUY'
 
     @staticmethod
     def _timespan_to_interval(timespan: TimeSpan) -> str:

@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import List, Dict
 
@@ -14,22 +15,28 @@ from algotrader.storage.storage_provider import StorageProvider
 class HistoryBucketCompareStrategy(Strategy):
 
     def __init__(self, storage_provider: StorageProvider, timeframe_start: datetime, timeframe_end: datetime,
-                 indicators_to_compare: List[str], return_field: str, min_event_count: int,
+                 indicators_to_compare: List[str], return_fields: List[str], min_event_count: int,
                  min_avg_return: float) -> None:
         self.timeframe_start = timeframe_start
         self.timeframe_end = timeframe_end
         self.indicators_to_compare = indicators_to_compare
         self.storage_provider = storage_provider
         self.indicators_to_compare = indicators_to_compare
-        self.return_field = return_field
+        self.return_fields = return_fields
         self.min_event_count = min_event_count
         self.min_avg_return = min_avg_return
 
         groupby_fields = [f'attachments.indicators_matched_buckets.{ind}.ident' for ind in self.indicators_to_compare]
-        return_field = f'attachments.returns.{return_field}'
+        return_fields = [f'attachments.returns.{return_field}' for return_field in self.return_fields]
 
-        self.matchers = storage_provider.get_aggregated_history(timeframe_start, timeframe_end, groupby_fields,
-                                                                return_field, min_event_count, min_avg_return)
+        self.long_matchers, self.short_matchers = storage_provider.get_aggregated_history(timeframe_start,
+                                                                                          timeframe_end,
+                                                                                          groupby_fields,
+                                                                                          return_fields,
+                                                                                          min_event_count,
+                                                                                          min_avg_return)
+
+        logging.info(f'Found {len(self.long_matchers)} long matchers and {len(self.short_matchers)} short matchers')
 
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
         indicators_buckets: IndicatorsMatchedBuckets = \
@@ -43,7 +50,7 @@ class HistoryBucketCompareStrategy(Strategy):
             candle_buckets_map[f'attachments.indicators_matched_buckets.{indicator}.ident'] = indicators_buckets.get(
                 indicator).ident
 
-        for matcher in self.matchers:
+        for matcher in self.long_matchers:
             match = True
             for candle_ind, candle_val in candle_buckets_map.items():
                 if matcher[candle_ind] != candle_val:
@@ -51,6 +58,15 @@ class HistoryBucketCompareStrategy(Strategy):
 
             if match:
                 return [StrategySignal(candle.symbol, SignalDirection.Long)]
+
+        for matcher in self.short_matchers:
+            match = True
+            for candle_ind, candle_val in candle_buckets_map.items():
+                if matcher[candle_ind] != candle_val:
+                    match = False
+
+            if match:
+                return [StrategySignal(candle.symbol, SignalDirection.Short)]
 
         return []
 
@@ -61,7 +77,7 @@ class HistoryBucketCompareStrategy(Strategy):
             'timeframe_start': self.timeframe_start,
             'timeframe_end': self.timeframe_end,
             'indicators_to_compare': self.indicators_to_compare,
-            'return_field': self.return_field,
+            'return_fields': self.return_fields,
             'min_event_count': self.min_event_count,
             'min_avg_return': self.min_avg_return,
         })
@@ -72,5 +88,5 @@ class HistoryBucketCompareStrategy(Strategy):
         storage_provider: StorageProvider = DeserializationService.deserialize(data.get('storage_provider'))
 
         return cls(storage_provider, data.get('timeframe_start'), data.get('timeframe_end'),
-                   data.get('indicators_to_compare'), data.get('return_field'),
+                   data.get('indicators_to_compare'), data.get('return_fields'),
                    data.get('min_event_count'), data.get('min_avg_return'))

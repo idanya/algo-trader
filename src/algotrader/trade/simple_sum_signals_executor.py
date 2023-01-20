@@ -13,8 +13,8 @@ class SimpleSumSignalsExecutor(SignalsExecutor):
         self.position: Dict[str, float] = {}
         self.cash = 0
 
-    def _get_order_size(self, price: float) -> int:
-        return int(DEFAULT_ORDER_VALUE / price)
+    def _get_order_size(self, price: float) -> float:
+        return DEFAULT_ORDER_VALUE / price
 
     def execute(self, candle: Candle, signals: List[StrategySignal]):
         # close when there is no signal

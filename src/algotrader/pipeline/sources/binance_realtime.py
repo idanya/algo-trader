@@ -15,6 +15,8 @@ class BinanceRealtimeSource(Source):
         self.time_span = time_span
         self.queue = Queue()
 
+        self._last_received_candle: Dict[str, Candle] = {}
+
     def read(self) -> Iterator[Candle]:
         for symbol in self.symbols:
             self.binance_provider.start_kline_socket(symbol, self.time_span, self._on_candle)
@@ -23,7 +25,11 @@ class BinanceRealtimeSource(Source):
             yield self.queue.get()
 
     def _on_candle(self, candle: Candle):
-        self.queue.put(candle)
+        if candle.symbol in self._last_received_candle and \
+                candle.timestamp > self._last_received_candle[candle.symbol].timestamp:
+            self.queue.put(self._last_received_candle[candle.symbol])
+
+        self._last_received_candle[candle.symbol] = candle
 
     def serialize(self) -> Dict:
         obj = super().serialize()

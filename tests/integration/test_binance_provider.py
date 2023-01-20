@@ -18,6 +18,10 @@ class TestBinanceMarketProvider(TestCase):
     API_KEY = os.environ.get('BINANCE_API_KEY')
     API_SECRET = os.environ.get('BINANCE_API_SECRET')
 
+    def test_get_account(self):
+        provider = BinanceProvider(self.API_KEY, self.API_SECRET, False, testnet=True)
+        provider.account()
+
     def test_get_symbol_history(self):
         provider = BinanceProvider(self.API_KEY, self.API_SECRET, False)
 
