@@ -1,36 +1,46 @@
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest import TestCase
 
 from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
-from fakes.pipeline_validators import ValidationProcessor
+from algotrader.pipeline.reverse_source import ReverseSource
+from fakes.pipeline_validators import ValidationProcessor, TerminatorValidator
 from fakes.source import FakeSource
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.returns import ReturnsCalculatorProcessor, RETURNS_ATTACHMENT_KEY, Returns
 from algotrader.pipeline.runner import PipelineRunner
 from algotrader.pipeline.shared_context import SharedContext
-from unit import generate_candle_with_price
+from unit import generate_candle_with_price, TEST_SYMBOL
 
 
 class TestReturnsCalculatorProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(1, c)) for c in range(1, 50)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now() + timedelta(minutes=c), c) for c in range(1, 50)])
 
     def test(self):
-        def _check(context: SharedContext, candle: Candle):
+        def _check_returns(context: SharedContext):
             self.assertIsNotNone(context)
-            context.put_kv_data('check_count', context.get_kv_data('check_count', 0) + 1)
-            check_count = context.get_kv_data('check_count', 0)
+            cache_reader = CandleCache.context_reader(context)
+            candles = cache_reader.get_symbol_candles(TEST_SYMBOL)
 
-            if check_count > 6:
-                candle_returns: Returns = candle.attachments.get_attachment(RETURNS_ATTACHMENT_KEY)
-                self.assertTrue(candle_returns.has('ctc1'))
+            self.assertFalse(candles[0].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has('ctc-1'))
+            self.assertFalse(candles[1].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has('ctc-1'))
+            self.assertFalse(candles[2].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has('ctc-1'))
 
-        validator = ValidationProcessor(_check)
-        cache_processor = CandleCache(validator)
-        processor = ReturnsCalculatorProcessor(5, cache_processor)
-        PipelineRunner(Pipeline(self.source, processor)).run()
+            ctc1 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-1']
+            ctc2 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-2']
+            ctc3 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-3']
+            self.assertTrue(ctc1 < ctc2 < ctc3)
+
+
+        cache_processor = CandleCache()
+        processor = ReturnsCalculatorProcessor('ctc', 3, cache_processor)
+
+        terminator = TerminatorValidator(_check_returns)
+
+        self.source = ReverseSource(self.source)
+        PipelineRunner(Pipeline(self.source, processor, terminator)).run()

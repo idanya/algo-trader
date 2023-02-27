@@ -1162,6 +1162,7 @@
       "ZTS"
     ],
     "bins_count": 10,
-    "output_file_path": "/Users/idanyael/personal-dev/algo-trader/src/algotrader/examples/pipeline-templates/bins.json"
+    "output_file_path": "/Users/idanyael/personal-dev/algo-trader/src/algotrader/examples/pipeline-templates/bins.json",
+    "outliers_removal_percentage": 0.05
   }
 }

@@ -547,7 +547,17 @@
                 "ema20",
                 "correlation"
               ],
-              "return_field": "ctc1",
+              "return_fields": [
+                "ctc-1",
+                "ctc-2",
+                "ctc-3",
+                "ctc-4",
+                "ctc-5",
+                "ctc-6",
+                "ctc-7",
+                "ctc-8",
+                "ctc-9"
+              ],
               "min_event_count": 50,
               "min_avg_return": 0.2
             }

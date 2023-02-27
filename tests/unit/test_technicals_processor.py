@@ -52,6 +52,7 @@ class TestTechnicalsProcessor(TestCase):
             IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
             IndicatorConfig('macd', TechnicalCalculation.MACD, [2, 5, 9]),
             IndicatorConfig('cci7', TechnicalCalculation.CCI, [7]),
+            IndicatorConfig('arooosc', TechnicalCalculation.AROONOSC, [7]),
         ])
 
         processor = TechnicalsProcessor(config, cache_processor)

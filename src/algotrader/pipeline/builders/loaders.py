@@ -104,7 +104,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = ReturnsCalculatorProcessor(5, cache_processor)
+        processor = ReturnsCalculatorProcessor('ctc', 5, cache_processor)
 
         return Pipeline(source, processor)
 

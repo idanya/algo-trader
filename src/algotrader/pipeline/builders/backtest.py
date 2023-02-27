@@ -43,6 +43,8 @@ class BacktestPipelines:
         data_from_time = STATIC_NOW - timedelta(days=365 * 3)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time, STATIC_NOW)
 
+        return_fields = [f'ctc-{i}' for i in range(1, 10)]
+
         history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
                                                                 data_from_time,
                                                                 backtest_from_time,
@@ -51,7 +53,7 @@ class BacktestPipelines:
                                                                                        'rsi7', 'rsi14',
                                                                                        'stddev5', 'ema5',
                                                                                        'ema20', 'correlation'],
-                                                                return_field='ctc1', min_event_count=50,
+                                                                return_fields=return_fields, min_event_count=50,
                                                                 min_avg_return=0.2)
 
         cache_processor = CandleCache()

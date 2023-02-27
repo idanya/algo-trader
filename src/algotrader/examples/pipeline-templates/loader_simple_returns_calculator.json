@@ -515,7 +515,8 @@
     }
   },
   "processor": {
-    "returnsCount": 5
+    "returnsCount": 5,
+    "fieldPrefix": "ctc"
   },
   "terminator": null
 }

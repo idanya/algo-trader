@@ -72,7 +72,7 @@ class TestHistoryCompareStrategy(TestCase):
                                                                 datetime.now() - timedelta(days=60),
                                                                 datetime.now(),
                                                                 indicators_to_compare=['sma5', 'sma20'],
-                                                                return_field='ctc1', min_event_count=1,
+                                                                return_fields=['ctc1'], min_event_count=1,
                                                                 min_avg_return=0.2)
 
         # TODO: FakeSignalsExecutor is not called when there is not signal. make sure to fail if it's not called.
@@ -100,7 +100,7 @@ class TestHistoryCompareStrategy(TestCase):
                                                                 datetime.now(),
                                                                 datetime.now(),
                                                                 indicators_to_compare=['sma5', 'sma20'],
-                                                                return_field='ctc1', min_event_count=1,
+                                                                return_fields=['ctc1'], min_event_count=1,
                                                                 min_avg_return=0.2)
 
         # TODO: FakeSignalsExecutor is not called when there is not signal. make sure to fail if it's not called.

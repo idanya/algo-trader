@@ -22,6 +22,7 @@ class Indicators(GenericCandleAttachment[IndicatorValue]):
 
 Indicators()
 
+MAX_CANDLES_FOR_CALC = 50
 
 class TechnicalsProcessor(Processor):
     """
@@ -36,7 +37,7 @@ class TechnicalsProcessor(Processor):
     def process(self, context: SharedContext, candle: Candle):
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
-        calculator = TechnicalCalculator(symbol_candles + [candle])
+        calculator = TechnicalCalculator(symbol_candles[-MAX_CANDLES_FOR_CALC:] + [candle])
 
         candle_indicators = Indicators()
         self._calculate(calculator, candle_indicators)
