@@ -37,10 +37,9 @@ class ReturnsCalculatorProcessor(Processor):
         if self.next_processor:
             self.next_processor.process(context, candle)
 
-
     def _calc_returns(self, current_candle: Candle, candles: List[Candle]) -> Returns:
         candle_returns = Returns()
-        for i in range(1, self.returns_count+1):
+        for i in range(1, self.returns_count + 1):
             candle_returns.set(f'{self.field_prefix}-{i}', (1 - current_candle.close / candles[-i].close) * 100)
 
         return candle_returns

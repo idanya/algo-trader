@@ -1,17 +1,15 @@
-import random
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
-from algotrader.pipeline.reverse_source import ReverseSource
-from fakes.pipeline_validators import ValidationProcessor, TerminatorValidator
-from fakes.source import FakeSource
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.returns import ReturnsCalculatorProcessor, RETURNS_ATTACHMENT_KEY, Returns
+from algotrader.pipeline.processors.returns import ReturnsCalculatorProcessor, RETURNS_ATTACHMENT_KEY
+from algotrader.pipeline.reverse_source import ReverseSource
 from algotrader.pipeline.runner import PipelineRunner
 from algotrader.pipeline.shared_context import SharedContext
+from fakes.pipeline_validators import TerminatorValidator
+from fakes.source import FakeSource
 from unit import generate_candle_with_price, TEST_SYMBOL
 
 
@@ -35,7 +33,6 @@ class TestReturnsCalculatorProcessor(TestCase):
             ctc2 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-2']
             ctc3 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-3']
             self.assertTrue(ctc1 < ctc2 < ctc3)
-
 
         cache_processor = CandleCache()
         processor = ReturnsCalculatorProcessor('ctc', 3, cache_processor)

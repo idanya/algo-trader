@@ -24,6 +24,7 @@ Indicators()
 
 MAX_CANDLES_FOR_CALC = 50
 
+
 class TechnicalsProcessor(Processor):
     """
     Technical indicators processor. Using Tulip indicators to calculate and attach technicals to the processed candles.
