@@ -1,8 +1,6 @@
 import logging
 from typing import Optional, Dict
 
-from rich.progress import Progress, TextColumn, BarColumn
-
 from algotrader.entities.serializable import Serializable, Deserializable
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.shared_context import SharedContext
@@ -37,13 +35,10 @@ class Pipeline(Serializable, Deserializable):
     def run(self, context: SharedContext) -> None:
         self.logger.info('Starting pipeline...')
 
-        with Progress(TextColumn('{task.completed} Candle(s) processed'), BarColumn()) as progress:
-            processing_task = progress.add_task("Processing", total=None)
-
-            for candle in self.source.read():
-                self.logger.debug('Processing candle: %s\r', candle.serialize())
-                self.processor.process(context, candle)
-                progress.update(processing_task, advance=1)
+        for candle in self.source.read():
+            self.logger.debug('Processing candle: %s\r', candle.serialize())
+            self.processor.process(context, candle)
 
         if self.terminator:
+            self.logger.debug('initiating termination...')
             self.terminator.terminate(context)

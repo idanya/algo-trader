@@ -30,6 +30,10 @@ class MongoDBStorage(StorageProvider):
         self.db: Optional[Database] = None
         self.candles_collection: Optional[Collection] = None
 
+    def get_collection(self) -> Collection:
+        self._ensure_connection()
+        return self.candles_collection
+
     def _ensure_connection(self):
         if self.client:
             return

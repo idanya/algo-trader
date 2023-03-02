@@ -64,7 +64,7 @@ class TechnicalCalculator:
         return ti.fisher(self._highs, self._lows, period)
 
     def aroonosc(self, period: int) -> List[float]:
-        if len(self._highs) < period:
+        if len(self._highs) <= period:
             return []
 
         return ti.aroonosc(self._highs, self._lows, period)

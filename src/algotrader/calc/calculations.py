@@ -16,3 +16,7 @@ class TechnicalCalculation(Enum):
     OBV = 'obv'
     VAR = 'var'
     VOSC = 'vosc'
+    STOCH = 'stoch'
+    FISHER = 'fisher'
+    AROONOSC = 'aroonosc'
+    BBANDS = 'bbands'

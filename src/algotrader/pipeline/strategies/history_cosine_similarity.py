@@ -26,11 +26,11 @@ class HistoryCosineSimilarityStrategy(Strategy):
         self.min_avg_return = min_avg_return
 
         groupby_fields = [f'attachments.indicators_matched_buckets.{ind}.ident' for ind in self.indicators_to_compare]
-        return_field = f'attachments.returns.{return_field}'
+        return_fields = [f'attachments.returns.ctc-{i}' for i in range(1, 20)]
 
         self.long_matchers, self.short_matchers = storage_provider.get_aggregated_history(timeframe_start,
                                                                                           timeframe_end, groupby_fields,
-                                                                                          return_field, min_event_count,
+                                                                                          return_fields, min_event_count,
                                                                                           min_avg_return)
 
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:

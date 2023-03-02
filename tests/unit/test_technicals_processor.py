@@ -52,6 +52,7 @@ class TestTechnicalsProcessor(TestCase):
             IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
             IndicatorConfig('macd', TechnicalCalculation.MACD, [2, 5, 9]),
             IndicatorConfig('cci7', TechnicalCalculation.CCI, [7]),
+            IndicatorConfig('arooosc', TechnicalCalculation.AROONOSC, [7]),
         ])
 
         processor = TechnicalsProcessor(config, cache_processor)
@@ -69,9 +70,18 @@ class TestTechnicalsProcessor(TestCase):
 
                 normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
                     NORMALIZED_INDICATORS_ATTACHMENT_KEY)
+
+                bbands5_value = indicators.get('bbands5')
+                normalized_bbands5_value = normalized_indicators.get('bbands5')
+
                 sma5_value = indicators.get('sma5')
                 normalized_sma5_value = normalized_indicators.get('sma5')
+
                 vwap = (candle.close + candle.high + candle.low) / candle.volume
+
+                for i in range(len(bbands5_value)):
+                    self.assertTrue(bbands5_value[i] / vwap, normalized_bbands5_value[i])
+
                 self.assertTrue(sma5_value / vwap, normalized_sma5_value)
 
         validator = ValidationProcessor(_check)
@@ -80,6 +90,7 @@ class TestTechnicalsProcessor(TestCase):
 
         config = TechnicalsProcessorConfig([
             IndicatorConfig('sma5', TechnicalCalculation.SMA, [5]),
+            IndicatorConfig('bbands5', TechnicalCalculation.BBANDS, [5]),
         ])
 
         technicals = TechnicalsProcessor(config, technicals_normalizer)

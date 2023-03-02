@@ -21,7 +21,7 @@ class NormalizedIndicators(GenericCandleAttachment[IndicatorValue]):
 
 NormalizedIndicators()
 
-VWAP_NORMALIZE_PREFIXES = ['sma', 'ema']
+VWAP_NORMALIZE_PREFIXES = ['sma', 'ema', 'typical', 'bbands']
 
 NormalizeFunc = Callable[[List[Candle], IndicatorValue], IndicatorValue]
 
