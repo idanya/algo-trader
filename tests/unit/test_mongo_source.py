@@ -10,7 +10,7 @@ from unit import generate_candle, TEST_SYMBOL
 
 
 class TestMongoSource(TestCase):
-    @mongomock.patch(servers=(('localhost', 27017),))
+    @mongomock.patch(servers=(("localhost", 27017),))
     def setUp(self) -> None:
         super().setUp()
         self.mongo_storage = MongoDBStorage()

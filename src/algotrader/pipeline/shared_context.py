@@ -1,6 +1,6 @@
 from typing import Dict, Optional, TypeVar, Generic
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class SharedContext(Generic[T]):

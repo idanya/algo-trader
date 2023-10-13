@@ -13,11 +13,7 @@ class IndicatorConfig(Serializable, Deserializable):
         self.params = params
 
     def serialize(self) -> Dict:
-        return {
-            "name": self.name,
-            "type": self.type.value,
-            "params": self.params
-        }
+        return {"name": self.name, "type": self.type.value, "params": self.params}
 
     @classmethod
     def deserialize(cls, data: Dict) -> IndicatorConfig:

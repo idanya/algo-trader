@@ -31,6 +31,6 @@ def _get_single_by_name(base_class, name: str):
 
 def _describe_object(obj):
     if obj.__doc__:
-        print(f'Description: {obj.__doc__}')
+        print(f"Description: {obj.__doc__}")
     if obj.__init__.__doc__:
-        print(f'Parameters: {obj.__init__.__doc__}')
+        print(f"Parameters: {obj.__init__.__doc__}")

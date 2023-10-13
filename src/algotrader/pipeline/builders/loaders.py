@@ -104,7 +104,7 @@ class LoadersPipelines:
 
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
-        processor = ReturnsCalculatorProcessor('ctc', 5, cache_processor)
+        processor = ReturnsCalculatorProcessor("ctc", 5, cache_processor)
 
         return Pipeline(source, processor)
 
@@ -118,8 +118,9 @@ class LoadersPipelines:
         return source
 
     @staticmethod
-    def _build_technicals_base_processor_chain(bins_file_path: Optional[str] = None,
-                                               correlations_file_path: Optional[str] = None) -> Processor:
+    def _build_technicals_base_processor_chain(
+        bins_file_path: Optional[str] = None, correlations_file_path: Optional[str] = None
+    ) -> Processor:
         mongodb_storage = MongoDBStorage()
         sink = StorageSinkProcessor(mongodb_storage)
         cache_processor = CandleCache(sink)
@@ -146,12 +147,13 @@ class LoadersPipelines:
         return Pipeline(source, technicals)
 
     @staticmethod
-    def build_technicals_with_buckets_calculator(bins_file_path: str, bins_count: int,
-                                                 correlations_file_path: str,
-                                                 days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
+    def build_technicals_with_buckets_calculator(
+        bins_file_path: str, bins_count: int, correlations_file_path: str, days_back: int = DEFAULT_DAYS_BACK
+    ) -> Pipeline:
         source = LoadersPipelines._build_mongo_source(days_back)
         technicals = LoadersPipelines._build_technicals_base_processor_chain(
-            correlations_file_path=correlations_file_path)
+            correlations_file_path=correlations_file_path
+        )
 
         symbols = AssetsProvider.get_sp500_symbols()
         technicals_binner = TechnicalsBinner(symbols, bins_count, bins_file_path)
@@ -159,9 +161,9 @@ class LoadersPipelines:
         return Pipeline(source, technicals, technicals_binner)
 
     @staticmethod
-    def build_technicals_with_buckets_matcher(bins_file_path: str,
-                                              correlations_file_path: str,
-                                              days_back: int = DEFAULT_DAYS_BACK) -> Pipeline:
+    def build_technicals_with_buckets_matcher(
+        bins_file_path: str, correlations_file_path: str, days_back: int = DEFAULT_DAYS_BACK
+    ) -> Pipeline:
         source = LoadersPipelines._build_mongo_source(days_back)
 
         technicals = LoadersPipelines._build_technicals_base_processor_chain(bins_file_path, correlations_file_path)

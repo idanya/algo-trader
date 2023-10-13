@@ -43,18 +43,28 @@ class BacktestPipelines:
         data_from_time = STATIC_NOW - timedelta(days=365 * 3)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time, STATIC_NOW)
 
-        return_fields = [f'ctc-{i}' for i in range(1, 10)]
+        return_fields = [f"ctc-{i}" for i in range(1, 10)]
 
-        history_compare_strategy = HistoryBucketCompareStrategy(mongodb_storage,
-                                                                data_from_time,
-                                                                backtest_from_time,
-                                                                indicators_to_compare=['sma5', 'sma20',
-                                                                                       'cci7', 'cci14',
-                                                                                       'rsi7', 'rsi14',
-                                                                                       'stddev5', 'ema5',
-                                                                                       'ema20', 'correlation'],
-                                                                return_fields=return_fields, min_event_count=50,
-                                                                min_avg_return=0.2)
+        history_compare_strategy = HistoryBucketCompareStrategy(
+            mongodb_storage,
+            data_from_time,
+            backtest_from_time,
+            indicators_to_compare=[
+                "sma5",
+                "sma20",
+                "cci7",
+                "cci14",
+                "rsi7",
+                "rsi14",
+                "stddev5",
+                "ema5",
+                "ema20",
+                "correlation",
+            ],
+            return_fields=return_fields,
+            min_event_count=50,
+            min_avg_return=0.2,
+        )
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)
@@ -73,15 +83,15 @@ class BacktestPipelines:
         data_from_time = STATIC_NOW - timedelta(days=365 * 3)
         source = MongoDBSource(mongodb_storage, symbols, TimeSpan.Day, backtest_from_time, STATIC_NOW)
 
-        history_compare_strategy = HistoryCosineSimilarityStrategy(mongodb_storage,
-                                                                   data_from_time,
-                                                                   backtest_from_time,
-                                                                   indicators_to_compare=['sma5', 'sma20',
-                                                                                          'cci7', 'cci14',
-                                                                                          'rsi2', 'rsi7',
-                                                                                          'stddev5', 'ema5', 'ema20'],
-                                                                   return_field='ctc1', min_event_count=50,
-                                                                   min_avg_return=0.3)
+        history_compare_strategy = HistoryCosineSimilarityStrategy(
+            mongodb_storage,
+            data_from_time,
+            backtest_from_time,
+            indicators_to_compare=["sma5", "sma20", "cci7", "cci14", "rsi2", "rsi7", "stddev5", "ema5", "ema20"],
+            return_field="ctc1",
+            min_event_count=50,
+            min_avg_return=0.3,
+        )
 
         cache_processor = CandleCache()
         strategy_processor = StrategyProcessor([history_compare_strategy], SimpleSumSignalsExecutor(), cache_processor)

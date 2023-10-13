@@ -4,7 +4,7 @@ from typing import Dict, TypeVar, Generic, Optional, ItemsView, Union
 
 from algotrader.entities.serializable import Serializable, Deserializable
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class GenericCandleAttachment(Generic[T], Serializable, Deserializable):
@@ -24,7 +24,7 @@ class GenericCandleAttachment(Generic[T], Serializable, Deserializable):
     def items(self) -> ItemsView[str, T]:
         data = {}
         for k, v in self._data.items():
-            if k == '__class__':
+            if k == "__class__":
                 continue
             data.update({k: v})
 

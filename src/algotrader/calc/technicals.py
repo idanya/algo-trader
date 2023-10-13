@@ -10,7 +10,6 @@ from algotrader.entities.candle import Candle
 
 
 class TechnicalCalculator:
-
     def __init__(self, candles: List[Candle]):
         self._candles = candles
         self._closes = np.array([float(c.close) for c in candles])
@@ -94,13 +93,11 @@ class TechnicalCalculator:
         return ti.md(np.array(self._closes), period=period).tolist()
 
     def macd(self, short_period: int, long_period: int, signal_period: int) -> List[float]:
-
         needed_history_count = max(short_period, long_period, signal_period)
         if len(self._closes) < needed_history_count:
             return [] * 3
 
-        return ti.macd(self._closes, short_period=short_period, long_period=long_period,
-                       signal_period=signal_period)
+        return ti.macd(self._closes, short_period=short_period, long_period=long_period, signal_period=signal_period)
 
     def bbands(self, period: int) -> List[float]:
         if len(self._closes) < period:

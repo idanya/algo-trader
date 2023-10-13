@@ -12,7 +12,7 @@ from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.technicals import Indicators, INDICATORS_ATTACHMENT_KEY, IndicatorValue
 from algotrader.pipeline.shared_context import SharedContext
 
-NORMALIZED_INDICATORS_ATTACHMENT_KEY = 'normalized_indicators'
+NORMALIZED_INDICATORS_ATTACHMENT_KEY = "normalized_indicators"
 
 
 class NormalizedIndicators(GenericCandleAttachment[IndicatorValue]):
@@ -21,7 +21,7 @@ class NormalizedIndicators(GenericCandleAttachment[IndicatorValue]):
 
 NormalizedIndicators()
 
-VWAP_NORMALIZE_PREFIXES = ['sma', 'ema', 'typical', 'bbands']
+VWAP_NORMALIZE_PREFIXES = ["sma", "ema", "typical", "bbands"]
 
 NormalizeFunc = Callable[[List[Candle], IndicatorValue], IndicatorValue]
 
@@ -49,7 +49,7 @@ class TechnicalsNormalizerProcessor(Processor):
     def process(self, context: SharedContext, candle: Candle):
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
-        latest_candles = symbol_candles[-self.normalization_window_size:] + [candle]
+        latest_candles = symbol_candles[-self.normalization_window_size :] + [candle]
 
         indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
         asset_correlation: AssetCorrelation = candle.attachments.get_attachment(CORRELATIONS_ATTACHMENT_KEY)
@@ -62,7 +62,7 @@ class TechnicalsNormalizerProcessor(Processor):
 
         correlation = self._get_normalized_correlation(asset_correlation)
         if correlation:
-            normalized_indicators.set('correlation', correlation)
+            normalized_indicators.set("correlation", correlation)
 
         candle.attachments.add_attachement(NORMALIZED_INDICATORS_ATTACHMENT_KEY, normalized_indicators)
 
@@ -107,11 +107,9 @@ class TechnicalsNormalizerProcessor(Processor):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'normalization_window_size': self.normalization_window_size
-        })
+        obj.update({"normalization_window_size": self.normalization_window_size})
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict) -> Optional[TechnicalsNormalizerProcessor]:
-        return cls(data.get('normalization_window_size'), cls._deserialize_next_processor(data))
+        return cls(data.get("normalization_window_size"), cls._deserialize_next_processor(data))

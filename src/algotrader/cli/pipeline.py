@@ -10,7 +10,7 @@ app = typer.Typer(no_args_is_help=True)
 
 
 def load_pipeline_spec(file_path: str) -> Pipeline:
-    with open(file_path, 'r') as input_file:
+    with open(file_path, "r") as input_file:
         return DeserializationService.deserialize(json.loads(input_file.read()))
 
 

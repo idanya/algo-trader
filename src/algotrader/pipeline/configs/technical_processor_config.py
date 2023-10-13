@@ -11,12 +11,8 @@ class TechnicalsProcessorConfig(Serializable, Deserializable):
         self.technicals = technicals
 
     def serialize(self) -> Dict:
-        return {
-            "technicals": [t.serialize() for t in self.technicals]
-        }
+        return {"technicals": [t.serialize() for t in self.technicals]}
 
     @classmethod
     def deserialize(cls, data: Dict) -> TechnicalsProcessorConfig:
-        return TechnicalsProcessorConfig(
-            technicals=[IndicatorConfig.deserialize(t) for t in data["technicals"]]
-        )
+        return TechnicalsProcessorConfig(technicals=[IndicatorConfig.deserialize(t) for t in data["technicals"]])

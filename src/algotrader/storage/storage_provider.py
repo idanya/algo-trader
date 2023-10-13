@@ -13,8 +13,9 @@ class StorageProvider(Serializable, Deserializable):
         pass
 
     @abstractmethod
-    def get_symbol_candles(self, symbol: str, time_span: TimeSpan, from_timestamp: datetime,
-                           to_timestamp: datetime, limit: int) -> List[Candle]:
+    def get_symbol_candles(
+        self, symbol: str, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime, limit: int
+    ) -> List[Candle]:
         pass
 
     @abstractmethod
@@ -22,7 +23,13 @@ class StorageProvider(Serializable, Deserializable):
         pass
 
     @abstractmethod
-    def get_aggregated_history(self, from_timestamp: datetime, to_timestamp: datetime, groupby_fields: List[str],
-                               return_fields: List[str], min_count: int, min_return: float) -> \
-            Tuple[List[Dict[str, int]], List[Dict[str, int]]]:
+    def get_aggregated_history(
+        self,
+        from_timestamp: datetime,
+        to_timestamp: datetime,
+        groupby_fields: List[str],
+        return_fields: List[str],
+        min_count: int,
+        min_return: float,
+    ) -> Tuple[List[Dict[str, int]], List[Dict[str, int]]]:
         pass

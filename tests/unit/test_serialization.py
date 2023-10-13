@@ -14,8 +14,10 @@ class TestSerialization(TestCase):
     def test_serialize_processor(self):
         candle_cache_processor = CandleCache(CandleCache())
         serialized = candle_cache_processor.serialize()
-        self.assertEqual('algotrader.pipeline.processors.candle_cache:CandleCache', serialized['__class__'])
-        self.assertEqual('algotrader.pipeline.processors.candle_cache:CandleCache', serialized['next_processor']['__class__'])
+        self.assertEqual("algotrader.pipeline.processors.candle_cache:CandleCache", serialized["__class__"])
+        self.assertEqual(
+            "algotrader.pipeline.processors.candle_cache:CandleCache", serialized["next_processor"]["__class__"]
+        )
 
         deserialized: CandleCache = CandleCache.deserialize(serialized)
         self.assertIsNotNone(deserialized)
@@ -39,17 +41,17 @@ class TestSerialization(TestCase):
         self.assertIsInstance(deserialized.next_processor, TechnicalsNormalizerProcessor)
         self.assertEqual(deserialized.next_processor.normalization_window_size, 666)
 
-    @mongomock.patch(servers=(('host', 666),))
+    @mongomock.patch(servers=(("host", 666),))
     def test_serialize_complex_source(self):
         from_time = datetime.now() - timedelta(minutes=10)
         to_time = datetime.now()
-        mongo_storage = MongoDBStorage('host', 666, 'db')
-        mongo_source = MongoDBSource(mongo_storage, ['X', 'Y'], TimeSpan.Day, from_time, to_time)
+        mongo_storage = MongoDBStorage("host", 666, "db")
+        mongo_source = MongoDBSource(mongo_storage, ["X", "Y"], TimeSpan.Day, from_time, to_time)
 
         serialized = mongo_source.serialize()
         deserialized: MongoDBSource = MongoDBSource.deserialize(serialized)
-        self.assertEqual('host', deserialized.mongo_storage.host)
+        self.assertEqual("host", deserialized.mongo_storage.host)
         self.assertEqual(666, deserialized.mongo_storage.port)
-        self.assertEqual('db', deserialized.mongo_storage.database)
+        self.assertEqual("db", deserialized.mongo_storage.database)
         self.assertEqual(from_time, deserialized.from_time)
         self.assertEqual(to_time, deserialized.to_time)

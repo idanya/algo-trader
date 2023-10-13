@@ -4,7 +4,7 @@ from algotrader.entities.candle import Candle
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.shared_context import SharedContext
 
-CONTEXT_IDENT = 'CandleCache'
+CONTEXT_IDENT = "CandleCache"
 CacheData = Dict[str, List[Candle]]
 
 
@@ -46,6 +46,7 @@ class CandleCache(Processor):
     """
     Provides a cache facade for processed candles
     """
+
     def __init__(self, next_processor: Optional[Processor] = None) -> None:
         super().__init__(next_processor)
         self.data: CacheData = {}

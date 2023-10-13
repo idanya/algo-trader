@@ -13,10 +13,10 @@ load_dotenv()
 
 
 class TestBinanceMarketProvider(TestCase):
-    SYMBOL = 'BTCUSDT'
+    SYMBOL = "BTCUSDT"
     BASE_TIME = datetime.fromtimestamp(1671183359)
-    API_KEY = os.environ.get('BINANCE_API_KEY')
-    API_SECRET = os.environ.get('BINANCE_API_SECRET')
+    API_KEY = os.environ.get("BINANCE_API_KEY")
+    API_SECRET = os.environ.get("BINANCE_API_SECRET")
 
     def test_get_account(self):
         provider = BinanceProvider(self.API_KEY, self.API_SECRET, False, testnet=True)

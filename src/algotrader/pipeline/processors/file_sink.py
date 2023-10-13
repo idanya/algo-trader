@@ -19,9 +19,9 @@ class FileSinkProcessor(Processor):
         self.file_path = file_path
 
     def process(self, context: SharedContext, candle: Candle):
-        with open(self.file_path, 'a') as output_file:
+        with open(self.file_path, "a") as output_file:
             line = self._generate_candle_output(context, candle)
-            output_file.write(f'{line}\n')
+            output_file.write(f"{line}\n")
 
         super().process(context, candle)
 

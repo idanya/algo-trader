@@ -8,7 +8,7 @@ app = typer.Typer(no_args_is_help=True)
 
 @app.command()
 def list():
-    print('\n'.join(_get_all_of_class_names(Source)))
+    print("\n".join(_get_all_of_class_names(Source)))
 
 
 @app.command()

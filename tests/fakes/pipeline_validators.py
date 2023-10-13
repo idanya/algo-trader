@@ -8,9 +8,11 @@ from algotrader.pipeline.terminator import Terminator
 
 
 class ValidationProcessor(Processor):
-
-    def __init__(self, process_callback: Callable[[SharedContext, Candle], None],
-                 event_callback: Callable[[SharedContext, Event], None] = None) -> None:
+    def __init__(
+        self,
+        process_callback: Callable[[SharedContext, Candle], None],
+        event_callback: Callable[[SharedContext, Event], None] = None,
+    ) -> None:
         super().__init__(None)
         self.process_callback = process_callback
         self.event_callback = event_callback

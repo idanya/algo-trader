@@ -35,16 +35,14 @@ class Processor(Serializable, Deserializable):
 
     @classmethod
     def _deserialize_next_processor(cls, data: Dict) -> Optional[Processor]:
-        if data.get('next_processor'):
-            return DeserializationService.deserialize(data['next_processor'])
+        if data.get("next_processor"):
+            return DeserializationService.deserialize(data["next_processor"])
         return None
 
     def serialize(self) -> Dict:
         obj = super().serialize()
 
         if self.next_processor:
-            obj.update({
-                "next_processor": self.next_processor.serialize()
-            })
+            obj.update({"next_processor": self.next_processor.serialize()})
 
         return obj

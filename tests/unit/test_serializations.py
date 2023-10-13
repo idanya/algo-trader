@@ -14,9 +14,7 @@ from unit import generate_candle_with_price
 class NothingClass(Serializable, Deserializable):
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'nothing': 'at-all'
-        })
+        obj.update({"nothing": "at-all"})
         return obj
 
 
@@ -38,30 +36,30 @@ class TestSerializations(TestCase):
 
     def test_candle_attachments(self):
         candle = generate_candle_with_price(TimeSpan.Day, datetime.now(), 888)
-        candle.add_attachement('key1', NothingClass())
+        candle.add_attachement("key1", NothingClass())
 
         data = candle.serialize()
         new_candle = Candle.deserialize(data)
 
         self.assertEqual(candle.symbol, new_candle.symbol)
-        original_attachment = candle.attachments.get_attachment('key1')
-        new_attachment = new_candle.attachments.get_attachment('key1')
+        original_attachment = candle.attachments.get_attachment("key1")
+        new_attachment = new_candle.attachments.get_attachment("key1")
         self.assertEqual(original_attachment.__class__, new_attachment.__class__)
 
     def test_bins(self):
         bins = BucketsContainer()
-        bins.add('x', [Bucket(ident=1, start=1, end=2)])
-        bins.add('list', [[Bucket(ident=0, start=1, end=2)], [Bucket(ident=1, start=3, end=4)]])
+        bins.add("x", [Bucket(ident=1, start=1, end=2)])
+        bins.add("list", [[Bucket(ident=0, start=1, end=2)], [Bucket(ident=1, start=3, end=4)]])
 
         serialized_data = bins.serialize()
         new_bins: BucketsContainer = DeserializationService.deserialize(serialized_data)
 
-        x = new_bins.get('x')
+        x = new_bins.get("x")
         self.assertIsNotNone(x)
         self.assertEqual(1, x[0].start)
         self.assertEqual(2, x[0].end)
 
-        lst = new_bins.get('list')
+        lst = new_bins.get("list")
         self.assertIsNotNone(lst)
         self.assertTrue(isinstance(lst[0], list))
         self.assertEqual(1, lst[0][0].start)

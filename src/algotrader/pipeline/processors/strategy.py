@@ -15,8 +15,9 @@ class StrategyProcessor(Processor):
     Forward all strategies signals to a SignalsExecutor implementation
     """
 
-    def __init__(self, strategies: List[Strategy], signals_executor: SignalsExecutor,
-                 next_processor: Optional[Processor]) -> None:
+    def __init__(
+        self, strategies: List[Strategy], signals_executor: SignalsExecutor, next_processor: Optional[Processor]
+    ) -> None:
         """
         @param strategies: List of strategies (Strategy implementations)
         @param signals_executor: SignalsExecutor implementation
@@ -36,15 +37,18 @@ class StrategyProcessor(Processor):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'strategies': [strategy.serialize() for strategy in self.strategies],
-            'signals_executor': self.signals_executor.serialize()
-        })
+        obj.update(
+            {
+                "strategies": [strategy.serialize() for strategy in self.strategies],
+                "signals_executor": self.signals_executor.serialize(),
+            }
+        )
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict) -> Optional[Processor]:
-        strategies: List[Strategy] = [DeserializationService.deserialize(strategy) for strategy in
-                                      data.get('strategies')]
-        signals_executor: SignalsExecutor = DeserializationService.deserialize(data.get('signals_executor'))
+        strategies: List[Strategy] = [
+            DeserializationService.deserialize(strategy) for strategy in data.get("strategies")
+        ]
+        signals_executor: SignalsExecutor = DeserializationService.deserialize(data.get("signals_executor"))
         return cls(strategies, signals_executor, cls._deserialize_next_processor(data))

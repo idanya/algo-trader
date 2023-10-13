@@ -16,7 +16,7 @@ class TestIBSource(TestCase):
         self.ib_connector.kill()
 
     def test(self):
-        symbol = 'AAPL'
+        symbol = "AAPL"
         from_time = datetime.now() - timedelta(days=30)
         source = IBHistorySource(self.ib_connector, [symbol], TimeSpan.Day, from_time)
 

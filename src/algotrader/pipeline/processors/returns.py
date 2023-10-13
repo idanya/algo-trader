@@ -8,7 +8,7 @@ from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.shared_context import SharedContext
 
-RETURNS_ATTACHMENT_KEY = 'returns'
+RETURNS_ATTACHMENT_KEY = "returns"
 
 
 class Returns(GenericCandleAttachment[float]):
@@ -40,16 +40,13 @@ class ReturnsCalculatorProcessor(Processor):
     def _calc_returns(self, current_candle: Candle, candles: List[Candle]) -> Returns:
         candle_returns = Returns()
         for i in range(1, self.returns_count + 1):
-            candle_returns.set(f'{self.field_prefix}-{i}', (1 - current_candle.close / candles[-i].close) * 100)
+            candle_returns.set(f"{self.field_prefix}-{i}", (1 - current_candle.close / candles[-i].close) * 100)
 
         return candle_returns
 
     def serialize(self) -> Dict:
-        return {
-            'returnsCount': self.returns_count,
-            'fieldPrefix': self.field_prefix
-        }
+        return {"returnsCount": self.returns_count, "fieldPrefix": self.field_prefix}
 
     @classmethod
     def deserialize(cls, data: Dict) -> Optional[Processor]:
-        return cls(data['fieldPrefix'], data['returnsCount'], cls._deserialize_next_processor(data))
+        return cls(data["fieldPrefix"], data["returnsCount"], cls._deserialize_next_processor(data))
