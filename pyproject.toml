@@ -51,6 +51,7 @@ typer = { version = "0.7.0", extras = ["all"] }
 coverage = "7.3.2"
 binance-connector = "1.18.0"
 python-dotenv = "0.21.0"
+ibapi = {path = "libs/ib_client"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]

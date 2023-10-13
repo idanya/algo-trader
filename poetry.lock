@@ -504,6 +504,19 @@ files = [
 idna = ">=2.5"
 
 [[package]]
+name = "ibapi"
+version = "9.76.1"
+description = "Python IB API"
+optional = false
+python-versions = "*"
+files = []
+develop = false
+
+[package.source]
+type = "directory"
+url = "libs/ib_client"
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -1637,4 +1650,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6f5b2e8f7fe18e03409e12a1cb63ba4eab10e95436a0bda11081b431802e04b7"
+content-hash = "3b895c063d4ccf9721baed447926ed40cc1b9a4661c26e1cb4ea21d077ab7870"
