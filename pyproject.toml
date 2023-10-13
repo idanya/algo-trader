@@ -4,7 +4,7 @@ description = "Trading bot with support for realtime trading, backtesting, custo
 authors = ["Idan Yael"]
 maintainers = ["Idan Yael"]
 readme = "README.md"
-version = "0.0.0"
+version = "0.0.6.post1.dev0+7aabc15"
 keywords = ["algo-trader", "trading", "backtesting", "strategy", "bot"]
 license = "MIT"
 classifiers = [
@@ -38,14 +38,14 @@ target-version = ['py311']
 
 
 [tool.poetry-dynamic-versioning]
-enable = true
+enable = false
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.13"
 newtulipy = "0.4.6"
 pymongo = "3.12.0"
 mongomock = "4.1.2"
-scipy = "1.9.3"
+scipy = "1.11.3"
 yfinance = "0.1.87"
 typer = { version = "0.7.0", extras = ["all"] }
 coverage = "7.3.2"
