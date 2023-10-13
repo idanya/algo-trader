@@ -8,8 +8,14 @@ from algotrader.providers.binance import BinanceProvider
 
 
 class BinanceHistorySource(Source):
-    def __init__(self, binance_provider: BinanceProvider, symbols: List[str], time_span: TimeSpan,
-                 start_time: datetime, end_time: datetime = datetime.now()):
+    def __init__(
+        self,
+        binance_provider: BinanceProvider,
+        symbols: List[str],
+        time_span: TimeSpan,
+        start_time: datetime,
+        end_time: datetime = datetime.now(),
+    ):
         self.binance_provider = binance_provider
         self.symbols = symbols
         self.time_span = time_span
@@ -24,18 +30,24 @@ class BinanceHistorySource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'binanceProvider': self.binance_provider.serialize(),
-            'symbols': self.symbols,
-            'timeSpan': self.time_span.value,
-            'startTime': self.start_time.timestamp(),
-            'endTime': self.end_time.timestamp(),
-        })
+        obj.update(
+            {
+                "binanceProvider": self.binance_provider.serialize(),
+                "symbols": self.symbols,
+                "timeSpan": self.time_span.value,
+                "startTime": self.start_time.timestamp(),
+                "endTime": self.end_time.timestamp(),
+            }
+        )
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict):
-        provider = BinanceProvider.deserialize(data.get('binanceProvider'))
-        return cls(provider, data.get('symbols'), TimeSpan(data.get('timeSpan')),
-                   datetime.fromtimestamp(data.get('startTime')),
-                   datetime.fromtimestamp(data.get('endTime')))
+        provider = BinanceProvider.deserialize(data.get("binanceProvider"))
+        return cls(
+            provider,
+            data.get("symbols"),
+            TimeSpan(data.get("timeSpan")),
+            datetime.fromtimestamp(data.get("startTime")),
+            datetime.fromtimestamp(data.get("endTime")),
+        )

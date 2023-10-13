@@ -18,8 +18,7 @@ from algotrader.providers.ib.query_subscription import QuerySubscription
 
 
 class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
-
-    def __init__(self, host: str = '127.0.0.1', port: int = 7497, client_id: int = 100) -> None:
+    def __init__(self, host: str = "127.0.0.1", port: int = 7497, client_id: int = 100) -> None:
         EWrapper.__init__(self)
         EClient.__init__(self, wrapper=self)
         self.done = False
@@ -41,20 +40,28 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
         self.nextValidOrderId += 1
         return oid
 
-    def request_symbol_history(self, symbol: str, candle_timespan: TimeSpan, from_time: datetime,
-                               to_time: datetime) -> AsyncQueryResult:
-        logging.info(f'request_symbol_history :: {symbol} ...')
+    def request_symbol_history(
+        self, symbol: str, candle_timespan: TimeSpan, from_time: datetime, to_time: datetime
+    ) -> AsyncQueryResult:
+        logging.info(f"request_symbol_history :: {symbol} ...")
         async_query_result = AsyncQueryResult(from_time, to_time)
         self.tick_last_query_id += 1
         subscription = self._add_subscription(self.tick_last_query_id, symbol, candle_timespan)
 
         async_query_result.attach_query_subscription(subscription)
 
-        self.reqHistoricalData(self.tick_last_query_id,
-                               self._get_contract(symbol),
-                               datetime_to_api_string(to_time),
-                               self._calculate_query_duration(candle_timespan, from_time, to_time),
-                               timespan_to_api_str(candle_timespan), 'TRADES', 1, 1, False, [])
+        self.reqHistoricalData(
+            self.tick_last_query_id,
+            self._get_contract(symbol),
+            datetime_to_api_string(to_time),
+            self._calculate_query_duration(candle_timespan, from_time, to_time),
+            timespan_to_api_str(candle_timespan),
+            "TRADES",
+            1,
+            1,
+            False,
+            [],
+        )
 
         return async_query_result
 
@@ -62,9 +69,9 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
         if candle_timespan == TimeSpan.Day:
             days = (to_time - from_time).days + 1
             if days > 365:
-                return f'{math.ceil(days / 365)} Y'
+                return f"{math.ceil(days / 365)} Y"
             else:
-                return f'{math.ceil(days / 7)} W'
+                return f"{math.ceil(days / 7)} W"
 
     def _add_subscription(self, query_id: int, symbol: str, candle_timespan: TimeSpan) -> QuerySubscription:
         subscription = QuerySubscription(query_id, symbol, candle_timespan)
@@ -86,11 +93,16 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
         except Exception:
             bar_time = datetime.strptime(bar.date, "%Y%m%d %H:%M:%S")
 
-        c = Candle(subscription.symbol,
-                   subscription.candle_timespan,
-                   bar_time,
-                   bar.open, bar.close, bar.high, bar.low,
-                   bar.volume * bar.average)
+        c = Candle(
+            subscription.symbol,
+            subscription.candle_timespan,
+            bar_time,
+            bar.open,
+            bar.close,
+            bar.high,
+            bar.low,
+            bar.volume * bar.average,
+        )
 
         subscription.push_candles([c])
 
@@ -114,7 +126,7 @@ class InteractiveBrokersConnector(AsyncMarketProvider, EWrapper, EClient):
     def kill(self):
         self.done = True
 
-    def _get_contract(self, symbol: str, exchange: str = 'SMART') -> Contract:
+    def _get_contract(self, symbol: str, exchange: str = "SMART") -> Contract:
         contract = Contract()
         contract.symbol = symbol
         contract.secType = "STK"

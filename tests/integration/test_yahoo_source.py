@@ -10,7 +10,7 @@ from algotrader.pipeline.sources.yahoo_finance_history import YahooFinanceHistor
 
 class TestYahooMarketSource(TestCase):
     provider = YahooFinanceHistoryProvider()
-    symbols = ['AAPL', 'MSFT']
+    symbols = ["AAPL", "MSFT"]
     to_time = datetime.fromtimestamp(1669145312)
     from_time = to_time - timedelta(days=50)
 

@@ -13,21 +13,19 @@ from unit import generate_candle_with_price
 
 
 class TestReverseSource(TestCase):
-
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now(), c) for c in range(1, 50)])
+        self.source = FakeSource([generate_candle_with_price(TimeSpan.Day, datetime.now(), c) for c in range(1, 50)])
 
     def test_regular_order(self):
         def _check(context: SharedContext, candle: Candle):
             self.assertIsNotNone(context)
 
-            last_price = context.get_kv_data('last_price')
+            last_price = context.get_kv_data("last_price")
             if last_price:
                 self.assertTrue(candle.close > last_price)
 
-            context.put_kv_data('last_price', candle.close)
+            context.put_kv_data("last_price", candle.close)
 
         validator = ValidationProcessor(_check)
         PipelineRunner(Pipeline(self.source, validator)).run()
@@ -36,11 +34,11 @@ class TestReverseSource(TestCase):
         def _check(context: SharedContext, candle: Candle):
             self.assertIsNotNone(context)
 
-            last_price = context.get_kv_data('last_price')
+            last_price = context.get_kv_data("last_price")
             if last_price:
                 self.assertTrue(candle.close < last_price)
 
-            context.put_kv_data('last_price', candle.close)
+            context.put_kv_data("last_price", candle.close)
 
         validator = ValidationProcessor(_check)
         PipelineRunner(Pipeline(ReverseSource(self.source), validator)).run()

@@ -13,9 +13,16 @@ class YahooFinanceHistorySource(Source):
     Source for fetching historical data from Yahoo Finance
     """
 
-    def __init__(self, symbols: List[str], timespan: TimeSpan,
-                 start_time: datetime, end_time: datetime, auto_adjust: bool = True,
-                 include_after_hours: bool = False, sort_all: bool = False):
+    def __init__(
+        self,
+        symbols: List[str],
+        timespan: TimeSpan,
+        start_time: datetime,
+        end_time: datetime,
+        auto_adjust: bool = True,
+        include_after_hours: bool = False,
+        sort_all: bool = False,
+    ):
         """
         @param symbols: list of symbols to fetch
         @param timespan: candles timespan
@@ -36,9 +43,16 @@ class YahooFinanceHistorySource(Source):
         self.provider = YahooFinanceHistoryProvider()
 
     def fetch_symbol(self, symbol: str) -> Iterator[Candle]:
-        logging.info(f'Fetching {symbol} history from Yahoo Finance')
-        candles = self.provider.get_symbol_history(symbol, self.timespan, self.timespan, self.start_time, self.end_time,
-                                                   self.auto_adjust, self.include_after_hours)
+        logging.info(f"Fetching {symbol} history from Yahoo Finance")
+        candles = self.provider.get_symbol_history(
+            symbol,
+            self.timespan,
+            self.timespan,
+            self.start_time,
+            self.end_time,
+            self.auto_adjust,
+            self.include_after_hours,
+        )
         for candle in candles:
             yield candle
 
@@ -64,19 +78,27 @@ class YahooFinanceHistorySource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'symbols': self.symbols,
-            'timespan': self.timespan.value,
-            'start_time': self.start_time.timestamp(),
-            'end_time': self.end_time.timestamp(),
-            'auto_adjust': self.auto_adjust,
-            'include_after_hours': self.include_after_hours,
-            'sort_all': self.sort_all,
-        })
+        obj.update(
+            {
+                "symbols": self.symbols,
+                "timespan": self.timespan.value,
+                "start_time": self.start_time.timestamp(),
+                "end_time": self.end_time.timestamp(),
+                "auto_adjust": self.auto_adjust,
+                "include_after_hours": self.include_after_hours,
+                "sort_all": self.sort_all,
+            }
+        )
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict):
-        return cls(data.get('symbols'), TimeSpan(data.get('timespan')), datetime.fromtimestamp(data.get('start_time')),
-                   datetime.fromtimestamp(data.get('end_time')), data.get('auto_adjust'),
-                   data.get('include_after_hours'), data.get('sort_all'))
+        return cls(
+            data.get("symbols"),
+            TimeSpan(data.get("timespan")),
+            datetime.fromtimestamp(data.get("start_time")),
+            datetime.fromtimestamp(data.get("end_time")),
+            data.get("auto_adjust"),
+            data.get("include_after_hours"),
+            data.get("sort_all"),
+        )

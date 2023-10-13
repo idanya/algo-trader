@@ -12,18 +12,17 @@ from unit import generate_candle_with_price
 
 
 class TestMultiplePipelines(TestCase):
-
     def setUp(self) -> None:
         super().setUp()
 
     def test_multiple_pipelines(self):
         def _check_pipeline_one(context: SharedContext):
             self.assertIsNotNone(context)
-            context.put_kv_data('check', True)
+            context.put_kv_data("check", True)
 
         def _check_pipeline_two(context: SharedContext):
             self.assertIsNotNone(context)
-            check = context.get_kv_data('check')
+            check = context.get_kv_data("check")
             self.assertTrue(check)
 
         source = FakeSource([generate_candle_with_price(TimeSpan.Day, datetime.now(), 1)])

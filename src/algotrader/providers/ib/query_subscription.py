@@ -25,6 +25,6 @@ class QuerySubscription:
         self.done_event.wait()
 
         if self.is_error:
-            raise Exception('query failed. see logs.')
+            raise Exception("query failed. see logs.")
 
         return self.candles

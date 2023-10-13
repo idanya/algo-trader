@@ -6,7 +6,7 @@ from algotrader.entities.serializable import Serializable, Deserializable
 
 
 class Bucket(Serializable, Deserializable):
-    def __init__(self, ident: int, start: float = float('-inf'), end: float = float('inf')) -> None:
+    def __init__(self, ident: int, start: float = float("-inf"), end: float = float("inf")) -> None:
         super().__init__()
         self.ident = ident
         self.start = start
@@ -14,15 +14,11 @@ class Bucket(Serializable, Deserializable):
 
     @classmethod
     def deserialize(cls, data: Dict) -> Bucket:
-        return Bucket(data['ident'], data['start'], data['end'])
+        return Bucket(data["ident"], data["start"], data["end"])
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'ident': self.ident,
-            'start': self.start,
-            'end': self.end
-        })
+        obj.update({"ident": self.ident, "start": self.start, "end": self.end})
 
         return obj
 

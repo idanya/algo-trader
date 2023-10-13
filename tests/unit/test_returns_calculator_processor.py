@@ -17,7 +17,8 @@ class TestReturnsCalculatorProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now() + timedelta(minutes=c), c) for c in range(1, 50)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now() + timedelta(minutes=c), c) for c in range(1, 50)]
+        )
 
     def test(self):
         def _check_returns(context: SharedContext):
@@ -25,17 +26,17 @@ class TestReturnsCalculatorProcessor(TestCase):
             cache_reader = CandleCache.context_reader(context)
             candles = cache_reader.get_symbol_candles(TEST_SYMBOL)
 
-            self.assertFalse(candles[0].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has('ctc-1'))
-            self.assertFalse(candles[1].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has('ctc-1'))
-            self.assertFalse(candles[2].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has('ctc-1'))
+            self.assertFalse(candles[0].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has("ctc-1"))
+            self.assertFalse(candles[1].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has("ctc-1"))
+            self.assertFalse(candles[2].attachments.get_attachment(RETURNS_ATTACHMENT_KEY).has("ctc-1"))
 
-            ctc1 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-1']
-            ctc2 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-2']
-            ctc3 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)['ctc-3']
+            ctc1 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)["ctc-1"]
+            ctc2 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)["ctc-2"]
+            ctc3 = candles[3].attachments.get_attachment(RETURNS_ATTACHMENT_KEY)["ctc-3"]
             self.assertTrue(ctc1 < ctc2 < ctc3)
 
         cache_processor = CandleCache()
-        processor = ReturnsCalculatorProcessor('ctc', 3, cache_processor)
+        processor = ReturnsCalculatorProcessor("ctc", 3, cache_processor)
 
         terminator = TerminatorValidator(_check_returns)
 

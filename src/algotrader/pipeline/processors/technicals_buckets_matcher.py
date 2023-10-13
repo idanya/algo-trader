@@ -6,16 +6,31 @@ from algotrader.entities.bucketscontainer import BucketsContainer
 from algotrader.entities.candle import Candle
 from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
 from algotrader.pipeline.processor import Processor
-from algotrader.pipeline.processors.technicals_normalizer import NormalizedIndicators, \
-    NORMALIZED_INDICATORS_ATTACHMENT_KEY
+from algotrader.pipeline.processors.technicals_normalizer import (
+    NormalizedIndicators,
+    NORMALIZED_INDICATORS_ATTACHMENT_KEY,
+)
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.serialization.store import DeserializationService
 
-INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY = 'indicators_matched_buckets'
+INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY = "indicators_matched_buckets"
 
 
 class IndicatorsMatchedBuckets(GenericCandleAttachment[Union[List[Bucket], Bucket]]):
-    pass
+    @classmethod
+    def deserialize(cls, data: Dict) -> GenericCandleAttachment:
+        obj = IndicatorsMatchedBuckets()
+        obj._data = data
+        for k, v in obj._data.items():
+            if k == "__class__":
+                continue
+
+            if isinstance(v, dict) and "__class__" in v:
+                obj._data[k] = DeserializationService.deserialize(v)
+            elif isinstance(v, list):
+                obj._data[k] = [DeserializationService.deserialize(item) for item in v]
+
+        return obj
 
 
 IndicatorsMatchedBuckets()
@@ -47,7 +62,8 @@ class TechnicalsBucketsMatcher(Processor):
 
     def process(self, context: SharedContext, candle: Candle):
         normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
-            NORMALIZED_INDICATORS_ATTACHMENT_KEY)
+            NORMALIZED_INDICATORS_ATTACHMENT_KEY
+        )
 
         self._lazy_load_bins_file()
         matched_buckets = IndicatorsMatchedBuckets()
@@ -76,11 +92,9 @@ class TechnicalsBucketsMatcher(Processor):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'bins_file_path': self.bins_file_path
-        })
+        obj.update({"bins_file_path": self.bins_file_path})
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict) -> Optional[Processor]:
-        return cls(data.get('bins_file_path'), cls._deserialize_next_processor(data))
+        return cls(data.get("bins_file_path"), cls._deserialize_next_processor(data))

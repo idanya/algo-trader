@@ -10,7 +10,7 @@ from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.shared_context import SharedContext
 
-INDICATORS_ATTACHMENT_KEY = 'indicators'
+INDICATORS_ATTACHMENT_KEY = "indicators"
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
 IndicatorValue = Union[List[float], float]
@@ -47,7 +47,6 @@ class TechnicalsProcessor(Processor):
         super().process(context, candle)
 
     def _calculate(self, calculator: TechnicalCalculator, candle_indicators: Indicators):
-
         for technicalConfig in self.config.technicals:
             results = calculator.execute(technicalConfig.type, technicalConfig.params)
             candle_indicators.set(technicalConfig.name, TechnicalsProcessor._get_last_value(results))
@@ -61,12 +60,10 @@ class TechnicalsProcessor(Processor):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'config': self.config.serialize()
-        })
+        obj.update({"config": self.config.serialize()})
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict) -> Optional[Processor]:
-        config = TechnicalsProcessorConfig.deserialize(data['config'])
+        config = TechnicalsProcessorConfig.deserialize(data["config"])
         return cls(config, cls._deserialize_next_processor(data))

@@ -13,7 +13,6 @@ from unit import generate_candle
 
 
 class TestCandleCacheProcessor(TestCase):
-
     def setUp(self) -> None:
         super().setUp()
         self.test_candle = generate_candle(TimeSpan.Day, datetime.now())

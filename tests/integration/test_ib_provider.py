@@ -8,7 +8,6 @@ from algotrader.providers.ib.interactive_brokers_connector import InteractiveBro
 
 
 class TestIBMarketProvider(TestCase):
-
     def setUp(self) -> None:
         super().setUp()
         self.ib_connector = InteractiveBrokersConnector()
@@ -22,7 +21,7 @@ class TestIBMarketProvider(TestCase):
         from_time = datetime.now() - timedelta(days=50)
         to_time = datetime.now() - timedelta(days=30)
 
-        async_result: AsyncQueryResult = ib_provider.request_symbol_history('AAPL', TimeSpan.Day, from_time, to_time)
+        async_result: AsyncQueryResult = ib_provider.request_symbol_history("AAPL", TimeSpan.Day, from_time, to_time)
         candles = async_result.result()
         self.assertTrue(len(candles) > 10)
         self.assertTrue(candles[0].timestamp < candles[-1].timestamp)
@@ -32,8 +31,9 @@ class TestIBMarketProvider(TestCase):
 
         yesterday = (datetime.now() - timedelta(days=1)).date()
         yesterday = datetime(yesterday.year, yesterday.month, yesterday.day)
-        async_result: AsyncQueryResult = ib_provider.request_symbol_history('AAPL', TimeSpan.Day, yesterday,
-                                                                            datetime.now())
+        async_result: AsyncQueryResult = ib_provider.request_symbol_history(
+            "AAPL", TimeSpan.Day, yesterday, datetime.now()
+        )
         candles = async_result.result()
         self.assertEqual(1, len(candles))
         self.assertEqual(yesterday.date(), candles[0].timestamp.date())
@@ -43,7 +43,7 @@ class TestIBMarketProvider(TestCase):
         from_time = datetime.now() - timedelta(days=500)
         to_time = datetime.now() - timedelta(days=100)
 
-        async_result: AsyncQueryResult = ib_provider.request_symbol_history('AAPL', TimeSpan.Day, from_time, to_time)
+        async_result: AsyncQueryResult = ib_provider.request_symbol_history("AAPL", TimeSpan.Day, from_time, to_time)
         candles = async_result.result()
         self.assertTrue(len(candles) > 10)
         self.assertTrue(candles[0].timestamp < candles[-1].timestamp)

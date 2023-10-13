@@ -12,3 +12,7 @@ build/
 *.egg
 logs/
 .coverage
+/coverage.xml
+/report.xml
+/.ruff_cache/
+/.pytest_cache/

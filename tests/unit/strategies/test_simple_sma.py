@@ -50,12 +50,12 @@ class TestSimpleSMAStrategy(TestCase):
         current_candle = generate_candle(TimeSpan.Day, datetime.now())
 
         prev_indicators = Indicators()
-        prev_indicators.set('sma5', 5)
-        prev_indicators.set('sma20', 6)
+        prev_indicators.set("sma5", 5)
+        prev_indicators.set("sma20", 6)
 
         current_indicators = Indicators()
-        current_indicators.set('sma5', 6)
-        current_indicators.set('sma20', 5)
+        current_indicators.set("sma5", 6)
+        current_indicators.set("sma20", 5)
 
         prev_candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, prev_indicators)
         current_candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, current_indicators)

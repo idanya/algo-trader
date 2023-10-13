@@ -37,7 +37,7 @@ class BucketsContainer(Serializable, Deserializable):
     def deserialize(cls, data: Dict) -> BucketsContainer:
         bins = BucketsContainer()
         for key, value in data.items():
-            if key == '__class__':
+            if key == "__class__":
                 continue
 
             if isinstance(value[0], list):

@@ -13,8 +13,15 @@ class IBHistorySource(Source):
     """
     Source for fetching data from Interactive Brokers
     """
-    def __init__(self, ib_connector: InteractiveBrokersConnector, symbols: List[str], timespan: TimeSpan,
-                 from_time: datetime, to_time: Optional[datetime] = datetime.now()) -> None:
+
+    def __init__(
+        self,
+        ib_connector: InteractiveBrokersConnector,
+        symbols: List[str],
+        timespan: TimeSpan,
+        from_time: datetime,
+        to_time: Optional[datetime] = datetime.now(),
+    ) -> None:
         """
         @param ib_connector: InteractiveBrokersConnector instance
         @param symbols: symbols to fetch
@@ -35,4 +42,4 @@ class IBHistorySource(Source):
                 for candle in result.result():
                     yield candle
             except Exception as ex:
-                logging.warning(f'Failed to fetch symbol {symbol} history. Error: {ex}')
+                logging.warning(f"Failed to fetch symbol {symbol} history. Error: {ex}")

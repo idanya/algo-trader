@@ -10,7 +10,7 @@ from algotrader.serialization.store import DeserializationService
 
 
 class Pipeline(Serializable, Deserializable):
-    logger = logging.getLogger('Pipeline')
+    logger = logging.getLogger("Pipeline")
 
     def __init__(self, source: Source, processor: Processor, terminator: Optional[Terminator] = None) -> None:
         self.source = source
@@ -19,26 +19,30 @@ class Pipeline(Serializable, Deserializable):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'source': self.source.serialize(),
-            'processor': self.processor.serialize(),
-            'terminator': self.terminator.serialize() if self.terminator else None,
-        })
+        obj.update(
+            {
+                "source": self.source.serialize(),
+                "processor": self.processor.serialize(),
+                "terminator": self.terminator.serialize() if self.terminator else None,
+            }
+        )
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict):
-        return cls(DeserializationService.deserialize(data.get('source')),
-                   DeserializationService.deserialize(data.get('processor')),
-                   DeserializationService.deserialize(data.get('terminator')))
+        return cls(
+            DeserializationService.deserialize(data.get("source")),
+            DeserializationService.deserialize(data.get("processor")),
+            DeserializationService.deserialize(data.get("terminator")),
+        )
 
     def run(self, context: SharedContext) -> None:
-        self.logger.info('Starting pipeline...')
+        self.logger.info("Starting pipeline...")
 
         for candle in self.source.read():
-            self.logger.debug('Processing candle: %s\r', candle.serialize())
+            self.logger.debug("Processing candle: %s\r", candle.serialize())
             self.processor.process(context, candle)
 
         if self.terminator:
-            self.logger.debug('initiating termination...')
+            self.logger.debug("initiating termination...")
             self.terminator.terminate(context)

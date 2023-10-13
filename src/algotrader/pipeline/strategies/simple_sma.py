@@ -23,13 +23,17 @@ class SimpleSMA(Strategy):
         past_candle_indicators: Indicators = symbol_candles[-1].attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
         current_candle_indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
 
-        if not current_candle_indicators.has('sma20') or not past_candle_indicators.has('sma20'):
+        if not current_candle_indicators.has("sma20") or not past_candle_indicators.has("sma20"):
             return []
 
-        if current_candle_indicators['sma5'] > current_candle_indicators['sma20'] and \
-                past_candle_indicators['sma5'] < past_candle_indicators['sma20']:
+        if (
+            current_candle_indicators["sma5"] > current_candle_indicators["sma20"]
+            and past_candle_indicators["sma5"] < past_candle_indicators["sma20"]
+        ):
             return [StrategySignal(candle.symbol, SignalDirection.Long)]
 
-        if current_candle_indicators['sma5'] < current_candle_indicators['sma20'] and \
-                past_candle_indicators['sma5'] > past_candle_indicators['sma20']:
+        if (
+            current_candle_indicators["sma5"] < current_candle_indicators["sma20"]
+            and past_candle_indicators["sma5"] > past_candle_indicators["sma20"]
+        ):
             return [StrategySignal(candle.symbol, SignalDirection.Short)]

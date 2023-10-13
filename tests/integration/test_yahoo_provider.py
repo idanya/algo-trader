@@ -10,11 +10,11 @@ class TestYahooMarketProvider(TestCase):
         from_time = datetime.now() - timedelta(days=50)
         to_time = datetime.now()
         provider = YahooFinanceHistoryProvider()
-        result = provider.get_symbol_history('AAPL', TimeSpan.Day, TimeSpan.Day, from_time, to_time)
+        result = provider.get_symbol_history("AAPL", TimeSpan.Day, TimeSpan.Day, from_time, to_time)
         self.assertTrue(len(result) > 10)
         self.assertIsNotNone(result)
         for candle in result:
-            self.assertEqual('AAPL', candle.symbol)
+            self.assertEqual("AAPL", candle.symbol)
             self.assertTrue(0 < candle.open)
             self.assertTrue(0 < candle.close)
             self.assertTrue(0 < candle.volume)

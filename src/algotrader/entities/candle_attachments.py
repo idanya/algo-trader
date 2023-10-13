@@ -7,7 +7,6 @@ from algotrader.serialization.store import DeserializationService
 
 
 class CandleAttachments(Serializable, Deserializable):
-
     def __init__(self) -> None:
         super().__init__()
         self.data: Dict[str, Serializable] = {}
@@ -16,7 +15,7 @@ class CandleAttachments(Serializable, Deserializable):
     def deserialize(cls, data: Dict):
         obj = CandleAttachments()
         for k, v in data.items():
-            if k != '__class__' and isinstance(v, dict) and '__class__' in v:
+            if k != "__class__" and isinstance(v, dict) and "__class__" in v:
                 obj.add_attachement(k, DeserializationService.deserialize(v))
 
         return obj

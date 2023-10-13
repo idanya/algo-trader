@@ -18,13 +18,11 @@ class ReverseSource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update({
-            'source': self.source.serialize()
-        })
+        obj.update({"source": self.source.serialize()})
 
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict):
-        source: Source = Source.deserialize(data['source'])
+        source: Source = Source.deserialize(data["source"])
         return cls(source)

@@ -20,7 +20,8 @@ class TestFileSinkProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(0, c)) for c in range(1, 50)])
+            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(0, c)) for c in range(1, 50)]
+        )
 
     def test(self):
         temp_file = tempfile.NamedTemporaryFile(delete=False)

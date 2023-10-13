@@ -11,7 +11,7 @@ from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.technicals import IndicatorValue
 from algotrader.pipeline.shared_context import SharedContext
 
-CORRELATIONS_ATTACHMENT_KEY = 'correlations'
+CORRELATIONS_ATTACHMENT_KEY = "correlations"
 CORRELATION_ELEMENTS_COUNT = 4
 
 
@@ -31,14 +31,15 @@ class AssetCorrelationProcessor(Processor):
     """
     Calculates correlations between groups of symbols
     """
+
     def __init__(self, config_path: str, next_processor: Optional[Processor]) -> None:
         """
         @param config_path: path to the correlation's config file
         @param next_processor: the next processor in chain
         """
-        with open(config_path, 'r') as config_content:
+        with open(config_path, "r") as config_content:
             c: Dict = json.loads(config_content.read())
-            self.config = CorrelationConfig(c.get('groups', []))
+            self.config = CorrelationConfig(c.get("groups", []))
 
         super().__init__(next_processor)
 
@@ -75,11 +76,15 @@ class AssetCorrelationProcessor(Processor):
                 symbol_candles = cache_reader.get_symbol_candles(paired_symbol) or []
                 symbol_values = self._get_correlation_measurable_values(symbol_candles)
 
-                if len(symbol_values) != len(current_symbol_values) or len(current_symbol_values) <= CORRELATION_ELEMENTS_COUNT:
+                if (
+                    len(symbol_values) != len(current_symbol_values)
+                    or len(current_symbol_values) <= CORRELATION_ELEMENTS_COUNT
+                ):
                     continue
 
-                correlation = spatial.distance.correlation(current_symbol_values[-CORRELATION_ELEMENTS_COUNT:],
-                                                           symbol_values[-CORRELATION_ELEMENTS_COUNT:])
+                correlation = spatial.distance.correlation(
+                    current_symbol_values[-CORRELATION_ELEMENTS_COUNT:], symbol_values[-CORRELATION_ELEMENTS_COUNT:]
+                )
                 asset_correlation.set(paired_symbol, correlation)
 
             latest_candle = current_symbol_candles[-1]
