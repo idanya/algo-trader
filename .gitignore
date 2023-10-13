@@ -12,3 +12,5 @@ build/
 *.egg
 logs/
 .coverage
+/coverage.xml
+/report.xml

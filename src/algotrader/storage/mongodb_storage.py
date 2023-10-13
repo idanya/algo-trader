@@ -1,7 +1,7 @@
 import json
 import logging
 from datetime import datetime
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Iterator
 
 import pymongo
 from pymongo import MongoClient
@@ -174,7 +174,7 @@ class MongoDBStorage(StorageProvider):
                 self.candles_collection.find(query).sort("timestamp").limit(limit)]
 
     def get_candles(self, time_span: TimeSpan,
-                    from_timestamp: datetime, to_timestamp: datetime) -> List[Candle]:
+                    from_timestamp: datetime, to_timestamp: datetime) -> Iterator[Candle]:
         self._ensure_connection()
 
         query = {
@@ -182,8 +182,8 @@ class MongoDBStorage(StorageProvider):
             'timestamp': {"$gte": from_timestamp, "$lte": to_timestamp}
         }
 
-        return [self._deserialize_candle(candle) for candle in
-                self.candles_collection.find(query).sort("timestamp")]
+        for candle in self.candles_collection.find(query).sort("timestamp"):
+            yield self._deserialize_candle(candle)
 
     def __drop_collections__(self):
         self._ensure_connection()

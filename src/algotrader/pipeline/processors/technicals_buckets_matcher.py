@@ -15,7 +15,20 @@ INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY = 'indicators_matched_buckets'
 
 
 class IndicatorsMatchedBuckets(GenericCandleAttachment[Union[List[Bucket], Bucket]]):
-    pass
+    @classmethod
+    def deserialize(cls, data: Dict) -> GenericCandleAttachment:
+        obj = IndicatorsMatchedBuckets()
+        obj._data = data
+        for k, v in obj._data.items():
+            if k == '__class__':
+                continue
+
+            if isinstance(v, dict) and '__class__' in v:
+                obj._data[k] = DeserializationService.deserialize(v)
+            elif isinstance(v, list):
+                obj._data[k] = [DeserializationService.deserialize(item) for item in v]
+
+        return obj
 
 
 IndicatorsMatchedBuckets()
