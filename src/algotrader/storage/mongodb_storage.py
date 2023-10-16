@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
 
-from algotrader.entities.candle import Candle, str_to_timestamp, timestamp_to_str
+from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
 from algotrader.storage.storage_provider import StorageProvider
 
@@ -51,7 +51,7 @@ class MongoDBStorage(StorageProvider):
 
         self.candles_collection = self.db[CANDLES_COLLECTION]
         self.candles_collection.create_index(
-            [("symbol", pymongo.ASCENDING), ("timespan", pymongo.ASCENDING), ("timestamp", pymongo.ASCENDING)],
+            [("symbol", pymongo.ASCENDING), ("time_span", pymongo.ASCENDING), ("timestamp", pymongo.ASCENDING)],
             unique=True,
             background=True,
         )
@@ -161,26 +161,12 @@ class MongoDBStorage(StorageProvider):
     def save(self, candle: Candle):
         self._ensure_connection()
 
-        self.candles_collection.replace_one(
-            self._serialize_candle_key(candle), self._serialize_candle(candle), upsert=True
+        self.candles_collection.replace_one(self._serialize_candle_key(candle), candle.model_dump(), upsert=True)
+
+    def _serialize_candle_key(self, candle: Candle) -> dict:
+        return candle.model_dump(
+            include={"symbol", "time_span", "timestamp"}, exclude={"open", "high", "low", "close", "volume"}
         )
-
-    def _serialize_candle_key(self, candle: Candle) -> Dict:
-        data = self._serialize_candle(candle)
-        return {
-            "symbol": data["symbol"],
-            "timespan": data["timespan"],
-            "timestamp": data["timestamp"],
-        }
-
-    def _serialize_candle(self, candle: Candle) -> Dict:
-        data = candle.serialize()
-        data["timestamp"] = str_to_timestamp(data["timestamp"])
-        return data
-
-    def _deserialize_candle(self, data: Dict) -> Candle:
-        data["timestamp"] = timestamp_to_str(data["timestamp"])
-        return Candle.deserialize(data)
 
     def get_symbol_candles(
         self, symbol: str, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime, limit: int = 0
@@ -189,22 +175,19 @@ class MongoDBStorage(StorageProvider):
 
         query = {
             "symbol": symbol,
-            "timespan": time_span.value,
+            "time_span": time_span.value,
             "timestamp": {"$gte": from_timestamp, "$lte": to_timestamp},
         }
 
-        return [
-            self._deserialize_candle(candle)
-            for candle in self.candles_collection.find(query).sort("timestamp").limit(limit)
-        ]
+        return [Candle(**candle) for candle in self.candles_collection.find(query).sort("timestamp").limit(limit)]
 
     def get_candles(self, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime) -> Iterator[Candle]:
         self._ensure_connection()
 
-        query = {"timespan": time_span.value, "timestamp": {"$gte": from_timestamp, "$lte": to_timestamp}}
+        query = {"time_span": time_span.value, "timestamp": {"$gte": from_timestamp, "$lte": to_timestamp}}
 
         for candle in self.candles_collection.find(query).sort("timestamp"):
-            yield self._deserialize_candle(candle)
+            yield Candle(**candle)
 
     def __drop_collections__(self):
         self._ensure_connection()

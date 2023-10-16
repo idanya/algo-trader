@@ -7,9 +7,9 @@ from algotrader.entities.candle import Candle
 from algotrader.entities.strategy import Strategy
 from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
 from algotrader.pipeline.processors.technicals_buckets_matcher import (
-    IndicatorsMatchedBuckets,
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_buckets_matcher import IndicatorsMatchedBuckets
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.serialization.store import DeserializationService
 from algotrader.storage.storage_provider import StorageProvider
@@ -42,9 +42,7 @@ class HistoryCosineSimilarityStrategy(Strategy):
         )
 
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
-        indicators_buckets: IndicatorsMatchedBuckets = candle.attachments.get_attachment(
-            INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY
-        )
+        indicators_buckets: IndicatorsMatchedBuckets = candle.get_attachment(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY)
 
         candle_values: list[int] = []
         for indicator in self.indicators_to_compare:

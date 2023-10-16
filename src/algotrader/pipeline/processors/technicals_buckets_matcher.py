@@ -1,39 +1,17 @@
-import json
-from typing import Optional, List, Union, Dict
+from typing import Optional, List, Dict
 
+from algotrader.entities.attachments.technicals_buckets_matcher import IndicatorsMatchedBuckets
 from algotrader.entities.bucket import Bucket, BucketList
 from algotrader.entities.bucketscontainer import BucketsContainer
 from algotrader.entities.candle import Candle
-from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.technicals_normalizer import (
-    NormalizedIndicators,
     NORMALIZED_INDICATORS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_normalizer import NormalizedIndicators
 from algotrader.pipeline.shared_context import SharedContext
-from algotrader.serialization.store import DeserializationService
 
 INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY = "indicators_matched_buckets"
-
-
-class IndicatorsMatchedBuckets(GenericCandleAttachment[Union[List[Bucket], Bucket]]):
-    @classmethod
-    def deserialize(cls, data: Dict) -> GenericCandleAttachment:
-        obj = IndicatorsMatchedBuckets()
-        obj._data = data
-        for k, v in obj._data.items():
-            if k == "__class__":
-                continue
-
-            if isinstance(v, dict) and "__class__" in v:
-                obj._data[k] = DeserializationService.deserialize(v)
-            elif isinstance(v, list):
-                obj._data[k] = [DeserializationService.deserialize(item) for item in v]
-
-        return obj
-
-
-IndicatorsMatchedBuckets()
 
 
 class TechnicalsBucketsMatcher(Processor):
@@ -58,12 +36,10 @@ class TechnicalsBucketsMatcher(Processor):
         if not self.bins:
             with open(self.bins_file_path) as bins_file_content:
                 content = bins_file_content.read()
-                self.bins: BucketsContainer = DeserializationService.deserialize(json.loads(content))
+                self.bins: BucketsContainer = BucketsContainer.model_validate_json(content)
 
     def process(self, context: SharedContext, candle: Candle):
-        normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
-            NORMALIZED_INDICATORS_ATTACHMENT_KEY
-        )
+        normalized_indicators: NormalizedIndicators = candle.get_attachment(NORMALIZED_INDICATORS_ATTACHMENT_KEY)
 
         self._lazy_load_bins_file()
         matched_buckets = IndicatorsMatchedBuckets()
@@ -78,7 +54,7 @@ class TechnicalsBucketsMatcher(Processor):
 
                 matched_buckets.set(indicator, match)
 
-        candle.attachments.add_attachement(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, matched_buckets)
+        candle.add_attachment(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, matched_buckets)
 
         super().process(context, candle)
 
@@ -87,7 +63,7 @@ class TechnicalsBucketsMatcher(Processor):
 
     def _indicator_match(self, value: float, bins: BucketList) -> Optional[Bucket]:
         for bin in bins:
-            if bin.start <= value < bin.end:
+            if bin.get_start <= value < bin.get_end:
                 return bin
 
     def serialize(self) -> Dict:

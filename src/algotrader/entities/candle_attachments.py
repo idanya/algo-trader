@@ -1,9 +1,16 @@
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
+from algotrader.entities.attachments.nothing import NothingClass
 from algotrader.entities.serializable import Serializable, Deserializable
+from algotrader.entities.attachments.technicals_buckets_matcher import IndicatorsMatchedBuckets
+from algotrader.entities.attachments.assets_correlation import AssetCorrelation
+from algotrader.entities.attachments.technicals import Indicators
+from algotrader.entities.attachments.technicals_normalizer import NormalizedIndicators
 from algotrader.serialization.store import DeserializationService
+
+CandleAttachment = Union[NothingClass, NormalizedIndicators, Indicators, AssetCorrelation, IndicatorsMatchedBuckets]
 
 
 class CandleAttachments(Serializable, Deserializable):

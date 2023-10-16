@@ -3,8 +3,9 @@ name = "algorithmic-trader"
 description = "Trading bot with support for realtime trading, backtesting, custom strategies and much more"
 authors = ["Idan Yael"]
 maintainers = ["Idan Yael"]
+packages = [{ include = "algotrader", from = "src" }]
 readme = "README.md"
-version = "0.0.6.post1.dev0+7aabc15"
+version = "0.0.0"
 keywords = ["algo-trader", "trading", "backtesting", "strategy", "bot"]
 license = "MIT"
 classifiers = [
@@ -38,7 +39,7 @@ target-version = ['py311']
 
 
 [tool.poetry-dynamic-versioning]
-enable = false
+enable = true
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
@@ -52,6 +53,7 @@ coverage = "7.3.2"
 binance-connector = "1.18.0"
 python-dotenv = "0.21.0"
 ibapi = {path = "libs/ib_client"}
+pydantic = "^2.4.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
@@ -74,3 +76,23 @@ bug-tracker = "https://github.com/idanya/algo-trader/issues"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[tool.pyright]
+include = ["src/"]
+exclude = ["**/node_modules",
+    "src/algotrader/providers/ib/",
+    "**/__pycache__",
+    "libs/",
+]
+defineConstant = { DEBUG = true }
+venv = "env311"
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.11"
+pythonPlatform = "Linux"
+
+executionEnvironments = [
+  { root = "src" }
+]

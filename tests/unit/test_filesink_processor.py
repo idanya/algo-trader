@@ -31,7 +31,7 @@ class TestFileSinkProcessor(TestCase):
             lines = temp_file.readlines()
             self.assertEqual(49, len(lines))
             for line in lines:
-                candle = Candle.deserialize(json.loads(line))
+                candle = Candle.model_validate_json(json.loads(line))
                 self.assertEqual(TimeSpan.Day, candle.time_span)
                 self.assertEqual(datetime.now().day, candle.timestamp.day)
 

@@ -2,20 +2,13 @@ from __future__ import annotations
 
 from typing import List, Dict, Optional
 
+from algotrader.entities.attachments.returns import Returns
 from algotrader.entities.candle import Candle
-from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.shared_context import SharedContext
 
 RETURNS_ATTACHMENT_KEY = "returns"
-
-
-class Returns(GenericCandleAttachment[float]):
-    pass
-
-
-Returns()
 
 
 class ReturnsCalculatorProcessor(Processor):
@@ -28,11 +21,11 @@ class ReturnsCalculatorProcessor(Processor):
         cache_reader = CandleCache.context_reader(context)
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
 
-        candle.attachments.add_attachement(RETURNS_ATTACHMENT_KEY, Returns())
+        candle.add_attachment(RETURNS_ATTACHMENT_KEY, Returns())
 
         if len(symbol_candles) >= self.returns_count:
             candle_returns = self._calc_returns(candle, symbol_candles)
-            candle.attachments.add_attachement(RETURNS_ATTACHMENT_KEY, candle_returns)
+            candle.add_attachment(RETURNS_ATTACHMENT_KEY, candle_returns)
 
         if self.next_processor:
             self.next_processor.process(context, candle)

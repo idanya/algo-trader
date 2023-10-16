@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 from algotrader.entities.candle import Candle
 from algotrader.entities.timespan import TimeSpan
 

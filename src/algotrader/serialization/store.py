@@ -17,7 +17,7 @@ class DeserializationService(Generic[T]):
         if data is None or data.get("__class__") is None:
             return None
 
-        class_name = data.get("__class__")
+        class_name = data.get("__class__", "")
         mod_name, cls_name = class_name.split(":")
         mod = importlib.import_module(mod_name)
         cls: Deserializable = getattr(mod, cls_name)

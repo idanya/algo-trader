@@ -40,7 +40,7 @@ class Pipeline(Serializable, Deserializable):
         self.logger.info("Starting pipeline...")
 
         for candle in self.source.read():
-            self.logger.debug("Processing candle: %s\r", candle.serialize())
+            self.logger.debug("Processing candle: %s\r", candle.model_dump())
             self.processor.process(context, candle)
 
         if self.terminator:
