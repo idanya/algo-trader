@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-import json
 import math
 from typing import List, Dict, Tuple
 
+from algotrader.entities.attachments.technicals import IndicatorValue
 from algotrader.entities.bucket import Bucket
 from algotrader.entities.bucketscontainer import BucketsContainer
 from algotrader.entities.candle import Candle
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.technicals import IndicatorValue
 from algotrader.pipeline.processors.technicals_normalizer import (
-    NormalizedIndicators,
     NORMALIZED_INDICATORS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_normalizer import NormalizedIndicators
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.pipeline.terminator import Terminator
 
@@ -41,9 +40,7 @@ class TechnicalsBinner(Terminator):
         self._save_bins()
 
     def _process_candle(self, candle: Candle):
-        normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
-            NORMALIZED_INDICATORS_ATTACHMENT_KEY
-        )
+        normalized_indicators: NormalizedIndicators = candle.get_attachment(NORMALIZED_INDICATORS_ATTACHMENT_KEY)
 
         if not normalized_indicators:
             return
@@ -85,25 +82,23 @@ class TechnicalsBinner(Terminator):
 
     def _save_bins(self):
         with open(self.output_file_path, "w+") as output_file:
-            output_file.write(json.dumps(self.bins.serialize()))
+            output_file.write(self.bins.model_dump_json())
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "symbols": self.symbols,
-                "bins_count": self.bins_count,
-                "output_file_path": self.output_file_path,
-                "outliers_removal_percentage": self.outliers_removal_percentage,
-            }
-        )
+        obj.update({
+            "symbols": self.symbols,
+            "bins_count": self.bins_count,
+            "output_file_path": self.output_file_path,
+            "outliers_removal_percentage": self.outliers_removal_percentage,
+        })
         return obj
 
     @classmethod
     def deserialize(cls, data: Dict):
         return cls(
-            data.get("symbols"),
-            data.get("bins_count"),
-            data.get("output_file_path"),
-            data.get("outliers_removal_percentage"),
+            data.get("symbols", []),
+            data.get("bins_count", 0),
+            data.get("output_file_path", ""),
+            data.get("outliers_removal_percentage", 0.05),
         )

@@ -7,9 +7,9 @@ from algotrader.entities.candle import Candle
 from algotrader.entities.strategy import Strategy
 from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
 from algotrader.pipeline.processors.technicals_buckets_matcher import (
-    IndicatorsMatchedBuckets,
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_buckets_matcher import IndicatorsMatchedBuckets
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.serialization.store import DeserializationService
 from algotrader.storage.storage_provider import StorageProvider
@@ -42,9 +42,7 @@ class HistoryCosineSimilarityStrategy(Strategy):
         )
 
     def process(self, context: SharedContext, candle: Candle) -> List[StrategySignal]:
-        indicators_buckets: IndicatorsMatchedBuckets = candle.attachments.get_attachment(
-            INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY
-        )
+        indicators_buckets: IndicatorsMatchedBuckets = candle.get_attachment(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY)
 
         candle_values: list[int] = []
         for indicator in self.indicators_to_compare:
@@ -66,17 +64,15 @@ class HistoryCosineSimilarityStrategy(Strategy):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "storage_provider": self.storage_provider.serialize(),
-                "timeframe_start": self.timeframe_start,
-                "timeframe_end": self.timeframe_end,
-                "indicators_to_compare": self.indicators_to_compare,
-                "return_field": self.return_field,
-                "min_event_count": self.min_event_count,
-                "min_avg_return": self.min_avg_return,
-            }
-        )
+        obj.update({
+            "storage_provider": self.storage_provider.serialize(),
+            "timeframe_start": self.timeframe_start,
+            "timeframe_end": self.timeframe_end,
+            "indicators_to_compare": self.indicators_to_compare,
+            "return_field": self.return_field,
+            "min_event_count": self.min_event_count,
+            "min_avg_return": self.min_avg_return,
+        })
         return obj
 
     @classmethod
@@ -85,10 +81,10 @@ class HistoryCosineSimilarityStrategy(Strategy):
 
         return cls(
             storage_provider,
-            data.get("timeframe_start"),
-            data.get("timeframe_end"),
-            data.get("indicators_to_compare"),
-            data.get("return_field"),
-            data.get("min_event_count"),
-            data.get("min_avg_return"),
+            data.get("timeframe_start", datetime.now()),
+            data.get("timeframe_end", datetime.now()),
+            data.get("indicators_to_compare", []),
+            data.get("return_field", ""),
+            data.get("min_event_count", 0),
+            data.get("min_avg_return", 0),
         )

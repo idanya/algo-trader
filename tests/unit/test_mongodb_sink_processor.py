@@ -18,12 +18,10 @@ from unit import generate_candle_with_price, TEST_SYMBOL
 class TestMongoDBSinkProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
-            [
-                generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(minutes=c), random.randint(0, c))
-                for c in range(1, 50)
-            ]
-        )
+        self.source = FakeSource([
+            generate_candle_with_price(TimeSpan.Day, datetime.now() - timedelta(minutes=c), random.randint(0, c))
+            for c in range(1, 50)
+        ])
 
     @mongomock.patch(servers=(("localhost", 27017),))
     def test(self):

@@ -26,4 +26,4 @@ class FileSinkProcessor(Processor):
         super().process(context, candle)
 
     def _generate_candle_output(self, context: SharedContext, candle: Candle) -> str:
-        return json.dumps(candle.serialize())
+        return json.dumps(candle.model_dump_json())

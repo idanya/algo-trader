@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Optional, Annotated, Literal
 
-from algotrader.entities.candle_attachments import CandleAttachments
-from algotrader.entities.serializable import Serializable, Deserializable
+from pydantic import Field
+
+from algotrader.entities.base_dto import BaseEntity
+from algotrader.entities.candle_attachments import CandleAttachment
 from algotrader.entities.timespan import TimeSpan
-from algotrader.serialization.store import DeserializationService
 
 
 def timestamp_to_str(d: datetime) -> str:
@@ -17,60 +18,26 @@ def str_to_timestamp(d: str) -> datetime:
     return datetime.strptime(d, "%Y%m%d %H:%M:%S.%f")
 
 
-class Candle(Serializable, Deserializable):
-    def __init__(
-        self,
-        symbol: str,
-        time_span: TimeSpan,
-        timestamp: datetime,
-        open: float,
-        close: float,
-        high: float,
-        low: float,
-        volume: float,
-        attachments: Optional[CandleAttachments] = None,
-    ):
-        self.symbol = symbol
-        self.timestamp = timestamp
-        self.time_span = time_span
+class Candle(BaseEntity):
+    type: Literal["Candle"] = "Candle"
+    symbol: str
+    timestamp: datetime
+    time_span: TimeSpan
 
-        self.open = open
-        self.close = close
-        self.high = high
-        self.low = low
-        self.volume = volume
-        self.attachments = attachments or CandleAttachments()
+    open: float
+    close: float
+    high: float
+    low: float
+    volume: float
 
-    def add_attachement(self, key: str, data: Serializable):
-        self.attachments.add_attachement(key, data)
+    attachments: Optional[dict[str, Annotated[CandleAttachment, Field(discriminator="type")]]] = None
 
-    def serialize(self) -> Dict:
-        obj = super().serialize()
-        obj.update(
-            {
-                "symbol": self.symbol,
-                "timestamp": timestamp_to_str(self.timestamp),
-                "timespan": self.time_span.value,
-                "open": self.open,
-                "close": self.close,
-                "high": self.high,
-                "low": self.low,
-                "volume": self.volume,
-                "attachments": self.attachments.serialize(),
-            }
-        )
-        return obj
+    def add_attachment(self, key: str, entity: BaseEntity):
+        if not self.attachments:
+            self.attachments = {}
 
-    @classmethod
-    def deserialize(cls, data: Dict) -> Candle:
-        return cls(
-            data["symbol"],
-            TimeSpan(data["timespan"]),
-            str_to_timestamp(data["timestamp"]),
-            data["open"],
-            data["close"],
-            data["high"],
-            data["low"],
-            data["volume"],
-            DeserializationService.deserialize(data.get("attachments")),
-        )
+        self.attachments[key] = entity
+
+    def get_attachment(self, key: str) -> Optional[CandleAttachment]:
+        if self.attachments:
+            return self.attachments.get(key)

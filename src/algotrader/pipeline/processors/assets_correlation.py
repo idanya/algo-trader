@@ -3,23 +3,15 @@ from typing import Optional, List, Dict
 
 from scipy import spatial
 
+from algotrader.entities.attachments.assets_correlation import AssetCorrelation
 from algotrader.entities.candle import Candle
 from algotrader.entities.event import Event
-from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.technicals import IndicatorValue
 from algotrader.pipeline.shared_context import SharedContext
 
 CORRELATIONS_ATTACHMENT_KEY = "correlations"
 CORRELATION_ELEMENTS_COUNT = 4
-
-
-class AssetCorrelation(GenericCandleAttachment[IndicatorValue]):
-    pass
-
-
-AssetCorrelation()
 
 
 class CorrelationConfig:
@@ -88,7 +80,7 @@ class AssetCorrelationProcessor(Processor):
                 asset_correlation.set(paired_symbol, correlation)
 
             latest_candle = current_symbol_candles[-1]
-            latest_candle.attachments.add_attachement(CORRELATIONS_ATTACHMENT_KEY, asset_correlation)
+            latest_candle.add_attachment(CORRELATIONS_ATTACHMENT_KEY, asset_correlation)
 
             self.reprocess(context, latest_candle)
 

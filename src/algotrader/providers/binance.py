@@ -71,7 +71,16 @@ class BinanceProvider(Serializable, Deserializable):
         close = float(data["c"])
         volume = float(data["v"])
 
-        return Candle(data["s"], interval, timestamp, open, close, high, low, volume)
+        return Candle(
+            symbol=data["s"],
+            time_span=interval,
+            timestamp=timestamp,
+            open=open,
+            close=close,
+            high=high,
+            low=low,
+            volume=volume,
+        )
 
     def _deserialize_candle(self, symbol: str, interval: TimeSpan, data: Dict) -> Candle:
         timestamp = self._timestamp_to_datetime(data[0])
@@ -81,7 +90,16 @@ class BinanceProvider(Serializable, Deserializable):
         close = float(data[4])
         volume = float(data[5])
 
-        return Candle(symbol, interval, timestamp, open, close, high, low, volume)
+        return Candle(
+            symbol=symbol,
+            time_span=interval,
+            timestamp=timestamp,
+            open=open,
+            close=close,
+            high=high,
+            low=low,
+            volume=volume,
+        )
 
     def send_bracket_order(
         self,
@@ -95,16 +113,16 @@ class BinanceProvider(Serializable, Deserializable):
     ):
         grace_price = (
             triggering_price * (1 + position_entry_grace)
-            if direction == OrderDirection.BUY
+            if direction == OrderDirection.Buy
             else triggering_price * (1 - position_entry_grace)
         )
 
         take_profit_price = (
-            triggering_price * (1 + spread) if direction == OrderDirection.BUY else triggering_price * (1 - spread)
+            triggering_price * (1 + spread) if direction == OrderDirection.Buy else triggering_price * (1 - spread)
         )
 
         stop_loss_price = (
-            triggering_price * (1 - spread) if direction == OrderDirection.BUY else triggering_price * (1 + spread)
+            triggering_price * (1 - spread) if direction == OrderDirection.Buy else triggering_price * (1 + spread)
         )
 
         side = self._direction_to_side(direction)

@@ -8,12 +8,13 @@ from algotrader.pipeline.configs.indicator_config import IndicatorConfig
 from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY, Indicators
+from algotrader.pipeline.processors.technicals import TechnicalsProcessor, INDICATORS_ATTACHMENT_KEY
+from algotrader.entities.attachments.technicals import Indicators
 from algotrader.pipeline.processors.technicals_normalizer import (
     TechnicalsNormalizerProcessor,
     NORMALIZED_INDICATORS_ATTACHMENT_KEY,
-    NormalizedIndicators,
 )
+from algotrader.entities.attachments.technicals_normalizer import NormalizedIndicators
 from algotrader.pipeline.runner import PipelineRunner
 from algotrader.pipeline.shared_context import SharedContext
 from fakes.pipeline_validators import ValidationProcessor
@@ -33,7 +34,7 @@ class TestTechnicalsProcessor(TestCase):
 
             check_count = context.get_kv_data("check_count", 0)
             if check_count > 20:
-                candle_indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
+                candle_indicators: Indicators = candle.attachments[INDICATORS_ATTACHMENT_KEY]
                 macd_values = candle_indicators.get("macd")
                 self.assertEqual(len(macd_values), 3)
                 self.assertIsNotNone(macd_values[0])
@@ -49,14 +50,12 @@ class TestTechnicalsProcessor(TestCase):
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-                IndicatorConfig("macd", TechnicalCalculation.MACD, [2, 5, 9]),
-                IndicatorConfig("cci7", TechnicalCalculation.CCI, [7]),
-                IndicatorConfig("arooosc", TechnicalCalculation.AROONOSC, [7]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+            IndicatorConfig("macd", TechnicalCalculation.MACD, [2, 5, 9]),
+            IndicatorConfig("cci7", TechnicalCalculation.CCI, [7]),
+            IndicatorConfig("arooosc", TechnicalCalculation.AROONOSC, [7]),
+        ])
 
         processor = TechnicalsProcessor(config, cache_processor)
         PipelineRunner(Pipeline(self.source, processor)).run()
@@ -68,11 +67,9 @@ class TestTechnicalsProcessor(TestCase):
 
             check_count = context.get_kv_data("check_count", 0)
             if check_count > 20:
-                indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
+                indicators: Indicators = candle.attachments[INDICATORS_ATTACHMENT_KEY]
 
-                normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
-                    NORMALIZED_INDICATORS_ATTACHMENT_KEY
-                )
+                normalized_indicators: NormalizedIndicators = candle.attachments[NORMALIZED_INDICATORS_ATTACHMENT_KEY]
 
                 bbands5_value = indicators.get("bbands5")
                 normalized_bbands5_value = normalized_indicators.get("bbands5")
@@ -91,12 +88,10 @@ class TestTechnicalsProcessor(TestCase):
         cache_processor = CandleCache(validator)
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-                IndicatorConfig("bbands5", TechnicalCalculation.BBANDS, [5]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+            IndicatorConfig("bbands5", TechnicalCalculation.BBANDS, [5]),
+        ])
 
         technicals = TechnicalsProcessor(config, technicals_normalizer)
         PipelineRunner(Pipeline(self.source, technicals)).run()

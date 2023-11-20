@@ -29,11 +29,9 @@ class StorageSinkProcessor(Processor):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "storage_provider": self.storage_provider.serialize(),
-            }
-        )
+        obj.update({
+            "storage_provider": self.storage_provider.serialize(),
+        })
         return obj
 
     @classmethod

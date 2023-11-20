@@ -4,7 +4,8 @@ from algotrader.entities.candle import Candle
 from algotrader.entities.strategy import Strategy
 from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
+from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY
+from algotrader.entities.attachments.technicals import Indicators
 from algotrader.pipeline.shared_context import SharedContext
 
 
@@ -23,8 +24,8 @@ class ConnorsRSI2(Strategy):
         if candle.symbol not in self.current_position:
             self.current_position[candle.symbol] = None
 
-        past_candle_indicators: Indicators = symbol_candles[-1].attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
-        current_candle_indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
+        past_candle_indicators: Indicators = symbol_candles[-1].get_attachment(INDICATORS_ATTACHMENT_KEY)
+        current_candle_indicators: Indicators = candle.get_attachment(INDICATORS_ATTACHMENT_KEY)
 
         if (
             not current_candle_indicators.has("rsi2")

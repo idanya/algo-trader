@@ -17,13 +17,11 @@ class TestAsyncQueryResult(TestCase):
     def test_candles_out_of_range(self):
         subscription = QuerySubscription(1, "X", TimeSpan.Day)
         self.result.attach_query_subscription(subscription)
-        subscription.push_candles(
-            [
-                generate_candle(TimeSpan.Day, self.from_ts),
-                generate_candle(TimeSpan.Day, self.to_ts),
-                generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
-            ]
-        )
+        subscription.push_candles([
+            generate_candle(TimeSpan.Day, self.from_ts),
+            generate_candle(TimeSpan.Day, self.to_ts),
+            generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
+        ])
 
         subscription.done()
 
@@ -36,21 +34,17 @@ class TestAsyncQueryResult(TestCase):
         subscription2 = QuerySubscription(2, "X", TimeSpan.Day)
         self.result.attach_query_subscription(subscription2)
 
-        subscription1.push_candles(
-            [
-                generate_candle(TimeSpan.Day, self.from_ts),
-                generate_candle(TimeSpan.Day, self.to_ts),
-                generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
-            ]
-        )
+        subscription1.push_candles([
+            generate_candle(TimeSpan.Day, self.from_ts),
+            generate_candle(TimeSpan.Day, self.to_ts),
+            generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
+        ])
 
-        subscription2.push_candles(
-            [
-                generate_candle(TimeSpan.Day, self.from_ts),
-                generate_candle(TimeSpan.Day, self.to_ts),
-                generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
-            ]
-        )
+        subscription2.push_candles([
+            generate_candle(TimeSpan.Day, self.from_ts),
+            generate_candle(TimeSpan.Day, self.to_ts),
+            generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
+        ])
 
         subscription1.done()
         subscription2.done()
@@ -64,21 +58,17 @@ class TestAsyncQueryResult(TestCase):
         subscription2 = QuerySubscription(2, "X", TimeSpan.Day)
         self.result.attach_query_subscription(subscription2)
 
-        subscription1.push_candles(
-            [
-                generate_candle(TimeSpan.Day, self.from_ts),
-                generate_candle(TimeSpan.Day, self.to_ts),
-                generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
-            ]
-        )
+        subscription1.push_candles([
+            generate_candle(TimeSpan.Day, self.from_ts),
+            generate_candle(TimeSpan.Day, self.to_ts),
+            generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
+        ])
 
-        subscription2.push_candles(
-            [
-                generate_candle(TimeSpan.Day, self.from_ts),
-                generate_candle(TimeSpan.Day, self.to_ts),
-                generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
-            ]
-        )
+        subscription2.push_candles([
+            generate_candle(TimeSpan.Day, self.from_ts),
+            generate_candle(TimeSpan.Day, self.to_ts),
+            generate_candle(TimeSpan.Day, self.from_ts - timedelta(days=1)),
+        ])
 
         subscription1.done()
         subscription2.done(True)

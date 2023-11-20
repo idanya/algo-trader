@@ -15,14 +15,14 @@ from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.technicals import TechnicalsProcessor
 from algotrader.pipeline.processors.technicals_buckets_matcher import (
     TechnicalsBucketsMatcher,
-    IndicatorsMatchedBuckets,
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_buckets_matcher import IndicatorsMatchedBuckets
 from algotrader.pipeline.processors.technicals_normalizer import (
     TechnicalsNormalizerProcessor,
-    NormalizedIndicators,
     NORMALIZED_INDICATORS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_normalizer import NormalizedIndicators
 from algotrader.pipeline.runner import PipelineRunner
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.pipeline.terminators.technicals_binner import TechnicalsBinner
@@ -40,11 +40,9 @@ class TestTechnicalsBinnerTerminator(TestCase):
         cache_processor = CandleCache()
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+        ])
 
         technicals = TechnicalsProcessor(config, technicals_normalizer)
 
@@ -61,19 +59,19 @@ class TestTechnicalsBinnerTerminator(TestCase):
 
             check_count = context.get_kv_data("check_count", 0)
             if check_count > 20:
-                matched_buckets: IndicatorsMatchedBuckets = candle.attachments.get_attachment(
+                matched_buckets: IndicatorsMatchedBuckets = candle.get_attachment(
                     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY
                 )
 
-                normalized_indicators: NormalizedIndicators = candle.attachments.get_attachment(
+                normalized_indicators: NormalizedIndicators = candle.get_attachment(
                     NORMALIZED_INDICATORS_ATTACHMENT_KEY
                 )
 
                 matched_bucket = matched_buckets.get("sma5")
                 indicator_value = normalized_indicators.get("sma5")
                 self.assertTrue(isinstance(matched_bucket, Bucket))
-                self.assertTrue(matched_bucket.start <= indicator_value)
-                self.assertTrue(matched_bucket.end > indicator_value)
+                self.assertTrue(matched_bucket.get_start <= indicator_value)
+                self.assertTrue(matched_bucket.get_end > indicator_value)
 
         with tempfile.TemporaryDirectory() as tempdir:
             tmpfilepath = os.path.join(tempdir, "temp_bin_file.dat")
@@ -81,11 +79,9 @@ class TestTechnicalsBinnerTerminator(TestCase):
             cache_processor = CandleCache()
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
 
-            config = TechnicalsProcessorConfig(
-                [
-                    IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-                ]
-            )
+            config = TechnicalsProcessorConfig([
+                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+            ])
 
             technicals = TechnicalsProcessor(config, technicals_normalizer)
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, tmpfilepath)

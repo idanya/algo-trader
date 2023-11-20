@@ -8,7 +8,8 @@ from algotrader.entities.timespan import TimeSpan
 from fakes.strategy_executor import FakeSignalsExecutor
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.strategy import StrategyProcessor
-from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY, Indicators
+from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY
+from algotrader.entities.attachments.technicals import Indicators
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.pipeline.strategies.simple_sma import SimpleSMA
 from unit import generate_candle, TEST_SYMBOL
@@ -57,6 +58,6 @@ class TestSimpleSMAStrategy(TestCase):
         current_indicators.set("sma5", 6)
         current_indicators.set("sma20", 5)
 
-        prev_candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, prev_indicators)
-        current_candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, current_indicators)
+        prev_candle.add_attachment(INDICATORS_ATTACHMENT_KEY, prev_indicators)
+        current_candle.add_attachment(INDICATORS_ATTACHMENT_KEY, current_indicators)
         return prev_candle, current_candle

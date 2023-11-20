@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import Dict, Optional, ItemsView
 
+from pydantic import Field
+
+from algotrader.entities.base_dto import BaseEntity
 from algotrader.entities.bucket import Bucket, CompoundBucketList
-from algotrader.entities.serializable import Serializable, Deserializable
 from algotrader.serialization.store import DeserializationService
 
 
-class BucketsContainer(Serializable, Deserializable):
-    def __init__(self) -> None:
-        super().__init__()
-        self.bins: Dict[str, CompoundBucketList] = {}
+class BucketsContainer(BaseEntity):
+    bins: dict[str, CompoundBucketList] = Field(default_factory=dict)
 
     def items(self) -> ItemsView[str, CompoundBucketList]:
         return self.bins.items()

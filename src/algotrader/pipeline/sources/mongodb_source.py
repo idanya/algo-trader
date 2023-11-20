@@ -46,15 +46,13 @@ class MongoDBSource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "mongo_storage": self.mongo_storage.serialize(),
-                "symbols": self.symbols,
-                "timespan": self.timespan.value,
-                "from_time": self.from_time,
-                "to_time": self.to_time,
-            }
-        )
+        obj.update({
+            "mongo_storage": self.mongo_storage.serialize(),
+            "symbols": self.symbols,
+            "timespan": self.timespan.value,
+            "from_time": self.from_time,
+            "to_time": self.to_time,
+        })
         return obj
 
     @classmethod

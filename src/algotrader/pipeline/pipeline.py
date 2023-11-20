@@ -19,13 +19,11 @@ class Pipeline(Serializable, Deserializable):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "source": self.source.serialize(),
-                "processor": self.processor.serialize(),
-                "terminator": self.terminator.serialize() if self.terminator else None,
-            }
-        )
+        obj.update({
+            "source": self.source.serialize(),
+            "processor": self.processor.serialize(),
+            "terminator": self.terminator.serialize() if self.terminator else None,
+        })
         return obj
 
     @classmethod
@@ -40,7 +38,7 @@ class Pipeline(Serializable, Deserializable):
         self.logger.info("Starting pipeline...")
 
         for candle in self.source.read():
-            self.logger.debug("Processing candle: %s\r", candle.serialize())
+            self.logger.debug("Processing candle: %s\r", candle.model_dump())
             self.processor.process(context, candle)
 
         if self.terminator:

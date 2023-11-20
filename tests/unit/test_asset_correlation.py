@@ -11,10 +11,10 @@ from algotrader.pipeline.configs.indicator_config import IndicatorConfig
 from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.pipeline import Pipeline
 from algotrader.pipeline.processors.assets_correlation import (
-    AssetCorrelation,
     CORRELATIONS_ATTACHMENT_KEY,
     AssetCorrelationProcessor,
 )
+from algotrader.entities.attachments.assets_correlation import AssetCorrelation
 from algotrader.pipeline.processors.candle_cache import CandleCache
 from algotrader.pipeline.processors.technicals import TechnicalsProcessor
 from algotrader.pipeline.processors.timespan_change import TimeSpanChangeProcessor
@@ -64,9 +64,7 @@ class TestAssetCorrelationProcessor(TestCase):
             if check_count > 20:
                 cache_reader = CandleCache.context_reader(context)
                 latest_candle = cache_reader.get_symbol_candles(candle.symbol)[-2]
-                asset_correlation: AssetCorrelation = latest_candle.attachments.get_attachment(
-                    CORRELATIONS_ATTACHMENT_KEY
-                )
+                asset_correlation: AssetCorrelation = latest_candle.get_attachment(CORRELATIONS_ATTACHMENT_KEY)
                 if candle.symbol == "X":
                     self.assertFalse(asset_correlation.has("X"))
                     self.assertTrue(asset_correlation.has("Y"))
@@ -82,11 +80,9 @@ class TestAssetCorrelationProcessor(TestCase):
         asset_correlation = AssetCorrelationProcessor(correlations_file_path, cache_processor)
         timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, asset_correlation)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+        ])
 
         technicals = TechnicalsProcessor(config, timespan_change_processor)
         PipelineRunner(Pipeline(self.source, technicals)).run()

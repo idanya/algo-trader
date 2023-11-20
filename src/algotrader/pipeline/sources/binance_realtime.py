@@ -34,13 +34,11 @@ class BinanceRealtimeSource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "binanceProvider": self.binance_provider.serialize(),
-                "symbols": self.symbols,
-                "timeSpan": self.time_span.value,
-            }
-        )
+        obj.update({
+            "binanceProvider": self.binance_provider.serialize(),
+            "symbols": self.symbols,
+            "timeSpan": self.time_span.value,
+        })
         return obj
 
     @classmethod

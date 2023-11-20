@@ -11,12 +11,13 @@ from algotrader.entities.strategy_signal import StrategySignal, SignalDirection
 from algotrader.entities.timespan import TimeSpan
 from fakes.strategy_executor import FakeSignalsExecutor
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.returns import Returns, RETURNS_ATTACHMENT_KEY
+from algotrader.pipeline.processors.returns import RETURNS_ATTACHMENT_KEY
+from algotrader.entities.attachments.returns import Returns
 from algotrader.pipeline.processors.strategy import StrategyProcessor
 from algotrader.pipeline.processors.technicals_buckets_matcher import (
-    IndicatorsMatchedBuckets,
     INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY,
 )
+from algotrader.entities.attachments.technicals_buckets_matcher import IndicatorsMatchedBuckets
 from algotrader.pipeline.shared_context import SharedContext
 from algotrader.pipeline.strategies.history_bucket_compare import HistoryBucketCompareStrategy
 from algotrader.storage.mongodb_storage import MongoDBStorage
@@ -44,8 +45,8 @@ class TestHistoryCompareStrategy(TestCase):
 
         history_compare_strategy = HistoryBucketCompareStrategy(
             mongodb_storage,
-            datetime.now() - timedelta(days=60),
-            datetime.now(),
+            datetime.utcnow() - timedelta(days=60),
+            datetime.utcnow(),
             indicators_to_compare=["sma5", "sma20"],
             return_fields=["ctc1"],
             min_event_count=1,
@@ -119,7 +120,7 @@ class TestHistoryCompareStrategy(TestCase):
         processor.process(context, candle)
 
     def _get_history_candle(self, ctc_value: float) -> Candle:
-        candle = generate_candle(TimeSpan.Day, datetime.now() - timedelta(days=random.randint(2, 50)))
+        candle = generate_candle(TimeSpan.Day, datetime.utcnow() - timedelta(days=random.randint(2, 50)))
 
         indicator_buckets = IndicatorsMatchedBuckets()
         indicator_buckets.set("sma5", Bucket(ident=0, start=0, end=0))
@@ -128,8 +129,8 @@ class TestHistoryCompareStrategy(TestCase):
         candle_returns = Returns()
         candle_returns.set("ctc1", ctc_value)
 
-        candle.attachments.add_attachement(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, indicator_buckets)
-        candle.attachments.add_attachement(RETURNS_ATTACHMENT_KEY, candle_returns)
+        candle.add_attachment(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, indicator_buckets)
+        candle.add_attachment(RETURNS_ATTACHMENT_KEY, candle_returns)
 
         return candle
 
@@ -140,5 +141,5 @@ class TestHistoryCompareStrategy(TestCase):
         indicator_buckets.set("sma5", Bucket(ident=0, start=0, end=0))
         indicator_buckets.set("sma20", Bucket(ident=4, start=7, end=9))
 
-        candle.attachments.add_attachement(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, indicator_buckets)
+        candle.add_attachment(INDICATORS_MATCHED_BUCKETS_ATTACHMENT_KEY, indicator_buckets)
         return candle

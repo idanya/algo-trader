@@ -19,9 +19,9 @@ from unit import generate_candle_with_price
 class TestFileSinkProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(0, c)) for c in range(1, 50)]
-        )
+        self.source = FakeSource([
+            generate_candle_with_price(TimeSpan.Day, datetime.now(), random.randint(0, c)) for c in range(1, 50)
+        ])
 
     def test(self):
         temp_file = tempfile.NamedTemporaryFile(delete=False)
@@ -31,7 +31,7 @@ class TestFileSinkProcessor(TestCase):
             lines = temp_file.readlines()
             self.assertEqual(49, len(lines))
             for line in lines:
-                candle = Candle.deserialize(json.loads(line))
+                candle = Candle.model_validate_json(json.loads(line))
                 self.assertEqual(TimeSpan.Day, candle.time_span)
                 self.assertEqual(datetime.now().day, candle.timestamp.day)
 

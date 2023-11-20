@@ -4,22 +4,17 @@ from typing import Optional, Callable, Dict, List
 
 import numpy
 
+from algotrader.entities.attachments.technicals_normalizer import NormalizedIndicators
 from algotrader.entities.candle import Candle
-from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
 from algotrader.pipeline.processor import Processor
-from algotrader.pipeline.processors.assets_correlation import AssetCorrelation, CORRELATIONS_ATTACHMENT_KEY
+from algotrader.pipeline.processors.assets_correlation import CORRELATIONS_ATTACHMENT_KEY
+from algotrader.entities.attachments.assets_correlation import AssetCorrelation
 from algotrader.pipeline.processors.candle_cache import CandleCache
-from algotrader.pipeline.processors.technicals import Indicators, INDICATORS_ATTACHMENT_KEY, IndicatorValue
+from algotrader.pipeline.processors.technicals import INDICATORS_ATTACHMENT_KEY
+from algotrader.entities.attachments.technicals import Indicators, IndicatorValue
 from algotrader.pipeline.shared_context import SharedContext
 
 NORMALIZED_INDICATORS_ATTACHMENT_KEY = "normalized_indicators"
-
-
-class NormalizedIndicators(GenericCandleAttachment[IndicatorValue]):
-    pass
-
-
-NormalizedIndicators()
 
 VWAP_NORMALIZE_PREFIXES = ["sma", "ema", "typical", "bbands"]
 
@@ -51,8 +46,8 @@ class TechnicalsNormalizerProcessor(Processor):
         symbol_candles = cache_reader.get_symbol_candles(candle.symbol) or []
         latest_candles = symbol_candles[-self.normalization_window_size :] + [candle]
 
-        indicators: Indicators = candle.attachments.get_attachment(INDICATORS_ATTACHMENT_KEY)
-        asset_correlation: AssetCorrelation = candle.attachments.get_attachment(CORRELATIONS_ATTACHMENT_KEY)
+        indicators: Indicators = candle.get_attachment(INDICATORS_ATTACHMENT_KEY)
+        asset_correlation: AssetCorrelation = candle.get_attachment(CORRELATIONS_ATTACHMENT_KEY)
 
         normalized_indicators = NormalizedIndicators()
         for indicator_name, indicator_value in indicators.items():
@@ -64,7 +59,7 @@ class TechnicalsNormalizerProcessor(Processor):
         if correlation:
             normalized_indicators.set("correlation", correlation)
 
-        candle.attachments.add_attachement(NORMALIZED_INDICATORS_ATTACHMENT_KEY, normalized_indicators)
+        candle.add_attachment(NORMALIZED_INDICATORS_ATTACHMENT_KEY, normalized_indicators)
 
         super().process(context, candle)
 

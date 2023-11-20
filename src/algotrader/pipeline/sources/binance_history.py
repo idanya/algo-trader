@@ -30,15 +30,13 @@ class BinanceHistorySource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "binanceProvider": self.binance_provider.serialize(),
-                "symbols": self.symbols,
-                "timeSpan": self.time_span.value,
-                "startTime": self.start_time.timestamp(),
-                "endTime": self.end_time.timestamp(),
-            }
-        )
+        obj.update({
+            "binanceProvider": self.binance_provider.serialize(),
+            "symbols": self.symbols,
+            "timeSpan": self.time_span.value,
+            "startTime": self.start_time.timestamp(),
+            "endTime": self.end_time.timestamp(),
+        })
         return obj
 
     @classmethod

@@ -5,7 +5,6 @@ from algotrader.pipeline.processors.returns import ReturnsCalculatorProcessor
 from algotrader.pipeline.processors.storage_provider_sink import StorageSinkProcessor
 from algotrader.pipeline.processors.strategy import StrategyProcessor
 from algotrader.pipeline.processors.technicals import TechnicalsProcessor
-from algotrader.pipeline.processors.technicals_buckets_matcher import IndicatorsMatchedBuckets
 from algotrader.pipeline.processors.technicals_normalizer import TechnicalsNormalizerProcessor
 from algotrader.pipeline.processors.timespan_change import TimeSpanChangeProcessor
 
@@ -17,7 +16,6 @@ __all__ = [
     "StorageSinkProcessor",
     "StrategyProcessor",
     "TechnicalsProcessor",
-    "IndicatorsMatchedBuckets",
     "TechnicalsNormalizerProcessor",
     "TimeSpanChangeProcessor",
 ]

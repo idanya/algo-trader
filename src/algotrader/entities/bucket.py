@@ -1,29 +1,26 @@
 from __future__ import annotations
 
-from typing import Dict, List, Union
+import math
+from typing import List, Union, Optional
 
-from algotrader.entities.serializable import Serializable, Deserializable
+from pydantic import Field
+
+from algotrader.entities.base_dto import BaseEntity
 
 
-class Bucket(Serializable, Deserializable):
-    def __init__(self, ident: int, start: float = float("-inf"), end: float = float("inf")) -> None:
-        super().__init__()
-        self.ident = ident
-        self.start = start
-        self.end = end
+class Bucket(BaseEntity):
+    ident: float
+    start: Optional[float] = Field(default=-math.inf)
+    end: Optional[float] = Field(default=math.inf)
 
-    @classmethod
-    def deserialize(cls, data: Dict) -> Bucket:
-        return Bucket(data["ident"], data["start"], data["end"])
+    @property
+    def get_start(self):
+        return self.start or -math.inf
 
-    def serialize(self) -> Dict:
-        obj = super().serialize()
-        obj.update({"ident": self.ident, "start": self.start, "end": self.end})
-
-        return obj
+    @property
+    def get_end(self):
+        return self.end or math.inf
 
 
 BucketList = List[Bucket]
 CompoundBucketList = Union[List[BucketList], BucketList]
-
-Bucket(0)

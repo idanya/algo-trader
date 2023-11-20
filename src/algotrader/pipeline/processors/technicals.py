@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Optional, List, Dict, Union, Tuple
 
 from algotrader.calc.technicals import TechnicalCalculator
+from algotrader.entities.attachments.technicals import Indicators, IndicatorValue
 from algotrader.entities.candle import Candle
-from algotrader.entities.generic_candle_attachment import GenericCandleAttachment
 from algotrader.pipeline.configs.technical_processor_config import TechnicalsProcessorConfig
 from algotrader.pipeline.processor import Processor
 from algotrader.pipeline.processors.candle_cache import CandleCache
@@ -13,14 +13,6 @@ from algotrader.pipeline.shared_context import SharedContext
 INDICATORS_ATTACHMENT_KEY = "indicators"
 TechnicalsData = Dict[str, Dict[str, List[float]]]
 
-IndicatorValue = Union[List[float], float]
-
-
-class Indicators(GenericCandleAttachment[IndicatorValue]):
-    pass
-
-
-Indicators()
 
 MAX_CANDLES_FOR_CALC = 50
 
@@ -42,7 +34,7 @@ class TechnicalsProcessor(Processor):
 
         candle_indicators = Indicators()
         self._calculate(calculator, candle_indicators)
-        candle.attachments.add_attachement(INDICATORS_ATTACHMENT_KEY, candle_indicators)
+        candle.add_attachment(INDICATORS_ATTACHMENT_KEY, candle_indicators)
 
         super().process(context, candle)
 

@@ -23,7 +23,7 @@ class SimpleSumSignalsExecutor(SignalsExecutor):
             self.position[candle.symbol] = 0
 
         for signal in signals:
-            logging.info(f"Got {signal.direction} signal for {signal.symbol}. Signaling candle: {candle.serialize()}")
+            logging.info(f"Got {signal.direction} signal for {signal.symbol}. Signaling candle: {candle.model_dump()}")
 
             if signal.symbol not in self.position:
                 self.position[signal.symbol] = 0
