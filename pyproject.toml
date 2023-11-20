@@ -5,7 +5,7 @@ authors = ["Idan Yael"]
 maintainers = ["Idan Yael"]
 packages = [{ include = "algotrader", from = "src" }]
 readme = "README.md"
-version = "0.0.6.post5.dev0+efb8c0f"
+version = "0.0.0"
 keywords = ["algo-trader", "trading", "backtesting", "strategy", "bot"]
 license = "MIT"
 classifiers = [
@@ -39,7 +39,7 @@ target-version = ['py311']
 
 
 [tool.poetry-dynamic-versioning]
-enable = false
+enable = true
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
