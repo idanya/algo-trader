@@ -5,7 +5,7 @@ authors = ["Idan Yael"]
 maintainers = ["Idan Yael"]
 packages = [{ include = "algotrader", from = "src" }]
 readme = "README.md"
-version = "0.0.0"
+version = "0.0.6.post5.dev0+efb8c0f"
 keywords = ["algo-trader", "trading", "backtesting", "strategy", "bot"]
 license = "MIT"
 classifiers = [
@@ -39,19 +39,19 @@ target-version = ['py311']
 
 
 [tool.poetry-dynamic-versioning]
-enable = true
+enable = false
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 newtulipy = "0.4.6"
-pymongo = "3.12.0"
+pymongo = "4.6.0"
 mongomock = "4.1.2"
-scipy = "1.11.3"
-yfinance = "0.1.87"
-typer = { version = "0.7.0", extras = ["all"] }
+scipy = "1.11.4"
+yfinance = "0.2.32"
+typer = { version = "0.9.0", extras = ["all"] }
 coverage = "7.3.2"
 binance-connector = "1.18.0"
-python-dotenv = "0.21.0"
+python-dotenv = "1.0.0"
 ibapi = {path = "libs/ib_client"}
 pydantic = "^2.4.2"
 
