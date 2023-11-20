@@ -83,10 +83,10 @@ class HistoryCosineSimilarityStrategy(Strategy):
 
         return cls(
             storage_provider,
-            data.get("timeframe_start"),
-            data.get("timeframe_end"),
-            data.get("indicators_to_compare"),
-            data.get("return_field"),
-            data.get("min_event_count"),
-            data.get("min_avg_return"),
+            data.get("timeframe_start", datetime.now()),
+            data.get("timeframe_end", datetime.now()),
+            data.get("indicators_to_compare", []),
+            data.get("return_field", ""),
+            data.get("min_event_count", 0),
+            data.get("min_avg_return", 0),
         )

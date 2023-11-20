@@ -113,16 +113,16 @@ class BinanceProvider(Serializable, Deserializable):
     ):
         grace_price = (
             triggering_price * (1 + position_entry_grace)
-            if direction == OrderDirection.BUY
+            if direction == OrderDirection.Buy
             else triggering_price * (1 - position_entry_grace)
         )
 
         take_profit_price = (
-            triggering_price * (1 + spread) if direction == OrderDirection.BUY else triggering_price * (1 - spread)
+            triggering_price * (1 + spread) if direction == OrderDirection.Buy else triggering_price * (1 - spread)
         )
 
         stop_loss_price = (
-            triggering_price * (1 - spread) if direction == OrderDirection.BUY else triggering_price * (1 + spread)
+            triggering_price * (1 - spread) if direction == OrderDirection.Buy else triggering_price * (1 + spread)
         )
 
         side = self._direction_to_side(direction)

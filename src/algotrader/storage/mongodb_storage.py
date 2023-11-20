@@ -35,9 +35,19 @@ class MongoDBStorage(StorageProvider):
         self.db: Optional[Database] = None
         self.candles_collection: Optional[Collection] = None
 
-    def get_collection(self) -> Collection:
+    def _get_collection(self) -> Collection:
         self._ensure_connection()
+        if not self.candles_collection:
+            raise Exception("DB not initialized")
+
         return self.candles_collection
+
+    def _get_db(self) -> Database:
+        self._ensure_connection()
+        if not self.db:
+            raise Exception("DB not initialized")
+
+        return self.db
 
     def _ensure_connection(self):
         if self.client:
@@ -65,8 +75,6 @@ class MongoDBStorage(StorageProvider):
         min_count: int,
         min_return: float,
     ) -> Tuple[List[Dict[str, int]], List[Dict[str, int]]]:
-        self._ensure_connection()
-
         stage_and_match = [
             self._generate_history_match_clause(from_timestamp, to_timestamp, groupby_fields + return_fields),
             self._generate_group_stage(groupby_fields, return_fields),
@@ -86,11 +94,9 @@ class MongoDBStorage(StorageProvider):
         return long_matches, short_matches
 
     def _run_and_parse_aggregate(self, pipeline: List):
-        self._ensure_connection()
-
         logging.info(f"Running pipeline: {json.dumps(pipeline, indent=4, sort_keys=True, default=str)}")
 
-        results = self.candles_collection.aggregate(pipeline, allowDiskUse=True)
+        results = self._get_collection().aggregate(pipeline, allowDiskUse=True)
         matches: List[Dict[str, int]] = []
 
         for res in results:
@@ -159,9 +165,7 @@ class MongoDBStorage(StorageProvider):
         }
 
     def save(self, candle: Candle):
-        self._ensure_connection()
-
-        self.candles_collection.replace_one(self._serialize_candle_key(candle), candle.model_dump(), upsert=True)
+        self._get_collection().replace_one(self._serialize_candle_key(candle), candle.model_dump(), upsert=True)
 
     def _serialize_candle_key(self, candle: Candle) -> dict:
         return candle.model_dump(
@@ -171,27 +175,22 @@ class MongoDBStorage(StorageProvider):
     def get_symbol_candles(
         self, symbol: str, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime, limit: int = 0
     ) -> List[Candle]:
-        self._ensure_connection()
-
         query = {
             "symbol": symbol,
             "time_span": time_span.value,
             "timestamp": {"$gte": from_timestamp, "$lte": to_timestamp},
         }
 
-        return [Candle(**candle) for candle in self.candles_collection.find(query).sort("timestamp").limit(limit)]
+        return [Candle(**candle) for candle in self._get_collection().find(query).sort("timestamp").limit(limit)]
 
     def get_candles(self, time_span: TimeSpan, from_timestamp: datetime, to_timestamp: datetime) -> Iterator[Candle]:
-        self._ensure_connection()
-
         query = {"time_span": time_span.value, "timestamp": {"$gte": from_timestamp, "$lte": to_timestamp}}
 
-        for candle in self.candles_collection.find(query).sort("timestamp"):
+        for candle in self._get_collection().find(query).sort("timestamp"):
             yield Candle(**candle)
 
     def __drop_collections__(self):
-        self._ensure_connection()
-        self.db.drop_collection(CANDLES_COLLECTION)
+        self._get_db().drop_collection(CANDLES_COLLECTION)
 
     def serialize(self) -> Dict:
         obj = super().serialize()
@@ -208,4 +207,10 @@ class MongoDBStorage(StorageProvider):
 
     @classmethod
     def deserialize(cls, data: Dict):
-        return cls(data.get("host"), data.get("port"), data.get("database"), data.get("username"), data.get("password"))
+        return cls(
+            host=data.get("host", ""),
+            port=data.get("port", ""),
+            database=data.get("database", ""),
+            username=data.get("username", ""),
+            password=data.get("password", ""),
+        )

@@ -99,8 +99,8 @@ class TechnicalsBinner(Terminator):
     @classmethod
     def deserialize(cls, data: Dict):
         return cls(
-            data.get("symbols"),
-            data.get("bins_count"),
-            data.get("output_file_path"),
-            data.get("outliers_removal_percentage"),
+            data.get("symbols", []),
+            data.get("bins_count", 0),
+            data.get("output_file_path", ""),
+            data.get("outliers_removal_percentage", 0.05),
         )
