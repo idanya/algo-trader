@@ -16,9 +16,9 @@ from unit import generate_candle_with_price, TEST_SYMBOL
 class TestReturnsCalculatorProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
-            [generate_candle_with_price(TimeSpan.Day, datetime.now() + timedelta(minutes=c), c) for c in range(1, 50)]
-        )
+        self.source = FakeSource([
+            generate_candle_with_price(TimeSpan.Day, datetime.now() + timedelta(minutes=c), c) for c in range(1, 50)
+        ])
 
     def test(self):
         def _check_returns(context: SharedContext):

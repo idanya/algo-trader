@@ -17,12 +17,10 @@ from unit import generate_candle_with_price
 class TestTimeSpanChangeProcessor(TestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.source = FakeSource(
-            [
-                generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c)
-                for c in range(1, 55)
-            ]
-        )
+        self.source = FakeSource([
+            generate_candle_with_price(TimeSpan.Day, datetime.fromtimestamp(1669050000) - timedelta(hours=c), c)
+            for c in range(1, 55)
+        ])
 
     def test(self):
         def _terminate(context: SharedContext):

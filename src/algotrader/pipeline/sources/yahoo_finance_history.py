@@ -78,17 +78,15 @@ class YahooFinanceHistorySource(Source):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "symbols": self.symbols,
-                "timespan": self.timespan.value,
-                "start_time": self.start_time.timestamp(),
-                "end_time": self.end_time.timestamp(),
-                "auto_adjust": self.auto_adjust,
-                "include_after_hours": self.include_after_hours,
-                "sort_all": self.sort_all,
-            }
-        )
+        obj.update({
+            "symbols": self.symbols,
+            "timespan": self.timespan.value,
+            "start_time": self.start_time.timestamp(),
+            "end_time": self.end_time.timestamp(),
+            "auto_adjust": self.auto_adjust,
+            "include_after_hours": self.include_after_hours,
+            "sort_all": self.sort_all,
+        })
         return obj
 
     @classmethod

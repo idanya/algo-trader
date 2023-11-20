@@ -86,14 +86,12 @@ class TechnicalsBinner(Terminator):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "symbols": self.symbols,
-                "bins_count": self.bins_count,
-                "output_file_path": self.output_file_path,
-                "outliers_removal_percentage": self.outliers_removal_percentage,
-            }
-        )
+        obj.update({
+            "symbols": self.symbols,
+            "bins_count": self.bins_count,
+            "output_file_path": self.output_file_path,
+            "outliers_removal_percentage": self.outliers_removal_percentage,
+        })
         return obj
 
     @classmethod

@@ -50,14 +50,12 @@ class TestTechnicalsProcessor(TestCase):
         validator = ValidationProcessor(_check)
         cache_processor = CandleCache(validator)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-                IndicatorConfig("macd", TechnicalCalculation.MACD, [2, 5, 9]),
-                IndicatorConfig("cci7", TechnicalCalculation.CCI, [7]),
-                IndicatorConfig("arooosc", TechnicalCalculation.AROONOSC, [7]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+            IndicatorConfig("macd", TechnicalCalculation.MACD, [2, 5, 9]),
+            IndicatorConfig("cci7", TechnicalCalculation.CCI, [7]),
+            IndicatorConfig("arooosc", TechnicalCalculation.AROONOSC, [7]),
+        ])
 
         processor = TechnicalsProcessor(config, cache_processor)
         PipelineRunner(Pipeline(self.source, processor)).run()
@@ -90,12 +88,10 @@ class TestTechnicalsProcessor(TestCase):
         cache_processor = CandleCache(validator)
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-                IndicatorConfig("bbands5", TechnicalCalculation.BBANDS, [5]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+            IndicatorConfig("bbands5", TechnicalCalculation.BBANDS, [5]),
+        ])
 
         technicals = TechnicalsProcessor(config, technicals_normalizer)
         PipelineRunner(Pipeline(self.source, technicals)).run()

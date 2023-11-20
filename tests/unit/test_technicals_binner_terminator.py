@@ -40,11 +40,9 @@ class TestTechnicalsBinnerTerminator(TestCase):
         cache_processor = CandleCache()
         technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+        ])
 
         technicals = TechnicalsProcessor(config, technicals_normalizer)
 
@@ -81,11 +79,9 @@ class TestTechnicalsBinnerTerminator(TestCase):
             cache_processor = CandleCache()
             technicals_normalizer = TechnicalsNormalizerProcessor(next_processor=cache_processor)
 
-            config = TechnicalsProcessorConfig(
-                [
-                    IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-                ]
-            )
+            config = TechnicalsProcessorConfig([
+                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+            ])
 
             technicals = TechnicalsProcessor(config, technicals_normalizer)
             binner_terminator = TechnicalsBinner([TEST_SYMBOL], 7, tmpfilepath)

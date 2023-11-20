@@ -100,9 +100,9 @@ class MongoDBStorage(StorageProvider):
         matches: List[Dict[str, int]] = []
 
         for res in results:
-            matches.append(
-                {MongoDBStorage._deserialize_group_field_name(field): value for field, value in res["_id"].items()}
-            )
+            matches.append({
+                MongoDBStorage._deserialize_group_field_name(field): value for field, value in res["_id"].items()
+            })
 
         return matches
 
@@ -194,15 +194,13 @@ class MongoDBStorage(StorageProvider):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "host": self.host,
-                "port": self.port,
-                "database": self.database,
-                "username": self.username,
-                "password": self.password,
-            }
-        )
+        obj.update({
+            "host": self.host,
+            "port": self.port,
+            "database": self.database,
+            "username": self.username,
+            "password": self.password,
+        })
         return obj
 
     @classmethod

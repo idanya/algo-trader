@@ -80,11 +80,9 @@ class TestAssetCorrelationProcessor(TestCase):
         asset_correlation = AssetCorrelationProcessor(correlations_file_path, cache_processor)
         timespan_change_processor = TimeSpanChangeProcessor(TimeSpan.Day, asset_correlation)
 
-        config = TechnicalsProcessorConfig(
-            [
-                IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
-            ]
-        )
+        config = TechnicalsProcessorConfig([
+            IndicatorConfig("sma5", TechnicalCalculation.SMA, [5]),
+        ])
 
         technicals = TechnicalsProcessor(config, timespan_change_processor)
         PipelineRunner(Pipeline(self.source, technicals)).run()

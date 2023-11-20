@@ -19,13 +19,11 @@ class Pipeline(Serializable, Deserializable):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "source": self.source.serialize(),
-                "processor": self.processor.serialize(),
-                "terminator": self.terminator.serialize() if self.terminator else None,
-            }
-        )
+        obj.update({
+            "source": self.source.serialize(),
+            "processor": self.processor.serialize(),
+            "terminator": self.terminator.serialize() if self.terminator else None,
+        })
         return obj
 
     @classmethod

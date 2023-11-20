@@ -79,17 +79,15 @@ class HistoryBucketCompareStrategy(Strategy):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "storage_provider": self.storage_provider.serialize(),
-                "timeframe_start": self.timeframe_start,
-                "timeframe_end": self.timeframe_end,
-                "indicators_to_compare": self.indicators_to_compare,
-                "return_fields": self.return_fields,
-                "min_event_count": self.min_event_count,
-                "min_avg_return": self.min_avg_return,
-            }
-        )
+        obj.update({
+            "storage_provider": self.storage_provider.serialize(),
+            "timeframe_start": self.timeframe_start,
+            "timeframe_end": self.timeframe_end,
+            "indicators_to_compare": self.indicators_to_compare,
+            "return_fields": self.return_fields,
+            "min_event_count": self.min_event_count,
+            "min_avg_return": self.min_avg_return,
+        })
         return obj
 
     @classmethod

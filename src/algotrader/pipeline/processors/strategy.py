@@ -37,12 +37,10 @@ class StrategyProcessor(Processor):
 
     def serialize(self) -> Dict:
         obj = super().serialize()
-        obj.update(
-            {
-                "strategies": [strategy.serialize() for strategy in self.strategies],
-                "signals_executor": self.signals_executor.serialize(),
-            }
-        )
+        obj.update({
+            "strategies": [strategy.serialize() for strategy in self.strategies],
+            "signals_executor": self.signals_executor.serialize(),
+        })
         return obj
 
     @classmethod
